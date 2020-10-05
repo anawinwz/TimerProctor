@@ -6,9 +6,9 @@ const Header = () => (
   <Card size="small">
     <Title level={5} className="text-center">ข้อสอบกลางภาค วิชา มนุษย์กับทะเล</Title>
     <Row justify="space-between" align="middle">
-      <Col span={4}><Avatar icon={<UserOutlined />} /> name</Col>
-      <Col span={4} className="text-center">--:--</Col>
-      <Col span={4}></Col>
+      <Col xs={18} md={8}><Avatar icon={<UserOutlined />} /> name</Col>
+      <Col span={6} className="text-center">--:--</Col>
+      <Col xs={0} md={8}></Col>
     </Row>
   </Card>
 )
