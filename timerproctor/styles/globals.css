@@ -1,5 +1,6 @@
 body {
   background: linear-gradient(180deg, #D8D8D8 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF;
+  background-repeat: no-repeat;
 }
 
 .text-center {
