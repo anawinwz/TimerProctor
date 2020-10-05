@@ -9,7 +9,7 @@ const IntroPage = (props) => {
   const { id } = router.query
 
   return (
-    <CenterContainer>
+    <CenterContainer full>
       <Space direction="vertical" size="large">
         <IntroCard />
         <IntroLogin />
