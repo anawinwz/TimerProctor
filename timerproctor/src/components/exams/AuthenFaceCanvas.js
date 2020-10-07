@@ -1,8 +1,13 @@
+import styled from 'styled-components'
 import { createRef, useState, useEffect, useCallback } from 'react'
 import { Alert, Button, Space } from 'antd'
 import { CameraOutlined } from '@ant-design/icons'
 import { loadModel } from '../../utils/faceDetection'
 import { getStream, getSnapshot } from '../../utils/camera'
+
+const Video = styled('video')`
+  background: #d8d8d8;
+`
 
 const AuthenFaceCanvas = () => {
   const [camState, setCamState] = useState(['LOADING', ''])
@@ -43,19 +48,19 @@ const AuthenFaceCanvas = () => {
       showIcon
     />
   )
+  
+  const canSendSnapshot = camState[0] === 'READY'
   return (
     <Space direction="vertical">
-      <video ref={camInput} onPlay={onPlay} autoPlay muted playsInline></video>
-      { 
-        camState[0] === 'READY' && 
-        <Button
-          type="primary"
-          icon={<CameraOutlined />}
-          onClick={sendSnapshot}
-        >
-          ใช้ภาพนี้
-        </Button>
-      }
+      <Video ref={camInput} onPlay={onPlay} autoPlay muted playsInline preload="none" />
+      <Button
+        type="primary"
+        icon={<CameraOutlined />}
+        onClick={sendSnapshot}
+        disabled={canSendSnapshot}
+      >
+        ใช้ภาพนี้
+      </Button>
     </Space>
   )
 }
