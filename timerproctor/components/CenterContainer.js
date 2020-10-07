@@ -1,7 +1,7 @@
 import { Row, Col } from 'antd'
 
 const CenterContainer = (props) => {
-  let options = { style: {} }
+  let options = { style: props?.style || {} }
   if (props?.full) {
     options.align = 'middle'
     options.style.minHeight = '100vh'
