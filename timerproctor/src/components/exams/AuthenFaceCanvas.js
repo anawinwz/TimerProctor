@@ -1,6 +1,8 @@
 import { createRef, useState, useEffect, useCallback } from 'react'
-import { Alert } from 'antd'
+import { Alert, Button, Space } from 'antd'
+import { CameraOutlined } from '@ant-design/icons'
 import { loadModel } from '../../utils/faceDetection'
+import { getStream, getSnapshot } from '../../utils/camera'
 
 const AuthenFaceCanvas = () => {
   const [camState, setCamState] = useState(['LOADING', ''])
@@ -8,27 +10,32 @@ const AuthenFaceCanvas = () => {
 
   useEffect(() => {
     (async () => {
-      await loadModel()
+      try {
+        await loadModel()
+      } catch (err) {
+        return setCamState(['FAILED', 'ไม่สามารถโหลดข้อมูลที่จำเป็นได้'])
+      }
 
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
+        const stream = await getStream()
         const videoEl = camInput.current
         videoEl.srcObject = stream
       } catch (err) {
-        let errMsg = ''
-        if (err.message.includes(`'getUserMedia' of undefined`))
-          errMsg = 'เบราว์เซอร์ (browser) ของคุณไม่รองรับการใช้กล้องบนเว็บ'
-        else if (err.message.includes('Requested device not found'))
-          errMsg = 'ไม่พบกล้องในอุปกรณ์ของคุณ หรือถูกปิดไว้ที่ตัวเครื่อง'
-        else if (err.message.includes('Permission dismissed'))
-          errMsg = 'คุณปฏิเสธการใช้กล้อง'
-
-        setCamState(['BLOCKED', errMsg])
+        return setCamState(['FAILED', err.message])
       }
     })()
   }, [])
 
-  if (camState[0] === 'BLOCKED') return (
+  const onPlay = useCallback(() => {
+    setCamState(['READY', ''])
+  }, [])
+
+  const sendSnapshot = useCallback(() => {
+    const image = getSnapshot(camInput.current)
+    console.log(image)
+  }, [camInput])
+
+  if (camState[0] === 'FAILED') return (
     <Alert
       message="ไม่สามารถเชื่อมต่อกล้องได้"
       description={camState[1] || 'ไม่พบกล้องในอุปกรณ์ของคุณ หรือคุณปฏิเสธการใช้กล้อง'}
@@ -36,7 +43,21 @@ const AuthenFaceCanvas = () => {
       showIcon
     />
   )
-  return (<video ref={camInput} autoPlay muted playsInline></video>)
+  return (
+    <Space direction="vertical">
+      <video ref={camInput} onPlay={onPlay} autoPlay muted playsInline></video>
+      { 
+        camState[0] === 'READY' && 
+        <Button
+          type="primary"
+          icon={<CameraOutlined />}
+          onClick={sendSnapshot}
+        >
+          ใช้ภาพนี้
+        </Button>
+      }
+    </Space>
+  )
 }
 
 export default AuthenFaceCanvas
