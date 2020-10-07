@@ -9,9 +9,7 @@ const AuthenPage = (props) => {
 
   return (
     <>
-      <CenterContainer fixed>
-        <Header />
-      </CenterContainer>
+      <Header />
       <CenterContainer full>
         <AuthenCard />
       </CenterContainer>

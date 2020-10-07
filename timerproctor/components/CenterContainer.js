@@ -7,7 +7,7 @@ const CenterContainer = (props) => {
     options.style.minHeight = '100vh'
   }
   if (props?.fixed) {
-    options.style.position = 'fixed !important'
+    options.style.position = 'fixed'
     options.style.width = '100%'
   }
 
