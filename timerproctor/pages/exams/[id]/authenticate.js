@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { Space } from 'antd'
 import Header from '../../../components/exams/Header'
 import CenterContainer from '../../../components/CenterContainer'
 import AuthenCard from '../../../components/exams/AuthenCard'
@@ -9,12 +8,14 @@ const AuthenPage = (props) => {
   const { id } = router.query
 
   return (
-    <CenterContainer>
-      <Space direction="vertical" size="large" className="w-100">
+    <>
+      <CenterContainer fixed>
         <Header />
+      </CenterContainer>
+      <CenterContainer full>
         <AuthenCard />
-      </Space>
-    </CenterContainer>
+      </CenterContainer>
+    </>
   )
 }
 
