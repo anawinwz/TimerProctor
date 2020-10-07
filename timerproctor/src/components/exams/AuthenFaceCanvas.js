@@ -7,6 +7,7 @@ import { getStream, getSnapshot } from '../../utils/camera'
 
 const Video = styled('video')`
   background: #d8d8d8;
+  width: 100%;
 `
 
 const AuthenFaceCanvas = () => {
@@ -57,7 +58,7 @@ const AuthenFaceCanvas = () => {
         type="primary"
         icon={<CameraOutlined />}
         onClick={sendSnapshot}
-        disabled={canSendSnapshot}
+        disabled={!canSendSnapshot}
       >
         ใช้ภาพนี้
       </Button>
