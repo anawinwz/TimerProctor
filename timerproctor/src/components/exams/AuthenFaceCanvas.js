@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 import { createRef, useState, useEffect, useCallback } from 'react'
-import { Alert, Button, Space } from 'antd'
+import { Alert, Modal, Button, Space } from 'antd'
 import { CameraOutlined } from '@ant-design/icons'
-import { loadModel } from '../../utils/faceDetection'
+import { getInputCanvas, loadModel } from '../../utils/faceDetection'
 import { getStream, getSnapshot } from '../../utils/camera'
+import { detectSingleFace } from 'face-api.js'
 
 const Video = styled('video')`
   background: #d8d8d8;
@@ -36,9 +37,20 @@ const AuthenFaceCanvas = () => {
     setCamState(['READY', ''])
   }, [])
 
-  const sendSnapshot = useCallback(() => {
+  const sendSnapshot = useCallback(async () => {
     const image = getSnapshot(camInput.current)
-    console.log(image)
+    const input = await getInputCanvas(image)
+    const results = await detectSingleFace(input)
+    if (!results) {
+      Modal.error({
+        title: 'ไม่พบใบหน้า',
+        content: (
+          <div>
+            <p>กรุณาลองบันทึกภาพใหม่อีกครั้ง</p>
+          </div>
+        )
+      })
+    }
   }, [camInput])
 
   if (camState[0] === 'FAILED') return (
