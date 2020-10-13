@@ -13,6 +13,7 @@ const Video = styled('video')`
 
 const AuthenFaceCanvas = () => {
   const [camState, setCamState] = useState(['LOADING', ''])
+  const [sendState, setSendState] = useState(['IDLE', ''])
   const camInput = createRef()
 
   useEffect(() => {
@@ -38,8 +39,12 @@ const AuthenFaceCanvas = () => {
   }, [])
 
   const sendSnapshot = useCallback(async () => {
-    const image = getSnapshot(camInput.current)
+    const video = camInput.current
+    video.pause()
+    setSendState(['CHECKING', 'กำลังตรวจสอบ...'])
+    const image = getSnapshot(video)
     const input = await getInputCanvas(image)
+
     const results = await detectSingleFace(input)
     if (!results) {
       Modal.error({
@@ -50,6 +55,10 @@ const AuthenFaceCanvas = () => {
           </div>
         )
       })
+      video.play()
+      setSendState(['IDLE'])
+    } else {
+      setSendState(['PENDING', 'กำลังรออนุมัติ...'])
     }
   }, [camInput])
 
@@ -71,8 +80,9 @@ const AuthenFaceCanvas = () => {
         icon={<CameraOutlined />}
         onClick={sendSnapshot}
         disabled={!canSendSnapshot}
+        loading={sendState[0] !== 'IDLE'}
       >
-        ใช้ภาพนี้
+        { sendState[1] || 'ใช้ภาพนี้' }
       </Button>
     </Space>
   )
