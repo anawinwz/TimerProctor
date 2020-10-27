@@ -14,7 +14,8 @@
     "next-transpile-modules": "^4.1.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.0",
+    "use-timer": "^2.0.1"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.8.0"
