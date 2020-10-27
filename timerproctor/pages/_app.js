@@ -4,10 +4,15 @@ import '../styles/globals.css'
 import { ConfigProvider } from 'antd'
 import thTH from 'antd/es/locale/th_TH'
 
+import DefaultLayout from '../layouts/default'
+
 function App({ Component, pageProps }) {
+  const Layout = Component.Layout || DefaultLayout
   return (
     <ConfigProvider locale={thTH}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ConfigProvider>
   )
 }

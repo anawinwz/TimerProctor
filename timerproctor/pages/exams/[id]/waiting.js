@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
-import Header from '../../../components/exams/Header'
-import CenterContainer from '../../../components/CenterContainer'
+import exams from '../../../layouts/exams'
 import WaitingCard from '../../../components/exams/WaitingCard'
 
 const WaitingPage = (props) => {
@@ -9,13 +8,11 @@ const WaitingPage = (props) => {
 
   return (
     <>
-      <Header />
-      <CenterContainer full>
-        <WaitingCard />
-      </CenterContainer>
+      <WaitingCard />
     </>
   )
 }
+WaitingPage.Layout = exams
 
 export async function getServerSideProps() {
   return {

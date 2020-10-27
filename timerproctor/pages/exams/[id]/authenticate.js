@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
-import Header from '../../../components/exams/Header'
-import CenterContainer from '../../../components/CenterContainer'
+import exams from '../../../layouts/exams'
 import AuthenCard from '../../../components/exams/AuthenCard'
 
 const AuthenPage = (props) => {
@@ -9,13 +8,12 @@ const AuthenPage = (props) => {
 
   return (
     <>
-      <Header />
-      <CenterContainer full>
-        <AuthenCard />
-      </CenterContainer>
+      <AuthenCard />
     </>
   )
 }
+
+AuthenPage.Layout = exams
 
 export async function getServerSideProps() {
   return {
