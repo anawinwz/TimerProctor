@@ -37,12 +37,12 @@ class Exam {
   }
 
   @computed
-  timeWindow() {
+  get timeWindow() {
     return this.info?.timeWindow || {}
   }
 
   @computed
-  status() {
+  get status() {
     if (!this.timeWindow) return 'pending'
     if (this.timeWindow.mode === 'realtime')
       return this.timeWindow.realtime.status
