@@ -16,6 +16,7 @@ wss.shouldHandle = (req) => {
 }
 
 app.use((req, res, next) => {
+  req.locals = {}
   req.locals.wss = wss
   next()
 })
