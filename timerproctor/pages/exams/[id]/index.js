@@ -1,23 +1,28 @@
-import { useRouter } from 'next/router'
 import { Space } from 'antd'
 import IntroCard from '../../../components/exams/IntroCard'
 import IntroLogin from '../../../components/exams/IntroLogin'
 
-const IntroPage = (props) => {
-  const router = useRouter()
-  const { id } = router.query
-
+const IntroPage = ({ error, examInfo }) => {
+  if (error) return <></>
   return (
     <Space direction="vertical" size="large">
-      <IntroCard />
-      <IntroLogin />
+      <IntroCard examInfo={examInfo} />
+      <IntroLogin loginMethods={examInfo?.authentication.loginMethods} />
     </Space>
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ params: { id }, res}) {
+  const examInfo = await (await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exams/${id}/info`)).json()
+
+  if (!examInfo) {
+    res.statusCode = 404
+    return { 
+      props: { error: 'ไม่พบการสอบดังกล่าว' }
+    }
+  }
   return {
-    props: {}
+    props: { examInfo }
   }
 }
 
