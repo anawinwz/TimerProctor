@@ -1,14 +1,18 @@
 import { Space, Card, Descriptions, Typography } from 'antd'
+import { observer } from 'mobx-react'
+import { useStore } from '../../stores'
 const { Title } = Typography
 
-const IntroCard = ({ examInfo }) => {
+const IntroCard = () => {
+  const { ExamStore: exam } = useStore()
+  const examInfo = exam?.info
   return (
     <Space direction="vertical" size="large">
       <Title level={2} className="text-center">{ examInfo.name }</Title>
       <Card>
         <Descriptions column={1} className="mx-auto">
           <Descriptions.Item label="เวลาเริ่ม-สิ้นสุด">ผู้สอนจะให้สัญญาณเริ่ม-สิ้นสุดการสอบด้วยตนเอง</Descriptions.Item>
-          <Descriptions.Item label="เวลาในการสอบ">{ examInfo.timer.duration } นาที</Descriptions.Item>
+          <Descriptions.Item label="เวลาในการสอบ">{ examInfo.timer?.duration } นาที</Descriptions.Item>
         </Descriptions>
 
         <div className="text-center">
@@ -20,4 +24,4 @@ const IntroCard = ({ examInfo }) => {
   )
 }
 
-export default IntroCard
+export default observer(IntroCard)
