@@ -6,11 +6,12 @@ import { Card, Space,Button } from 'antd'
 import { Google } from '../icons'
 
 const IntroLogin = () => {
-  const { ExamStore: exam } = useStore()
+  const { ExamStore: exam, AuthStore: auth } = useStore()
   const loginMethods = exam.info?.authentication?.loginMethods || []
   
   const history = useHistory()
   const login = useCallback(() => {
+    auth.setUser({ userId: '1234', displayName: 'anawin' })
     history.replace(`/exams/${exam.id}/authenticate`)
   }, [history])
 

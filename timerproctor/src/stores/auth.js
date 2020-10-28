@@ -1,10 +1,21 @@
-import { makeAutoObservable } from 'mobx'
+import { action, computed, makeAutoObservable } from 'mobx'
 
 class Auth {
   userId = ''
-  displayName = 'anawin'
+  displayName = ''
   constructor() {
     makeAutoObservable(this)
+  }
+
+  @computed
+  get isLoggedIn() {
+    return !!this.userId
+  }
+
+  @action
+  setUser({ userId, displayName }) {
+    this.userId = userId
+    this.displayName = displayName
   }
 }
 
