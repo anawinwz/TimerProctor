@@ -23,7 +23,7 @@ router.get('/:id/start', async (req, res, next) => {
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
     
     exam.timeWindow.realtime.status = 'started'
-    exam.timeWindow.realtime.startedAt = Date.now
+    exam.timeWindow.realtime.startedAt = new Date()
     await exam.save()
 
     return res.json(jsonResponse('ok', 'สั่งเริ่มการสอบแล้ว'))
@@ -41,7 +41,7 @@ router.get('/:id/stop', async (req, res, next) => {
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งยุติการสอบนี้ได้'))
     
     exam.timeWindow.realtime.status = 'stopped'
-    exam.timeWindow.realtime.stoppedAt = Date.now
+    exam.timeWindow.realtime.stoppedAt = new Date()
     await exam.save()
 
     return res.json(jsonResponse('ok', 'สั่งยุติการสอบแล้ว'))
