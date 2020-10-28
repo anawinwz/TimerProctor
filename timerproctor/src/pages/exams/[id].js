@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Switch, Route, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores/index.js'
@@ -13,14 +13,29 @@ import AuthenPage from './[id]/authenticate.js'
 import WaitingPage from './[id]/waiting.js'
 
 const ExamPage = ({ match }) => {
-  const { ExamStore } = useStore()
+  const [ws, setWS] = useState(null)
+  const { ExamStore, AuthStore: auth } = useStore()
 
   const location = useLocation()
   const Layout = location.pathname.endsWith(match.params?.id) ? DefaultLayout : ExamLayout
 
   useEffect(() => {
-    ExamStore?.getInfo({ id: match.params?.id })
+    ExamStore.getInfo({ id: match.params?.id })
   }, [match.params?.id])
+
+  useEffect(() => {
+    if (auth.isLoggedIn) {
+      try {
+        setWS(new WebSocket('ws://localhost:5000'))
+      } catch {
+        setWS(null)
+      }
+    }
+    return () => {
+      if (ws) ws.close()
+      setWS(null)
+    }
+  }, [auth.isLoggedIn])
 
   return (
     <Layout>
