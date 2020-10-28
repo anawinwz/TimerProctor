@@ -1,3 +1,5 @@
+import WebSocket from 'ws'
+
 export const jsonResponse = (status = 'ok', message = '') => ({ status, message })
 
 export const wsBroadcast = (wss, data = {}) => {

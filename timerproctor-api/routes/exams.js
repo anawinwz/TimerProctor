@@ -29,7 +29,8 @@ router.get('/:id/start', async (req, res, next) => {
     await exam.save()
 
     return res.json(jsonResponse('ok', 'สั่งเริ่มการสอบแล้ว'))
-  } catch {
+  } catch (err) {
+    console.log(err)
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
 })
@@ -49,7 +50,8 @@ router.get('/:id/stop', async (req, res, next) => {
     await exam.save()
 
     return res.json(jsonResponse('ok', 'สั่งยุติการสอบแล้ว'))
-  } catch {
+  } catch (err) {
+    console.log(err)
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
 })
