@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import cors from 'cors'
 
 require('dotenv').config()
 
@@ -21,5 +22,6 @@ mongoose.connection.on('error', err => {
 const app = express()
 app.use(express.json())
 app.disable('etag')
+app.use(cors())
 
 export default app
