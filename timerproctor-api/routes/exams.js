@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import Exam from '../models/exam'
-import { jsonResponse } from '../utils/helpers'
+import { jsonResponse, wsBroadcast } from '../utils/helpers'
 
 const router = Router()
 
@@ -22,6 +22,8 @@ router.get('/:id/start', async (req, res, next) => {
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'started')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
     
+    wsBroadcast(req.locals.wss, { type: 'examStatus', payload: 'started' })
+  
     exam.timeWindow.realtime.status = 'started'
     exam.timeWindow.realtime.startedAt = new Date()
     await exam.save()
@@ -39,6 +41,8 @@ router.get('/:id/stop', async (req, res, next) => {
     if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'stopped')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งยุติการสอบนี้ได้'))
+
+    wsBroadcast(req.locals.wss, { type: 'examStatus', payload: 'stopped' })
     
     exam.timeWindow.realtime.status = 'stopped'
     exam.timeWindow.realtime.stoppedAt = new Date()
