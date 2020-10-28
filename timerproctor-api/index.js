@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000
 const server = http.createServer(app)
 const wss = new WebSocket.Server({ server })
 wss.shouldHandle = (req) => {
-  return false 
+  return true 
 }
 
 app.use((req, res, next) => {
