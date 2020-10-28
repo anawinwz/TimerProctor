@@ -7,9 +7,46 @@ const router = Router()
 router.get('/:id/info', async (req, res, next) => {
   try {
     const exam = await Exam.findById(req.params.id)
+    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
     return res.json(exam)
   } catch {
-    return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
+    return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
+router.get('/:id/start', async (req, res, next) => {
+  try {
+    const exam = await Exam.findById(req.params.id)
+
+    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
+    if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'started')
+      return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
+    
+    exam.timeWindow.realtime.status = 'started'
+    exam.timeWindow.realtime.startedAt = Date.now
+    await exam.save()
+
+    return res.json(jsonResponse('ok', 'สั่งเริ่มการสอบแล้ว'))
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
+router.get('/:id/stop', async (req, res, next) => {
+  try {
+    const exam = await Exam.findById(req.params.id)
+
+    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
+    if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'stopped')
+      return res.json(jsonResponse('failed', 'ไม่สามารถสั่งยุติการสอบนี้ได้'))
+    
+    exam.timeWindow.realtime.status = 'stopped'
+    exam.timeWindow.realtime.stoppedAt = Date.now
+    await exam.save()
+
+    return res.json(jsonResponse('ok', 'สั่งยุติการสอบแล้ว'))
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
 })
 
