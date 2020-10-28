@@ -1,4 +1,4 @@
-import { action, makeAutoObservable } from 'mobx'
+import { action, computed, makeAutoObservable } from 'mobx'
 import { fetchAPI } from '../utils/api'
 
 class Exam {
@@ -34,6 +34,19 @@ class Exam {
     } finally {
       this.loading = false
     }
+  }
+
+  @computed
+  timeWindow() {
+    return this.info?.timeWindow || {}
+  }
+
+  @computed
+  status() {
+    if (!this.timeWindow) return 'pending'
+    if (this.timeWindow.mode === 'realtime')
+      return this.timeWindow.realtime.status
+    return 'pending'
   }
 }
 
