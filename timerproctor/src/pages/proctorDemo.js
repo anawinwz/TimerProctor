@@ -32,7 +32,7 @@ const IDCardRequestItem = ({ item, responseUser }) => {
 
   return (
     <Space direction="vertical">
-      <img src={item.imageURL} />
+      <img src={item.imageURL} width="100%" />
       <Title key={3}>userId {item.userId}</Title>
       <Space direction="horizontal">
         <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item.userId, 'approve')}>ยอมรับ</Button>
