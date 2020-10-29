@@ -1,7 +1,6 @@
-import { message } from 'antd'
 import { useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
-import { getStream, getSnapshot } from '../../utils/camera'
+import { getStream } from '../../utils/camera'
 import { detectAllFaces } from '../../utils/faceDetection'
 import { showModal } from '../../utils/modal'
 
@@ -11,7 +10,7 @@ const Video = styled('video')`
   height: 1px;
 `
 
-const FaceTracker = () => {
+const FaceTracker = ({ signal = () => {} }) => {
   const camInput = useRef()
 
   useEffect(() => {
@@ -29,18 +28,22 @@ const FaceTracker = () => {
 
   const tracker = useCallback(() => {
     const video = camInput.current
+    const timestamp = Date.now()
     detectAllFaces(video).then(detections => {
-      if (detections.length === 0) {
-        message.warning(<p>ไม่พบใบหน้าของคุณ<br />อาจารย์ผู้สอน/กรรมการจะได้รับการแจ้งเตือนนี้</p>)
-      } else if (detections.length > 1) {
-        message.warning(<p>พบหลายบุคคลที่หน้าจอ<br />อาจารย์ผู้สอน/กรรมการจะได้รับการแจ้งเตือนนี้</p>)
+      const faces = detections.length
+      if (faces === 0 || faces > 1) {
+        signal({
+          time: timestamp,
+          type: 'face',
+          faces: faces,
+          msg: faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
+        })
       }
-      console.log('[tracker]', detections)
     })
   }, [camInput])
 
   useEffect(() => {
-    const interval = setInterval(tracker, 7000)
+    const interval = setInterval(tracker, 3000)
     return () => clearInterval(interval)
   }, [])
 

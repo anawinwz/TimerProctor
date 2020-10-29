@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 import { useStore } from '../../../stores'
 import Form from '../../../components/exams/Form'
-import FaceTracker from '../../../components/exams/FaceTracker'
+import Trackers from '../../../components/exams/Trackers'
 
 const FormPage = () => {
   const { ExamStore: exam, TimerStore: timer } = useStore()
@@ -23,7 +23,7 @@ const FormPage = () => {
   else if (exam.status === 'stopped' || timer.isTimeout === true) return <Redirect to={`/exams/${exam.id}/failed`} />
   return (
     <>
-      <FaceTracker />
+      <Trackers />
       <Form
         formId="1FAIpQLScOZB90bgzMi0oNuqxSzqsiaEqkQSKIxlG5P5mDbTOxFgWLGA"
         onLoad={onLoad}
