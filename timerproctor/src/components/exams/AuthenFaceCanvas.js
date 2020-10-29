@@ -5,6 +5,7 @@ import { CameraOutlined } from '@ant-design/icons'
 import { getInputCanvas, loadModel } from '../../utils/faceDetection'
 import { getStream, getSnapshot } from '../../utils/camera'
 import { detectSingleFace } from 'face-api.js'
+import { showModal } from '../../utils/modal'
 
 const Video = styled('video')`
   background: #d8d8d8;
@@ -54,14 +55,7 @@ const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
 
     const results = await detectSingleFace(input)
     if (!results) {
-      Modal.error({
-        title: 'ไม่พบใบหน้า',
-        content: (
-          <div>
-            <p>กรุณาลองบันทึกภาพใหม่อีกครั้ง</p>
-          </div>
-        )
-      })
+      showModal('error', 'ไม่พบใบหน้า', 'กรุณาลองบันทึกภาพใหม่อีกครั้ง')
       setSendState(['IDLE'])
     } else {
       setSendState(['PENDING', 'กำลังอัปโหลด...']) 
@@ -70,14 +64,7 @@ const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
         setSendState(['PENDING', 'กำลังรออนุมัติ...'])
       } catch (err) {
         console.error(err)
-        Modal.error({
-          title: 'เกิดข้อผิดพลาดในการติดต่อกรรมการ',
-          content: (
-            <div>
-              <p>กรุณาลองบันทึกภาพใหม่อีกครั้ง</p>
-            </div>
-          )
-        })
+        showModal('error', 'เกิดข้อผิดพลาดในการติดต่อกรรมการ', 'กรุณาลองบันทึกภาพใหม่อีกครั้ง')
         setSendState(['IDLE'])
       }
     }

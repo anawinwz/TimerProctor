@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useStore } from '../../stores'
+import { showModal } from '../../utils/modal'
 import AuthenFaceCanvas from './AuthenFaceCanvas'
 const { Title } = Typography
 
@@ -17,18 +18,13 @@ const AuthenCard = () => {
       else
         history.replace(`/exams/${exam.id}/waiting`)
     } else if (auth.idCheck.accepted === false) {
-      Modal.error({
-        title: 'ภาพของคุณถูกปฏิเสธ',
-        content: (
-          <div>
-            <p>
-              ภาพของคุณถูกปฏิเสธด้วยสาเหตุ<br />
-              <b>[{auth.idCheck.reason}]</b><br />
-              กรุณาลองบันทึกภาพใหม่อีกครั้ง
-            </p>
-          </div>
-        )
-      })
+      showModal('error', 'ภาพของคุณถูกปฏิเสธ', (
+        <>
+          ภาพของคุณถูกปฏิเสธด้วยสาเหตุ<br />
+          <b>[{auth.idCheck.reason}]</b><br />
+          กรุณาลองบันทึกภาพใหม่อีกครั้ง
+        </>
+      ))
     }
   }, [exam.isPromptIDCheck, auth.idCheck.accepted])
 
