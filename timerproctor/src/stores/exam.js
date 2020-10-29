@@ -3,6 +3,8 @@ import { fetchAPI } from '../utils/api'
 
 class Exam {
   loading = false
+  error = null
+
   id = ''
   name = ''
   info = {}
@@ -29,8 +31,10 @@ class Exam {
       this.loading = true
       this.info = await fetchAPI(`/exams/${this.id}/info`)
       this.name = this.info.name
+      this.error = null
     } catch (err) {
       this.info = {}
+      this.error = err
     } finally {
       this.loading = false
     }

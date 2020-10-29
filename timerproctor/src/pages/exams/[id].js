@@ -1,9 +1,14 @@
 
 import { useEffect, useState } from 'react'
-import { Switch, Route, useLocation } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores/index.js'
 
+import Loading from '../../components/exams/Loading.js'
+import Error from '../../components/exams/Error.js'
+import NotFound from '../../components/exams/NotFound.js'
+
+import LayoutRoute from '../../components/LayoutRoute.js'
 import DefaultLayout from '../../layouts/default.js'
 import ExamLayout from '../../layouts/exams.js'
 
@@ -14,13 +19,10 @@ import WaitingPage from './[id]/waiting.js'
 
 const ExamPage = ({ match }) => {
   const [ws, setWS] = useState(null)
-  const { ExamStore, AuthStore: auth } = useStore()
-
-  const location = useLocation()
-  const Layout = location.pathname.endsWith(match.params?.id) ? DefaultLayout : ExamLayout
+  const { ExamStore: exam, AuthStore: auth } = useStore()
 
   useEffect(() => {
-    ExamStore.getInfo({ id: match.params?.id })
+    exam.getInfo({ id: match.params?.id })
   }, [match.params?.id])
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const ExamPage = ({ match }) => {
 
           if (!type) return false
           switch (type) {
-            case 'examStatus': ExamStore.updateStatus(payload); break
+            case 'examStatus': exam.updateStatus(payload); break
             case 'idCheckResponse':
               const { accepted, reason } = payload
               auth.setIDCheck(accepted, reason)
@@ -52,15 +54,16 @@ const ExamPage = ({ match }) => {
     }
   }, [auth.isLoggedIn])
 
+  if (exam.loading) return <Loading />
+  if (exam.error) return <Error />
+  if (!exam.name) return <NotFound />
   return (
-    <Layout>
-      <Switch>
-        <Route exact path={match.url} component={IntroPage} />
-        <Route exact path={match.url + '/authenticate'} component={AuthenPage} />
-        <Route exact path={match.url + '/waiting'} component={WaitingPage} />
-        <Route exact path={match.url + '/completed'} component={CompletedPage} />
-      </Switch>
-    </Layout>
+    <Switch>
+      <LayoutRoute exact path={match.url} component={IntroPage} layout={DefaultLayout} />
+      <LayoutRoute exact path={match.url + '/authenticate'} component={AuthenPage} layout={ExamLayout} />
+      <LayoutRoute exact path={match.url + '/waiting'} component={WaitingPage} layout={ExamLayout} />
+      <LayoutRoute exact path={match.url + '/completed'} component={CompletedPage} layout={ExamLayout} />
+    </Switch>
   )
 }
 
