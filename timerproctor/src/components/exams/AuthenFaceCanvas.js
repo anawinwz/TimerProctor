@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Alert, Modal, Button, Space } from 'antd'
+import { Alert, Button, Space } from 'antd'
 import { CameraOutlined } from '@ant-design/icons'
 import { getInputCanvas, loadModel } from '../../utils/faceDetection'
 import { getStream, getSnapshot } from '../../utils/camera'
@@ -10,6 +10,7 @@ import { showModal } from '../../utils/modal'
 const Video = styled('video')`
   background: #d8d8d8;
   width: 100%;
+  max-width: 480px;
   pointer-events: none;
 `
 
