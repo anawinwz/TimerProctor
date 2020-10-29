@@ -17,6 +17,7 @@ import AuthenPage from './[id]/authenticate.js'
 import WaitingPage from './[id]/waiting.js'
 import FormPage from './[id]/form.js'
 import CompletedPage from './[id]/completed.js'
+import FailedPage from './[id]/failed.js'
 
 const ExamPage = ({ match }) => {
   const [ws, setWS] = useState(null)
@@ -72,6 +73,7 @@ const ExamPage = ({ match }) => {
       <LayoutRoute exact path={match.url + '/waiting'} component={WaitingPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/form'} component={FormPage} layout={ExamNormalLayout} />
       <LayoutRoute exact path={match.url + '/completed'} component={CompletedPage} layout={ExamLayout} />
+      <LayoutRoute exact path={match.url + '/failed'} component={FailedPage} layout={ExamLayout} />
     </Switch>
   )
 }
