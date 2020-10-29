@@ -1,6 +1,13 @@
-import WaitingCard from '../../../components/exams/WaitingCard'
 
-const WaitingPage = (props) => {
+import { observer } from 'mobx-react'
+import { useStore } from '../../../stores'
+import WaitingCard from '../../../components/exams/WaitingCard'
+import { Redirect } from 'react-router-dom'
+
+const WaitingPage = () => {
+  const { ExamStore: exam } = useStore()
+
+  if (exam.status === 'started') return <Redirect to={`/exams/${exam.id}/form`} />
   return (
     <>
       <WaitingCard />
@@ -8,4 +15,4 @@ const WaitingPage = (props) => {
   )
 }
 
-export default WaitingPage
+export default observer(WaitingPage)
