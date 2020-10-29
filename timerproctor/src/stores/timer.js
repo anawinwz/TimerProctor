@@ -19,6 +19,10 @@ class Timer {
   tick() {
     if (!this.isRunning) return
     this.currentTime += 1
+    if (this.currentTime >= this.endTime) {
+      this.isRunning = false
+      return
+    }
     setTimeout(() => this.tick(), 1000)
   }
 
@@ -38,6 +42,12 @@ class Timer {
   @computed
   get remainingTime() {
     return this.endTime - this.currentTime
+  }
+
+  @computed 
+  get isTimeout() {
+    if (this.endTime > 0 && this.currentTime >= this.endTime) return true
+    return false
   }
 
   @computed

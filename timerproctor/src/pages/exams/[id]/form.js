@@ -19,7 +19,7 @@ const FormPage = () => {
   }, [])
 
   if (count > 1) return <Redirect to={`/exams/${exam.id}/completed`} />
-  else if (exam.status === 'stopped') return <Redirect to={`/exams/${exam.id}/failed`} />
+  else if (exam.status === 'stopped' || timer.isTimeout === true) return <Redirect to={`/exams/${exam.id}/failed`} />
   return (
     <>
       <Form
