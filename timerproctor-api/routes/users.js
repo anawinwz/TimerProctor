@@ -11,14 +11,15 @@ router.post('/submitIDCheck' , (req, res, next) => {
 
   const fileName = `${userId}_${Date.now()}.png`
   const filePath = `idphotos/${fileName}`
+  const imageURL = `http://localhost:5000/${filePath}`
   fs.writeFile(filePath, image, 'base64', function (err) {})
   req.app.locals.users[1234] = {
     displayName: 'anawin wongsadit',
     accepted: null,
     reason: '',
-    imagePath: filePath
+    imageURL: imageURL
   }
-  wsBroadcast(req.app, { type: 'newIdCheckReq', payload: { userId: 1234, imageURL: filePath } }, 'proctors')  
+  wsBroadcast(req.app, { type: 'newIdCheckReq', payload: { userId: 1234, imageURL: imageURL } }, 'proctors')  
   return res.json(jsonResponse('ok'))
 })
 
