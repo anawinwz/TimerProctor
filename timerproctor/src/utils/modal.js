@@ -1,6 +1,7 @@
 import { Modal } from 'antd'
 
-export const showModal = (type = 'error', title, content) => {
+export const showModal = (type = 'error', title, content, options) => {
+  if (!options) options = {}
   Modal[type]({
     title: title,
     content: !content ? null : (
@@ -9,6 +10,7 @@ export const showModal = (type = 'error', title, content) => {
           { content }
         </p>
       </div>
-    )
+    ),
+    ...options
   })
 }
