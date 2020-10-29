@@ -12,11 +12,11 @@ export const loadModel = () => new Promise(async (resolve, reject) => {
   }
 })
 
-export const getOptions = new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })
+export const options = new faceapi.SsdMobilenetv1Options({ minConfidence: 0.425 })
 
-export const detectSingleFace = (input) => faceapi.detectSingleFace(input, getOptions())
+export const detectSingleFace = (input) => faceapi.detectSingleFace(input, options)
 
-export const detectAllFaces = (input) => faceapi.detectAllFaces(input, getOptions())
+export const detectAllFaces = (input) => faceapi.detectAllFaces(input, options)
 
 export const getInputCanvas = (imageSrc) => new Promise((resolve) => {
   const canvas = document.createElement('canvas')
