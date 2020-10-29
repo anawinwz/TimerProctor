@@ -56,6 +56,11 @@ class Exam {
       return this.timeWindow.realtime.status
     return 'pending'
   }
+
+  @computed
+  get isPromptIDCheck() {
+    return this.info?.authentication?.idCheckMode === 'prompt'
+  }
 }
 
 const ExamStore = new Exam()

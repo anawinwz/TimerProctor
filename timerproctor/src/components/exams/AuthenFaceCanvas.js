@@ -11,7 +11,7 @@ const Video = styled('video')`
   width: 100%;
 `
 
-const AuthenFaceCanvas = () => {
+const AuthenFaceCanvas = ({ onSubmitPhoto }) => {
   const [camState, setCamState] = useState(['LOADING', ''])
   const [sendState, setSendState] = useState(['IDLE', ''])
   const camInput = createRef()
@@ -58,7 +58,23 @@ const AuthenFaceCanvas = () => {
       video.play()
       setSendState(['IDLE'])
     } else {
-      setSendState(['PENDING', 'กำลังรออนุมัติ...'])
+      setSendState(['PENDING', 'กำลังอัปโหลด...']) 
+      try {
+        await onSubmitPhoto(image)
+        setSendState(['PENDING', 'กำลังรออนุมัติ...'])
+      } catch (err) {
+        console.error(err)
+        Modal.error({
+          title: 'เกิดข้อผิดพลาดในการติดต่อกรรมการ',
+          content: (
+            <div>
+              <p>กรุณาลองบันทึกภาพใหม่อีกครั้ง</p>
+            </div>
+          )
+        })
+        video.play()
+        setSendState(['IDLE'])
+      }
     }
   }, [camInput])
 

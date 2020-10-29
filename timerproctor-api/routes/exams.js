@@ -22,7 +22,7 @@ router.get('/:id/start', async (req, res, next) => {
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'started')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
     
-    wsBroadcast(req.locals.wss, { type: 'examStatus', payload: 'started' })
+    wsBroadcast(req.app, { type: 'examStatus', payload: 'started' }, 'testtakers')
   
     exam.timeWindow.realtime.status = 'started'
     exam.timeWindow.realtime.startedAt = new Date()
@@ -43,7 +43,7 @@ router.get('/:id/stop', async (req, res, next) => {
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'stopped')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งยุติการสอบนี้ได้'))
 
-    wsBroadcast(req.locals.wss, { type: 'examStatus', payload: 'stopped' })
+    wsBroadcast(req.app, { type: 'examStatus', payload: 'stopped' }, 'testtakers')
     
     exam.timeWindow.realtime.status = 'stopped'
     exam.timeWindow.realtime.stoppedAt = new Date()

@@ -20,7 +20,7 @@ mongoose.connection.on('error', err => {
 })
 
 const app = express()
-app.use(express.json())
+app.use(express.json({ limit: '4mb' }))
 app.disable('etag')
 app.use(cors())
 

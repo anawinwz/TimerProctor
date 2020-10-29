@@ -26,7 +26,7 @@ const ExamPage = ({ match }) => {
   useEffect(() => {
     if (auth.isLoggedIn) {
       try {
-        const tempWs = new WebSocket('ws://localhost:5000')
+        const tempWs = new WebSocket('ws://localhost:5000/testtaker')
         tempWs.onmessage = (evt) => {
           const data = JSON.parse(evt?.data) || {}
           const { type, payload }  = data
@@ -35,6 +35,10 @@ const ExamPage = ({ match }) => {
           if (!type) return false
           switch (type) {
             case 'examStatus': ExamStore.updateStatus(payload); break
+            case 'idCheckResponse':
+              const { accepted, reason } = payload
+              auth.setIDCheck(accepted, reason)
+              break
           }
         }
         setWS(tempWs)
