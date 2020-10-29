@@ -7,15 +7,18 @@ const router = Router()
 
 router.post('/submitIDCheck' , (req, res, next) => {
   const userId = req.body.userId
-  const image = req.body.image.replace('data:image/png;base64,')
+  const image = req.body.image.replace('data:image/png;base64,', '')
+
   const fileName = `${userId}_${Date.now()}.png`
-  fs.writeFile(`${fileName}.png`, image, 'base64', function (err) {})
+  const filePath = `idphotos/${fileName}`
+  fs.writeFile(filePath, image, 'base64', function (err) {})
   req.app.locals.users[1234] = {
     displayName: 'anawin wongsadit',
     accepted: null,
-    reason: ''
+    reason: '',
+    imagePath: filePath
   }
-  wsBroadcast(req.app, { type: 'newIdCheckReq', payload: { userId: 1234, imageURL: `${fileName}.png` } }, 'proctors')  
+  wsBroadcast(req.app, { type: 'newIdCheckReq', payload: { userId: 1234, imageURL: filePath } }, 'proctors')  
   return res.json(jsonResponse('ok'))
 })
 
