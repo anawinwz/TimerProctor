@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined, ExclamationCircleOutlined, SendOutlined } from '@ant-design/icons'
-import { Modal, List, Badge, Empty, message, Tabs, Card, Space, Button, Popconfirm, Radio, Typography, Input } from 'antd'
+import { Modal, List, Badge, Empty, message, Tabs, Card, Space, Button, Popconfirm, Radio, Typography, Input, InputNumber, Form } from 'antd'
 import { useCallback, useState, useEffect } from 'react'
 import DefaultLayout from '../layouts/default.js'
 import { fetchAPI } from '../utils/api.js'
@@ -53,6 +53,8 @@ const IDCardRequestItem = ({ item, responseUser }) => {
 
 const ProctorDemoPage = () => {
   const [ws, setWS] = useState(null)
+
+  const examId = `5f991c780953aa4110686e76`
   const [annouce, setAnnouce] = useState('')
   const [pastAnnouce, setPastAnnouce] = useState([])
   const [waitingList, setWaitingList] = useState([])
@@ -93,14 +95,24 @@ const ProctorDemoPage = () => {
     }
   }, [])
 
+  const updateExam = useCallback(async (data) => {
+    console.log(data)
+    try {
+      await fetchAPI(`/exams/${examId}/update`, data)
+      message.success(`อัปเดตข้อมูลการสอบเรียบร้อยแล้ว!`)
+    } catch (err) {
+      message.error(`เกิดข้อผิดพลาด: ${err.message}`)
+    }
+  }, [examId])
+
   const controlExam = useCallback(async (mode) => {
     try {
-      await fetchAPI(`/exams/5f991c780953aa4110686e76/${mode}`)
+      await fetchAPI(`/exams/${examId}/${mode}`)
       message.success(`สั่ง ${mode} การสอบเรียบร้อยแล้ว!`)
     } catch (err) {
       message.error(`เกิดข้อผิดพลาด: ${err.message}`)
     }
-  }, [])
+  }, [examId])
 
   const stopExam = useCallback(() => {
     Modal.confirm({
@@ -140,7 +152,22 @@ const ProctorDemoPage = () => {
           <Button type="primary" onClick={() => controlExam('start')}>เริ่มการสอบ</Button>
           <Button type="danger" onClick={stopExam}>หยุดการสอบ</Button>
         </p>
-        <Title level={5}>ประกาศถึงผู้เข้าสอบ</Title>
+        <Title level={5}>Demo ตั้งค่า</Title>
+        <Form
+          layout="vertical"
+          size="default"
+          onFinish={updateExam}
+        >
+          <Form.Item label="จำกัดเวลาทำ (นาที)" name={['timer', 'duration']} initialValue={50}>
+            <InputNumber />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              อัปเดต
+            </Button>
+          </Form.Item>
+        </Form>
+        <Title level={5}>Demo ประกาศถึงผู้เข้าสอบ</Title>
         <List
           locale={{emptyText: ' '}}
           dataSource={pastAnnouce.slice(-3)}
