@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { createRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { Alert, Modal, Button, Space } from 'antd'
 import { CameraOutlined } from '@ant-design/icons'
 import { getInputCanvas, loadModel } from '../../utils/faceDetection'
@@ -13,7 +13,7 @@ const Video = styled('video')`
 
 const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
   const [camState, setCamState] = useState(['LOADING', ''])
-  const camInput = createRef()
+  const camInput = useRef()
 
   useEffect(() => {
     (async () => {
