@@ -39,7 +39,11 @@ const AuthenCard = () => {
         กรุณาแสดงบัตรประจำตัวผู้เข้าสอบคู่กับใบหน้าของคุณ<br />
         เพื่อให้กรรมการคุมสอบตรวจและอนุมัติคุณเข้าสู่ห้องสอบ
       </p>
-      <AuthenFaceCanvas onSubmitPhoto={(img) => auth.submitIDCheck(img)} />
+      <AuthenFaceCanvas
+        sendState={auth.idCheck.sendState}
+        setSendState={(state) => auth.setIDCheckState(state)}
+        onSubmitPhoto={(img) => auth.submitIDCheck(img)}
+      />
     </Card>
   )
 }

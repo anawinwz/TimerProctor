@@ -39,7 +39,11 @@ const ExamPage = ({ match }) => {
             case 'examStatus': exam.updateStatus(payload); break
             case 'idCheckResponse':
               const { accepted, reason } = payload
-              auth.setIDCheck(accepted, reason)
+              auth.setIDCheckResult(accepted, reason)
+              if (accepted === false) {
+                auth.setIDCheckState(['IDLE', ''])
+                auth.setIDCheckResult(null, '')
+              }
               break
           }
         }
@@ -56,7 +60,7 @@ const ExamPage = ({ match }) => {
 
   if (exam.loading) return <Loading />
   if (exam.error) return <Error />
-  if (!exam.name) return <NotFound />
+  if (!exam.info.name) return <NotFound />
   return (
     <Switch>
       <LayoutRoute exact path={match.url} component={IntroPage} layout={DefaultLayout} />

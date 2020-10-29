@@ -11,9 +11,8 @@ const Video = styled('video')`
   width: 100%;
 `
 
-const AuthenFaceCanvas = ({ onSubmitPhoto }) => {
+const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
   const [camState, setCamState] = useState(['LOADING', ''])
-  const [sendState, setSendState] = useState(['IDLE', ''])
   const camInput = createRef()
 
   useEffect(() => {
@@ -38,9 +37,16 @@ const AuthenFaceCanvas = ({ onSubmitPhoto }) => {
     setCamState(['READY', ''])
   }, [])
 
+  useEffect(() => {
+    const video = camInput.current
+    if (camState[0] === 'READY' && video) {
+      if (sendState[0] === 'IDLE') video.play()
+      else video.pause()
+    }
+  }, [camState, camInput.current, sendState[0]])
+
   const sendSnapshot = useCallback(async () => {
     const video = camInput.current
-    video.pause()
     setSendState(['CHECKING', 'กำลังตรวจสอบ...'])
     const image = getSnapshot(video)
     const input = await getInputCanvas(image)
@@ -55,7 +61,6 @@ const AuthenFaceCanvas = ({ onSubmitPhoto }) => {
           </div>
         )
       })
-      video.play()
       setSendState(['IDLE'])
     } else {
       setSendState(['PENDING', 'กำลังอัปโหลด...']) 
@@ -72,7 +77,6 @@ const AuthenFaceCanvas = ({ onSubmitPhoto }) => {
             </div>
           )
         })
-        video.play()
         setSendState(['IDLE'])
       }
     }

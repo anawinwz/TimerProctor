@@ -5,6 +5,7 @@ class Auth {
   userId = ''
   displayName = ''
   idCheck = {
+    sendState: ['IDLE', ''],
     accepted: null,
     reason: ''
   }
@@ -25,7 +26,12 @@ class Auth {
   }
 
   @action
-  setIDCheck(accepted, reason = '') {
+  setIDCheckState(state) {
+    this.idCheck.sendState = state
+  }
+
+  @action
+  setIDCheckResult(accepted, reason = '') {
     this.idCheck.accepted = accepted
     this.idCheck.reason = reason
   }
