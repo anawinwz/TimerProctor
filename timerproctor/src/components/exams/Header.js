@@ -14,15 +14,11 @@ const TimerProgress = styled(Progress)`
 `
 
 const Header = ({ fixed = true }) => {
-  const { ExamStore: exam, AuthStore: auth } = useStore()
+  const { ExamStore: exam, AuthStore: auth, TimerStore: timer } = useStore()
   
-  const totalTime = exam.status === 'started' ? exam.info.timer?.duration * 60 : 0
-  const { time, formattedTime } = useFormattedTimer({
-    autostart: false,
-    initialTime: totalTime,
-    endTime: 0,
-    timerType: 'DECREMENTAL',
-  })
+  const totalTime = timer.endTime
+  const time = timer.remainingTime
+  const formattedTime = timer.displayRemainingTime
   const timePercent = exam.status === 'started' ? time/totalTime * 100 : 0
 
   return (

@@ -1,6 +1,6 @@
 import CompletedCard from '../../../components/exams/CompletedCard'
 
-const CompletedPage = (props) => {
+const CompletedPage = () => {
   return (
     <>
       <CompletedCard />

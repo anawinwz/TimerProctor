@@ -1,12 +1,22 @@
+
+import { useEffect } from 'react'
 import { Card, Result, Button } from 'antd'
+import { observer } from 'mobx-react'
+import { useStore } from '../../stores'
 
 const CompletedCard = () => {
+  const { TimerStore: timer } = useStore()
+  
+  useEffect(() => {
+    timer.pause()
+  }, [])
+
   return (
     <Card className="text-center">
       <Result
         status="success"
         title="ส่งคำตอบแล้ว"
-        subTitle="คุณใช้เวลาในการทำข้อสอบ 24 นาที 52 วินาที"
+        subTitle={`คุณใช้เวลาในการทำข้อสอบไป ${timer.currentTime} วินาที`}
         extra={
           <Button type="primary">
             ออกจากระบบ
@@ -17,4 +27,4 @@ const CompletedCard = () => {
   )
 }
 
-export default CompletedCard
+export default observer(CompletedCard)
