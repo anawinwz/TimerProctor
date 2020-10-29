@@ -25,9 +25,16 @@ const IntroLogin = () => {
           
           <Space direction="vertical">
             {loginMethods?.map(item => {
+              const key = `login-${item.method}`
               switch (item.method) {
-                case 'google': return <Button onClick={login} block icon={<span className="anticon"><Google /></span>}>เข้าสู่ระบบด้วย Google</Button>
-                case 'openid': return <Button onClick={login} block>OpenID: Kasetsart University</Button>
+                case 'google':
+                  return (
+                    <Button key={key} onClick={login} block icon={<span className="anticon"><Google /></span>}>
+                      เข้าสู่ระบบด้วย Google
+                    </Button>
+                  )
+                case 'openid':
+                  return <Button key={key} onClick={login} block>OpenID: Kasetsart University</Button>
               }
             })}
           </Space>
