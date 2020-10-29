@@ -32,8 +32,8 @@ const IDCardRequestItem = ({ item, responseUser }) => {
   const [reason, setReason] = useState('รูปไม่ชัดเจน')
 
   return (
-    <Space direction="vertical">
-      <img src={item.imageURL} width="100%" />
+    <Space direction="vertical" className="text-center" style={{ display: 'block' }}>
+      <img src={item.imageURL} width="100%" style={{ maxWidth: '360px' }} />
       <Title key={3}>userId {item.userId}</Title>
       <Space direction="horizontal">
         <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item.userId, 'approve')}>ยอมรับ</Button>
@@ -147,14 +147,14 @@ const ProctorDemoPage = () => {
   return (
     <DefaultLayout>
       <Title level={2} className="text-center">Proctor Demo</Title>
-      <Card style={{ minHeight: '80vh' }}>
+      <Card style={{ minHeight: '90vh' }}>
         <p>
           <Button type="primary" onClick={() => controlExam('start')}>เริ่มการสอบ</Button>
           <Button type="danger" onClick={stopExam}>หยุดการสอบ</Button>
         </p>
         <Title level={5}>Demo ตั้งค่า</Title>
         <Form
-          layout="vertical"
+          layout="horizontal"
           size="default"
           onFinish={updateExam}
         >
@@ -169,8 +169,8 @@ const ProctorDemoPage = () => {
         </Form>
         <Title level={5}>Demo ประกาศถึงผู้เข้าสอบ</Title>
         <List
-          locale={{emptyText: ' '}}
-          dataSource={pastAnnouce.slice(-3)}
+          locale={{emptyText: 'ประวัติการส่งจะปรากฏที่นี่' }}
+          dataSource={pastAnnouce.slice(-2)}
           renderItem={item => <List.Item>{item}</List.Item>}
         />
         <TextArea placeholder="เนื้อหาประกาศถึงผู้เข้าสอบ" value={annouce} onChange={onTextChange} />
