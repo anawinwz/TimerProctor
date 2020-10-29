@@ -13,7 +13,7 @@ const CenterContainer = (props) => {
 
   return (
     <Row type="flex" justify="center" {...options}>
-      <Col xs={23} md={12}>
+      <Col xs={24} sm={23} md={20} lg={18} xl={14} xxl={12}>
         { props.children }
       </Col>
     </Row>
