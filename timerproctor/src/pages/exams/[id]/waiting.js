@@ -1,4 +1,3 @@
-import exams from '../../../layouts/exams'
 import WaitingCard from '../../../components/exams/WaitingCard'
 
 const WaitingPage = (props) => {
@@ -8,7 +7,5 @@ const WaitingPage = (props) => {
     </>
   )
 }
-
-WaitingPage.Layout = exams
 
 export default WaitingPage

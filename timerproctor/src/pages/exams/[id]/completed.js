@@ -1,4 +1,3 @@
-import exams from '../../../layouts/exams'
 import CompletedCard from '../../../components/exams/CompletedCard'
 
 const CompletedPage = (props) => {
@@ -8,7 +7,5 @@ const CompletedPage = (props) => {
     </>
   )
 }
-
-CompletedPage.Layout = exams
 
 export default CompletedPage
