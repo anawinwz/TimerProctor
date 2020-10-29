@@ -13,7 +13,7 @@ const TimerProgress = styled(Progress)`
   left: 0;
 `
 
-const Header = () => {
+const Header = ({ fixed = true }) => {
   const { ExamStore: exam, AuthStore: auth } = useStore()
   
   const totalTime = exam.status === 'started' ? exam.info.timer?.duration * 60 : 0
@@ -26,7 +26,7 @@ const Header = () => {
   const timePercent = exam.status === 'started' ? time/totalTime * 100 : 0
 
   return (
-    <CenterContainer fixed style={{ zIndex: 99 }}>
+    <CenterContainer fixed={fixed} style={{ zIndex: 99, top: 0 }}>
       <Card size="small">
         <Title level={5} className="text-center">{ exam.info.name }</Title>
         <Row justify="space-between" align="middle">

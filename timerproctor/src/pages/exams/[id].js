@@ -10,7 +10,7 @@ import NotFound from '../../components/exams/NotFound.js'
 
 import LayoutRoute from '../../components/LayoutRoute.js'
 import DefaultLayout from '../../layouts/default.js'
-import ExamLayout from '../../layouts/exams.js'
+import ExamLayout, { ExamNormalLayout } from '../../layouts/exams.js'
 
 import IntroPage from './[id]/index.js'
 import AuthenPage from './[id]/authenticate.js'
@@ -70,7 +70,7 @@ const ExamPage = ({ match }) => {
       <LayoutRoute exact path={match.url} component={IntroPage} layout={DefaultLayout} />
       <LayoutRoute exact path={match.url + '/authenticate'} component={AuthenPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/waiting'} component={WaitingPage} layout={ExamLayout} />
-      <LayoutRoute exact path={match.url + '/form'} component={FormPage} layout={ExamLayout} />
+      <LayoutRoute exact path={match.url + '/form'} component={FormPage} layout={ExamNormalLayout} />
       <LayoutRoute exact path={match.url + '/completed'} component={CompletedPage} layout={ExamLayout} />
     </Switch>
   )
