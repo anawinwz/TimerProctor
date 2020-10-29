@@ -56,6 +56,21 @@ router.get('/:id/stop', async (req, res, next) => {
   }
 })
 
+router.post('/:id/update', async (req, res, next) => {
+  try {
+    const exam = await Exam.findById(req.params.id)
+
+    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
+    Object.assign(exam, req.body)
+    await exam.save()
+
+    return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
+  } catch (err) {
+    console.log(err)
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
 router.post('/demo/annoucement', (req, res, next) => {
   const text = req.body?.text
   wsBroadcast(req.app, { type: 'examAnnoucement', payload: { text } }, 'testtakers')
