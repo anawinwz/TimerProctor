@@ -1,4 +1,18 @@
 import { Card, Result, Alert } from 'antd'
+import { observer } from 'mobx-react'
+import { useStore } from '../../stores'
+
+const WaitingAnnoucement = observer(() => {
+  const { ExamStore: { annoucements } } = useStore()
+  return annoucements.length === 0 ? null : (
+    <Alert
+      type="info"
+      showIcon
+      message="ประกาศล่าสุดจากอาจารย์ผู้สอน"
+      description={annoucements[annoucements.length - 1]}
+    />
+  )
+})
 
 const WaitingCard = () => {
   return (
@@ -6,12 +20,7 @@ const WaitingCard = () => {
       <Result
         title="อยู่ระหว่างรออาจารย์ผู้สอนให้สัญญาณเริ่มการสอบ"
       />
-      <Alert
-        type="info"
-        showIcon
-        message="ประกาศจากอาจารย์ผู้สอน"
-        description="เดี๋ยวรอเริ่มทำข้อสอบพร้อมกันประมาณ 13.05 น. นะครับ รอนิสิตอีกประมาณ 3-4 คน"
-      />
+      <WaitingAnnoucement />
     </Card>
   )
 }

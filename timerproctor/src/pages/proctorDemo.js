@@ -1,11 +1,12 @@
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { Badge, Empty, message, Tabs, Card, Space, Button, Popconfirm, Radio, Typography } from 'antd'
+import { CheckOutlined, CloseOutlined, ExclamationCircleOutlined, SendOutlined } from '@ant-design/icons'
+import { Modal, List, Badge, Empty, message, Tabs, Card, Space, Button, Popconfirm, Radio, Typography, Input } from 'antd'
 import { useCallback, useState, useEffect } from 'react'
 import DefaultLayout from '../layouts/default.js'
 import { fetchAPI } from '../utils/api.js'
 
 const { TabPane } = Tabs
 const { Title } = Typography
+const { TextArea } = Input
 
 const reasons = ['รูปไม่ชัดเจน', 'ประเภทบัตรไม่ถูกต้อง', 'บุคคลในภาพและในบัตรไม่ตรง']
 const radioStyle = {
@@ -52,6 +53,8 @@ const IDCardRequestItem = ({ item, responseUser }) => {
 
 const ProctorDemoPage = () => {
   const [ws, setWS] = useState(null)
+  const [annouce, setAnnouce] = useState('')
+  const [pastAnnouce, setPastAnnouce] = useState([])
   const [waitingList, setWaitingList] = useState([])
 
   useEffect(() => {
@@ -90,10 +93,61 @@ const ProctorDemoPage = () => {
     }
   }, [])
 
+  const controlExam = useCallback(async (mode) => {
+    try {
+      await fetchAPI(`/exams/5f991c780953aa4110686e76/${mode}`)
+      message.success(`สั่ง ${mode} การสอบเรียบร้อยแล้ว!`)
+    } catch (err) {
+      message.error(`เกิดข้อผิดพลาด: ${err.message}`)
+    }
+  }, [])
+
+  const stopExam = useCallback(() => {
+    Modal.confirm({
+      title: 'คุณแน่ใจหรือว่าต้องการสิ้นสุดการสอบ?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'ผู้เข้าสอบที่เหลืออยู่จะไม่สามารถส่งคำตอบได้',
+      onOk() {
+        controlExam('stop')
+      },
+      onCancel() {}
+    })
+  }, [])
+
+  const onTextChange = useCallback((e) => {
+    setAnnouce(e.target.value)
+  }, [])
+
+  const sendAnnouce = useCallback(async () => {
+    if (!annouce) {
+      return message.error('กรุณากรอกเนื้อหาประกาศก่อน!')
+    }
+    try {
+      await fetchAPI(`/exams/demo/annoucement`, { text: annouce })
+      message.success(`ประกาศเรียบร้อยแล้ว!`)
+      setAnnouce('')
+      setPastAnnouce(prevState => [...prevState, annouce])
+    } catch (err) {
+      message.error(`เกิดข้อผิดพลาด: ${err.message}`)
+    }
+  }, [annouce])
+
   return (
     <DefaultLayout>
-      <Title key={2} className="text-center">Proctor Demo</Title>
-      <Card>
+      <Title level={2} className="text-center">Proctor Demo</Title>
+      <Card style={{ minHeight: '80vh' }}>
+        <p>
+          <Button type="primary" onClick={() => controlExam('start')}>เริ่มการสอบ</Button>
+          <Button type="danger" onClick={stopExam}>หยุดการสอบ</Button>
+        </p>
+        <Title level={5}>ประกาศถึงผู้เข้าสอบ</Title>
+        <List
+          locale={{emptyText: ' '}}
+          dataSource={pastAnnouce.slice(-3)}
+          renderItem={item => <List.Item>{item}</List.Item>}
+        />
+        <TextArea placeholder="เนื้อหาประกาศถึงผู้เข้าสอบ" value={annouce} onChange={onTextChange} />
+        <Button block icon={<SendOutlined />} onClick={sendAnnouce}>ส่งประกาศ</Button>
         <Tabs defaultActiveKey="1" centered>
           <TabPane tab={<>รออนุมัติ <Badge count={waitingList.length} showZero /></>} key="1">
             { waitingList.length === 0 && <Empty /> }

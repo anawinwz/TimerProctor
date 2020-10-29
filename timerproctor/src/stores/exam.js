@@ -8,6 +8,7 @@ class Exam {
   id = ''
   name = ''
   info = {}
+  annoucements = []
   
   constructor() {
     makeAutoObservable(this)
@@ -46,6 +47,11 @@ class Exam {
       this.info.timeWindow.realtime.status = status
 
     console.log(this.info)
+  }
+
+  @action
+  updateAnnoucement(text) {
+    this.annoucements.push(text)
   }
 
   @computed

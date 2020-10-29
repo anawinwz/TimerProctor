@@ -45,6 +45,9 @@ const ExamPage = ({ match }) => {
                 auth.setIDCheckResult(null, '')
               }
               break
+            case 'examAnnoucement':
+              const { text } = payload
+              exam.updateAnnoucement(text)
           }
         }
         setWS(tempWs)

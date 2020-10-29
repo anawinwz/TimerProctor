@@ -56,6 +56,12 @@ router.get('/:id/stop', async (req, res, next) => {
   }
 })
 
+router.post('/demo/annoucement', (req, res, next) => {
+  const text = req.body?.text
+  wsBroadcast(req.app, { type: 'examAnnoucement', payload: { text } }, 'testtakers')
+  return res.json(jsonResponse('ok'))
+})
+
 router.get('/demo/create', async (req, res, next) => {
   const newExam = new Exam({
     name: 'ข้อสอบกลางภาค วิชา มนุษย์กับทะเล',
