@@ -1,11 +1,11 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { Badge, Empty, message, Tabs, Card, Space, Button, Popconfirm, Radio } from 'antd'
-import Title from 'antd/lib/skeleton/Title'
+import { Badge, Empty, message, Tabs, Card, Space, Button, Popconfirm, Radio, Typography } from 'antd'
 import { useCallback, useState, useEffect } from 'react'
 import DefaultLayout from '../layouts/default.js'
 import { fetchAPI } from '../utils/api.js'
 
 const { TabPane } = Tabs
+const { Title } = Typography
 
 const reasons = ['รูปไม่ชัดเจน', 'ประเภทบัตรไม่ถูกต้อง', 'บุคคลในภาพและในบัตรไม่ตรง']
 const radioStyle = {
@@ -33,7 +33,7 @@ const IDCardRequestItem = ({ item, responseUser }) => {
   return (
     <Space direction="vertical">
       <img src={item.imageURL} />
-      <Title key={3}>userId {item.id}</Title>
+      <Title key={3}>userId {item.userId}</Title>
       <Space direction="horizontal">
         <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item.userId, 'approve')}>ยอมรับ</Button>
         <Popconfirm
@@ -65,7 +65,7 @@ const ProctorDemoPage = () => {
         if (!type) return false
         switch (type) {
           case 'newIdCheckReq':
-            setWaitingList([...waitingList, payload])
+            setWaitingList(prevState => ([...prevState, payload]))
             break
         }
       }
@@ -84,7 +84,7 @@ const ProctorDemoPage = () => {
     try {
       await fetchAPI(`/users/${id}/${mode}`, mode === 'reject' ? { reason } : {})
       message.success(`แจ้งผลการ ${mode} แก่ ${id} เรียบร้อยแล้ว!`)
-      setWaitingList(waitingList.slice(1))
+      setWaitingList(prevState => prevState.slice(1))
     } catch (err) {
       message.error(`เกิดข้อผิดพลาด: ${err.message}`)
     }
