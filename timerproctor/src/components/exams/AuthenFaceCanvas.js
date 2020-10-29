@@ -9,6 +9,7 @@ import { detectSingleFace } from 'face-api.js'
 const Video = styled('video')`
   background: #d8d8d8;
   width: 100%;
+  pointer-events: none;
 `
 
 const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
