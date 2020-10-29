@@ -15,6 +15,13 @@ class Timer {
     if (endTime) this.endTime = endTime
   }
 
+  @action 
+  reset() {
+    this.isRunning = 0
+    this.currentTime = 0
+    this.endTime = 0
+  }
+
   @action
   tick() {
     if (!this.isRunning) return
