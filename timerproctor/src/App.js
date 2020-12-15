@@ -1,9 +1,12 @@
 import 'antd/dist/antd.css'
 import './styles/globals.css'
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import ExamPage from './pages/exams/[id].js'
 import store, { StoreContext } from './stores'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
+import AdminPage from './pages/admin'
+import ExamPage from './pages/exams/[id].js'
+
 import DemoPage from './pages/demo'
 import ProctorDemoPage from './pages/proctorDemo'
 
@@ -12,6 +15,7 @@ function App() {
     <StoreContext.Provider value={store}>
       <Router>
         <Switch>
+          <Route path="/admin" component={AdminPage} />
           <Route path="/exams/:id" component={ExamPage} />
           <Route exact path="/" component={DemoPage} />
           <Route exact path="/proctordemo" component={ProctorDemoPage} />
