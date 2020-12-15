@@ -5,7 +5,7 @@ const headerMargin = {
   marginTop: '10px'
 }
 
-const exams = ({ children, full = true }) => (
+const ExamLayout = ({ children, full = true }) => (
   <>
     <Header fixed={full} />
     <CenterContainer full={full} style={full ? {} : headerMargin}>
@@ -14,6 +14,8 @@ const exams = ({ children, full = true }) => (
   </>
 )
 
-export const ExamNormalLayout = ({ children }) => exams({ children, full: false })
+export const ExamNormalLayout = ({ children }) => (
+  <ExamLayout full={false}>{ children }</ExamLayout>
+)
 
-export default exams
+export default ExamLayout

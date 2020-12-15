@@ -1,8 +1,8 @@
 import CenterContainer from '../components/CenterContainer'
-const Default = ({ children }) => (
+const DefaultLayout = ({ children }) => (
   <CenterContainer full>
     { children }
   </CenterContainer>
 )
 
-export default Default
+export default DefaultLayout
