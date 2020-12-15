@@ -2,8 +2,9 @@ import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores'
-import { Card, Space,Button } from 'antd'
-import { Google } from '../icons'
+import { Card, Space, Button } from 'antd'
+
+import GoogleLoginButton from '../buttons/GoogleLoginButton'
 
 const IntroLogin = () => {
   const { ExamStore: exam, AuthStore: auth } = useStore()
@@ -28,11 +29,7 @@ const IntroLogin = () => {
               const key = `login-${item.method}`
               switch (item.method) {
                 case 'google':
-                  return (
-                    <Button key={key} onClick={login} block icon={<span className="anticon"><Google /></span>}>
-                      เข้าสู่ระบบด้วย Google
-                    </Button>
-                  )
+                  return <GoogleLoginButton key={key} onClick={login} />
                 case 'openid':
                   return <Button key={key} onClick={login} block>OpenID: Kasetsart University</Button>
               }
