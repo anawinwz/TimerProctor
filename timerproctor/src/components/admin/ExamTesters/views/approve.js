@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
-import { Empty, Space, Typography, Button, Popconfirm, Radio } from 'antd'
+import { Empty, Space, Typography, Button, Popconfirm, Radio, Image } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { photoRejectReasons } from '../../../utils/const'
+import { photoRejectReasons } from '../../../../utils/const'
 
 const { Title } = Typography
 const radioStyle = {
@@ -23,24 +23,24 @@ const RejectReasonRadios = ({ currentReason, setReason }) => {
   )
 }
 
-const ApproveView = ({ waitingList = [] }) => {
+const ApproveView = ({ testers = [] }) => {
   const [reason, setReason] = useState('รูปไม่ชัดเจน')
   const responseUser = useCallback((userId, mode, reason) => {
     console.log(userId, mode, reason)
   }, [])
 
-  if (waitingList.length === 0) return <Empty />
+  if (testers.length === 0) return <Empty />
   
-  const item = waitingList[0]
+  const item = testers[0]
   return (
     <Space direction="vertical" className="text-center" style={{ display: 'block' }}>
-      <img src={item.imageURL} width="100%" style={{ maxWidth: '360px' }} />
-      <Title key={3}>{ item.user.name }</Title>
+      <Image src={item.lastSnapshot.url} width="100%" style={{ maxWidth: '360px' }} />
+      <Title key={3}>{ item.name }</Title>
       <Space direction="horizontal">
-        <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item.user.id, 'approve')}>อนุมัติ</Button>
+        <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item._id, 'approve')}>อนุมัติ</Button>
         <Popconfirm
           title={<RejectReasonRadios currentReason={reason} setReason={setReason} />}
-          onConfirm={() => responseUser(item.user.id, 'reject', reason)}
+          onConfirm={() => responseUser(item._id, 'reject', reason)}
           okText="ดำเนินการต่อ"
           cancelText="ยกเลิก"
         >
