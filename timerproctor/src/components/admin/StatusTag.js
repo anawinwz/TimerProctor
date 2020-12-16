@@ -5,6 +5,9 @@ const statuses = {
     name: 'ยังไม่ได้ตั้งค่า',
     color: 'gold',
   },
+  'ready': {
+    name: 'ยังไม่เริ่ม',
+  },
   'started': {
     name: 'กำลังดำเนินการสอบ',
     color: 'geekblue',

@@ -12,7 +12,7 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
     width: '30%',
-    render: (name, exam) => <Link to={`/admin/exams/${exam._id}/`}>{name}</Link>,
+    render: (name, exam) => <Link to={`/admin/exams/${exam._id}/overview`}>{name}</Link>,
   },
   {
     title: 'สถานะ',
