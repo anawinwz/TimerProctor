@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import StatusTag from './StatusTag'
 
 import demoExam from '../../assets/demoExam.json'
-const demoExams = [ demoExam ]
+const demoExams = [ demoExam, { ...demoExam, status: 'unset' } ]
 
 const columns = [
   {
@@ -12,7 +12,7 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
     width: '30%',
-    render: (name, exam) => <Link to={`/admin/exams/${exam._id}/overview`}>{name}</Link>,
+    render: (name, exam) => <Link to={`/admin/exams/${exam._id}/${exam.status === 'unset' ? 'settings' : 'overview'}`}>{name}</Link>,
   },
   {
     title: 'สถานะ',
@@ -24,8 +24,8 @@ const columns = [
     title: 'กำหนดสอบ',
     dataIndex: 'timeWindow',
     key: 'timeWindow',
-    render: timeWindow => {
-      if (!timeWindow) return '-'
+    render: (timeWindow, exam) => {
+      if (exam.status === 'unset' || !timeWindow) return '-'
       if (timeWindow.mode === 'realtime') return 'ตามเวลาจริง'
       return timeWindow.schedule?.startDate
     },
@@ -34,13 +34,13 @@ const columns = [
     title: <>จำนวนผู้เข้าสอบ<br />(ทั้งหมด / ส่งแล้ว / ยังไม่เสร็จ)</>,
     dataIndex: 'participants',
     key: 'participants',
-    render: participants => `0 / 0 / 0`
+    render: (participants, exam) => exam.status === 'unset' ? '-' : `0 / 0 / 0`
   },
   {
     title: 'แก้ไขล่าสุดเมื่อ',
     dataIndex: 'updatedAt',
     key: 'updatedAt',
-    render: updatedAt => updatedAt
+    render: (updatedAt, exam) => updatedAt || exam.createdAt
   },
 ]
 
