@@ -2,7 +2,7 @@ import { Breadcrumb } from 'antd'
 import { withRouter, Link } from 'react-router-dom'
 
 const breadcrumbNameMap = {
-  '/tests': 'การสอบของฉัน',
+  '/exams': 'การสอบของฉัน',
   '/proctorings': 'การคุมสอบของฉัน',
 }
 

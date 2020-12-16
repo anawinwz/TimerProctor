@@ -1,9 +1,9 @@
-import TestsList from '../../components/admin/TestsList'
+import ExamsList from '../../components/admin/ExamsList'
 
 const AdminDashboard = () => {
   return (
     <>
-      <TestsList />
+      <ExamsList />
     </>
   )
 }
