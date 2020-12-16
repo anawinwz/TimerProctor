@@ -6,7 +6,7 @@ import demoExam from '../../../../assets/demoExam.json'
 import ContentBox from '../../../../components/admin/ContentBox'
 import ExamTitle from '../../../../components/admin/ExamTitle'
 import ExamStatusControls from '../../../../components/admin/ExamStatusControls'
-import ExamDescription from '../../../../components/admin/ExamDesciption'
+import ExamDescription from '../../../../components/admin/ExamDescription'
 import { testerStatuses } from '../../../../utils/const'
 import WhiteBadge from '../../../../components/WhiteBadge'
 
