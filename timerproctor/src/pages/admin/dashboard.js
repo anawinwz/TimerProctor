@@ -1,5 +1,11 @@
+import TestsList from '../../components/admin/TestsList'
+
 const AdminDashboard = () => {
-    return <></>
+  return (
+    <>
+      <TestsList />
+    </>
+  )
 }
 
 export default AdminDashboard
