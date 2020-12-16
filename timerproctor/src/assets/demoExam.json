@@ -1,0 +1,29 @@
+{
+  "linked": { "url": "https://docs.google.com/forms/" },
+  "timeWindow": {
+      "realtime": {
+          "status": "stopped",
+          "startedAt": "2020-12-10T06:32:18.460Z",
+          "stoppedAt": "2020-12-10T06:32:21.160Z"
+      },
+      "mode": "realtime"
+  },
+  "timer": {
+      "isShow": true,
+      "duration": 5
+  },
+  "authentication": {
+      "idCheckMode": "prompt",
+      "loginMethods": [
+          {
+              "_id": "5f991c780953aa4110686e77",
+              "method": "google"
+          }
+      ]
+  },
+  "_id": "5f991c780953aa4110686e76",
+  "name": "ข้อสอบกลางภาค",
+  "desc": "เป็นข้อสอบปรนัย 3 ข้อ <br/>\n    มีเวลาในการทำข้อสอบ 5 นาที<br/>\n    โดยจะเริ่มจับเวลาพร้อมกันทุกคน ขอให้นิสิตเข้าสู่ห้องสอบโดยเร็ว",
+  "createdAt": "2020-10-28T07:23:36.325Z",
+  "__v": 0
+}
