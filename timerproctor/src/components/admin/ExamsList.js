@@ -6,12 +6,12 @@ import ExamsListTable from './ExamsListTable'
 
 const { Title } = Typography
 
-const ExamsList = () => {
+const ExamsList = ({ pageSize = 5 }) => {
   return (
     <ContentBox>
       <Title level={3}>การสอบของฉัน</Title>
       <AddExamButton />
-      <ExamsListTable />
+      <ExamsListTable pageSize={pageSize} />
     </ContentBox>
   ) 
 }
