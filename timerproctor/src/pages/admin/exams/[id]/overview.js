@@ -9,6 +9,7 @@ import ExamStatusControls from '../../../../components/admin/ExamStatusControls'
 import ExamDescription from '../../../../components/admin/ExamDescription'
 import { testerStatuses } from '../../../../utils/const'
 import WhiteBadge from '../../../../components/WhiteBadge'
+import ExamTesters from '../../../../components/admin/ExamTesters'
 
 const { TabPane } = Tabs
 
@@ -29,7 +30,9 @@ const ExamOverview = () => {
               <TabPane
                 key={key}
                 tab={<>{ statuses[key] } <WhiteBadge count={0} showZero /></>}
-              />
+              >
+                <ExamTesters status={key} />
+              </TabPane>
             )
           })
         }
