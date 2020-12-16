@@ -3,6 +3,8 @@ import { withRouter, Link } from 'react-router-dom'
 
 const breadcrumbNameMap = {
   '/exams': 'การสอบของฉัน',
+  '/exams/:id/settings': 'ตั้งค่าการสอบ',
+  '/exams/:id/overview': 'ภาพรวมการสอบ',
   '/proctorings': 'การคุมสอบของฉัน',
 }
 
@@ -12,11 +14,12 @@ const AdminBreadcrumb = withRouter(props => {
   const pathSnippets = location.pathname.replace('/admin','').split('/').filter(i => i)
   const extraBreadcrumbItems = pathSnippets
     .map((_, index) => `/${pathSnippets.slice(0, index + 1).join('/')}`)
-    .filter(url => url !== '/dashboard')
+    .filter(url => url !== '/dashboard' && !url.match(/^\/exams\/[a-z0-9]+\/?$/))
     .map(url => {
+      const mapUrl = url.replace(/^\/exams\/[a-z0-9]\//, '/exams/:id/')
       return (
         <Breadcrumb.Item key={url}>
-          <Link to={`/admin${url}`}>{ breadcrumbNameMap[url] }</Link>
+          <Link to={`/admin${url}`}>{ breadcrumbNameMap[mapUrl] }</Link>
         </Breadcrumb.Item>
       )
     })
