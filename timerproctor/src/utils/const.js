@@ -19,3 +19,5 @@ export const testerStatuses = {
   doing: 'ยังไม่ส่งคำตอบ',
   submitted: 'ส่งคำตอบแล้ว',
 }
+
+export const photoRejectReasons = ['รูปไม่ชัดเจน', 'ประเภทบัตรไม่ถูกต้อง', 'บุคคลในภาพและในบัตรไม่ตรง']

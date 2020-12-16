@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react'
 import { Row, Radio, Pagination } from 'antd'
 import { CheckSquareOutlined, TableOutlined, UnorderedListOutlined } from '@ant-design/icons'
 
+import ApproveView from './approve'
+
 const ExamTesters = ({ status }) => {
   const [viewMode, setViewMode] = useState(status === 'authenticate' ? 'approve' : 'grid')
   const [currPage, setCurrPage] = useState(1)
@@ -31,7 +33,7 @@ const ExamTesters = ({ status }) => {
         </Radio.Group>
       </Row>
       <Row justify="center">
-        { status }
+        { viewMode === 'approve' && <ApproveView /> }
       </Row>
       { viewMode !== 'approve' &&
         <Row justify="center">
