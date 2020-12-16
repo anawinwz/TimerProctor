@@ -7,11 +7,15 @@ import ContentBox from '../../../../components/admin/ContentBox'
 import ExamTitle from '../../../../components/admin/ExamTitle'
 import ExamStatusControls from '../../../../components/admin/ExamStatusControls'
 import ExamDescription from '../../../../components/admin/ExamDesciption'
+import { testerStatuses } from '../../../../utils/const'
+import WhiteBadge from '../../../../components/WhiteBadge'
 
 const { TabPane } = Tabs
 
 const ExamOverview = () => {
   const [exam, setExam] = useState(demoExam)
+
+  const statuses = { all: 'ทั้งหมด', ...testerStatuses }
   
   return (
     <ContentBox>
@@ -19,11 +23,16 @@ const ExamOverview = () => {
       <ExamStatusControls exam={exam} />
       <ExamDescription exam={exam} />
       <Tabs centered>
-        <TabPane key="all" tab="ทั้งหมด" />
-        <TabPane key="waiting" tab="รออนุมัติเข้าสอบ" />
-        <TabPane key="approved" tab="รอเข้าสอบ" />
-        <TabPane key="doing" tab="ยังไม่ส่งคำตอบ" />
-        <TabPane key="submitted" tab="ส่งคำตอบแล้ว" />
+        { 
+          Object.keys(statuses).map(key => {
+            return (
+              <TabPane
+                key={key}
+                tab={<>{ statuses[key] } <WhiteBadge count={0} showZero /></>}
+              />
+            )
+          })
+        }
       </Tabs> 
     </ContentBox>
   )

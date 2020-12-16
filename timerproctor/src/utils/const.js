@@ -12,3 +12,10 @@ export const idCheckModes = {
   prompt: 'อนุมัติก่อนเข้าสอบ',
   post: 'ตรวจภายหลัง',
 }
+
+export const testerStatuses = {
+  authenticate: 'รออนุมัติเข้าสอบ',
+  waiting: 'รอเข้าสอบ',
+  doing: 'ยังไม่ส่งคำตอบ',
+  submitted: 'ส่งคำตอบแล้ว',
+}
