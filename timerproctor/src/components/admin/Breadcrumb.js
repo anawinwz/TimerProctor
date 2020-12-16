@@ -27,7 +27,11 @@ const AdminBreadcrumb = withRouter(props => {
     </Breadcrumb.Item>,
   ].concat(extraBreadcrumbItems)
 
-  return <Breadcrumb separator=">">{ breadcrumbItems }</Breadcrumb>
+  return (
+    <Breadcrumb separator=">" style={{ margin: '16px 0' }}>
+      { breadcrumbItems }
+    </Breadcrumb>
+  )
 })
 
 export default AdminBreadcrumb
