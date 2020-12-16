@@ -1,22 +1,15 @@
 import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button } from 'antd'
+import { timeWindowModes, loginMethods, idCheckModes } from '../../utils/const'
+import { toOptions } from '../../utils/form'
 
 const formLayout = { 
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 }
 
-const timeWindowModes = [
-  { label: 'ให้สัญญาณเริ่ม-สิ้นสุดด้วยตนเอง', value: 'realtime' },
-  { label: 'กำหนดล่วงหน้า', value: 'schedule' },
-]
-const loginMethods = [
-  { label: 'บัญชี Google', value: 'google' },
-]
-const idCheckModes = [
-  { label: 'ปิด', value: 'off' },
-  { label: 'อนุมัติก่อนเข้าสอบ', value: 'prompt' },
-  { label: 'ตรวจภายหลัง', value: 'post' },
-]
+const opt_timeWindowModes = toOptions(timeWindowModes)
+const opt_loginMethods = toOptions(loginMethods)
+const opt_idCheckModes = toOptions(idCheckModes)
 
 const ExamSettingsForm = () => {
   return (
@@ -27,7 +20,7 @@ const ExamSettingsForm = () => {
       <Divider plain>ทั่วไป</Divider>
       <Form.Item label="วิธีกำหนดเวลาสอบ" name={['timeWindow', 'mode']} initialValue="schedule">
         <Radio.Group
-          options={timeWindowModes}
+          options={opt_timeWindowModes}
           optionType="button"
         />
       </Form.Item>
@@ -50,12 +43,12 @@ const ExamSettingsForm = () => {
       <Divider plain>การยืนยันตนผู้เข้าสอบ</Divider>
       <Form.Item label="ต้องเข้าสู่ระบบก่อน" name={['authentication', 'loginMethods']} initialValue={['google']}>
         <Checkbox.Group
-          options={loginMethods}
+          options={opt_loginMethods}
         />
       </Form.Item>
       <Form.Item label="ตรวจสอบบัตรประจำตัว" name={['authentication', 'idCheckMode']} initialValue="prompt">
         <Radio.Group
-          options={idCheckModes}
+          options={opt_idCheckModes}
           optionType="button"
         />
       </Form.Item>

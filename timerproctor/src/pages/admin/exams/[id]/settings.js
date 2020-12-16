@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react'
-import ContentBox from '../../../../components/admin/ContentBox'
-import ExamTitle from '../../../../components/admin/ExamTitle'
 
 import demoExam from '../../../../assets/demoExam.json'
+
+import ContentBox from '../../../../components/admin/ContentBox'
+import ExamTitle from '../../../../components/admin/ExamTitle'
 import ExamSettingsForm from '../../../../components/admin/ExamSettingsForm'
 
 const ExamSettings = () => {
