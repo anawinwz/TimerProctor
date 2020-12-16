@@ -9,7 +9,7 @@ export const getTesters = (size = 8) => {
     const status = randomItem(statuses)
     result.push({
       "lastSnapshot": {
-        "url": status === 'authenticate' ? `https://picsum.photos/360/240?random=${i % 6}` : `https://picsum.photos/240/180?random=${i % 6}`
+        "url": status === 'authenticate' ? `https://picsum.photos/360/240` : `https://picsum.photos/240/180`
       },
       "_id": 1234 + i,
       "name": `demo${i}`,
