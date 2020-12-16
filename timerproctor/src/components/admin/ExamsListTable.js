@@ -1,6 +1,10 @@
 import { Table } from 'antd'
+import { Link } from 'react-router-dom'
 
 import StatusTag from './StatusTag'
+
+import demoExam from '../../assets/demoExam.json'
+const demoExams = [ demoExam ]
 
 const columns = [
   {
@@ -8,7 +12,7 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
     width: '30%',
-    render: text => <a>{text}</a>,
+    render: (name, exam) => <Link to={`/admin/exams/${exam._id}/`}>{name}</Link>,
   },
   {
     title: 'สถานะ',
@@ -45,6 +49,7 @@ const TestsListTable = ({ pageSize = 5 }) => {
     <Table
       size="middle"
       columns={columns}
+      dataSource={demoExams}
       pagination={{ 
         position: ['bottomRight'],
         pageSize: pageSize,

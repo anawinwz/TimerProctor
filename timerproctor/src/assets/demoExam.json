@@ -1,4 +1,5 @@
 {
+  "status": "unset",
   "linked": { "url": "https://docs.google.com/forms/" },
   "timeWindow": {
       "realtime": {
