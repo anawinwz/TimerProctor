@@ -16,7 +16,7 @@ const AdminBreadcrumb = withRouter(props => {
     .map((_, index) => `/${pathSnippets.slice(0, index + 1).join('/')}`)
     .filter(url => url !== '/dashboard' && !url.match(/^\/exams\/[a-z0-9]+\/?$/))
     .map(url => {
-      const mapUrl = url.replace(/^\/exams\/[a-z0-9]\//, '/exams/:id/')
+      const mapUrl = url.replace(/^\/exams\/[a-z0-9]+\//, '/exams/:id/')
       return (
         <Breadcrumb.Item key={url}>
           <Link to={`/admin${url}`}>{ breadcrumbNameMap[mapUrl] }</Link>
