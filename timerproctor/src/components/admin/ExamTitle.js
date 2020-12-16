@@ -15,10 +15,11 @@ const ExamTitle = ({ exam, editable, onEdit }) => {
       <Title 
         level={3}
         editable={editConfig}
+        style={{ marginBottom: 0 }}
       >
         { name }
       </Title>
-      <Text type="secondary">{ url }</Text>
+      <p><Text type="secondary">{ url }</Text></p>
     </>
   )
 }
