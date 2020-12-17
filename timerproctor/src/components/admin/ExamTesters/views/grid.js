@@ -1,4 +1,5 @@
-import { Col, Image } from 'antd'
+import { Col } from 'antd'
+import ExamTester from '../../ExamTester'
 
 const colSizeMap = {
   6: { span: 8 },
@@ -11,8 +12,7 @@ const colSizeMap = {
 const GridView = ({ pageSize = 6, testers = [] }) => {
   return testers.map(tester => (
     <Col { ...colSizeMap[pageSize] }>
-      <p><Image src={tester.lastSnapshot.url} width="100%" /></p>
-      <span>{ tester.name }</span>
+      <ExamTester tester={tester} />
     </Col>
   ))
 }

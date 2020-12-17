@@ -49,7 +49,7 @@ const ExamTesters = ({ status }) => {
           <Radio.Button value="list"><UnorderedListOutlined /> รายชื่อ</Radio.Button>
         </Radio.Group>
       </Row>
-      <Row justify="center">
+      <Row justify="center" gutter={4}>
         { viewMode === 'approve' && <ApproveView testers={pagedTesters} /> }
         { viewMode === 'grid' && <GridView pageSize={pageSize} testers={pagedTesters} /> }
         { viewMode === 'list' && <ListView pageSize={pageSize} testers={pagedTesters} /> }
