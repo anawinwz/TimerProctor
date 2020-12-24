@@ -1,5 +1,7 @@
 import styled from 'styled-components'
-import { Row, Col } from 'antd'
+import { useCallback } from 'react'
+import { Row, Col, Modal } from 'antd'
+import { Link } from 'react-router-dom'
 import { StopOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
 const ImageBox = styled(`div`)`
@@ -25,14 +27,35 @@ const ImageBox = styled(`div`)`
   }
 `
 
+const ButtonCol = styled(Col)`
+  cursor: pointer;
+  a { color: white; }
+  &:hover {
+    opacity: 0.8;
+  }
+`
+
 const ExamTester = ({ tester }) => {
+  const kickOut = useCallback(() => {
+    Modal.confirm({
+      title: `คุณแน่ใจหรือว่าต้องการเชิญ ${tester.name} ออกจากห้องสอบ?`,
+      content: `การดำเนินการนี้ไม่สามารถยกเลิกได้`,
+      okText: 'ยืนยันการเชิญออก',
+      cancelText: 'ยกเลิก',
+    })
+  }, [tester])
+
   return (
     <>
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot.url})` }}>
         <div class="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
-            <Col span={6}><StopOutlined /> เชิญออก</Col>
-            <Col span={6}><InfoCircleOutlined /> ข้อมูล</Col>
+            <ButtonCol span={6} onClick={kickOut}>
+              <StopOutlined /> เชิญออก
+            </ButtonCol>
+            <ButtonCol span={6}>
+              <Link to={`/admin/testers/${tester._id}`}><InfoCircleOutlined /> ข้อมูล</Link>
+            </ButtonCol>
           </Row>
         </div>
       </ImageBox>
