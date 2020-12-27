@@ -1,17 +1,14 @@
-import { action, computed, makeAutoObservable } from 'mobx'
+import { action, computed, observable } from 'mobx'
+import { persist, create } from 'mobx-persist'
 import { fetchAPI } from '../utils/api'
 
 class Auth {
-  userId = ''
-  displayName = ''
-  idCheck = {
+  @persist @observable userId = ''
+  @persist @observable displayName = ''
+  @persist('object') @observable idCheck = {
     sendState: ['IDLE', ''],
     accepted: null,
     reason: ''
-  }
-
-  constructor() {
-    makeAutoObservable(this)
   }
 
   @computed
@@ -50,5 +47,8 @@ class Auth {
   }
 }
 
+const hydrate = create()
 const AuthStore = new Auth()
 export default AuthStore
+hydrate('auth', AuthStore)
+
