@@ -7,7 +7,7 @@ const schema = new Schema(
     _id: Schema.Types.ObjectId,
     email: String,
     authentication: {
-      provider: { type: String, enum: ['google'] },
+      provider: { type: String, enum: ['temp', 'google'] },
       uid: String,
     }
   }
