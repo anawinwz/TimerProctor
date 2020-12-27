@@ -1,13 +1,9 @@
-import { action, computed, makeAutoObservable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 
 class Timer {
-  isRunning = false
-  currentTime = 0
-  endTime = 0
-
-  constructor() {
-    makeAutoObservable(this)
-  }
+  @observable isRunning = false
+  @observable currentTime = 0
+  @observable endTime = 0
   
   @action
   set({ startTime, endTime }) {

@@ -1,18 +1,14 @@
-import { action, computed, makeAutoObservable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { fetchAPI } from '../utils/api'
 
 class Exam {
-  loading = false
-  error = null
+  @observable loading = false
+  @observable error = null
 
-  id = ''
-  name = ''
-  info = {}
-  annoucements = []
-  
-  constructor() {
-    makeAutoObservable(this)
-  }
+  @observable id = ''
+  @observable name = ''
+  @observable info = {}
+  @observable annoucements = []
 
   @action
   setId(id) {
