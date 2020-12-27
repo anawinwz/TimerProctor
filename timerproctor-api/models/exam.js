@@ -4,9 +4,10 @@ const { Schema } = mongoose
 
 const schema = new Schema(
   {
+    _id: Schema.Types.ObjectId,
     name: String,
     desc: String,
-    owner: String,
+    owner: { type: Schema.Types.ObjectId, ref: 'User' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: Date,
     timeWindow: {
