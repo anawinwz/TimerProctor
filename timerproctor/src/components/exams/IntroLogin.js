@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores'
-import { Card, Space, Button } from 'antd'
+import { Card, Space, Button, message } from 'antd'
 
 import GoogleLoginButton from '../buttons/GoogleLoginButton'
 
@@ -11,10 +11,21 @@ const IntroLogin = () => {
   const loginMethods = exam.info?.authentication?.loginMethods || []
   
   const history = useHistory()
-  const login = useCallback(() => {
+  
+  const dummyLogin = useCallback(() => {
     auth.setUser({ userId: '1234', displayName: 'anawin' })
     history.replace(`/exams/${exam.id}/authenticate`)
   }, [history])
+
+  const login = useCallback(method => {
+    auth.doAuthen(method)
+      .then(() => {
+        history.replace(`/exams/${exam.id}/authenticate`)
+      })
+      .catch(err => {
+        message.error(err.message)
+      })
+  }, [])
 
 
   return (
@@ -29,9 +40,9 @@ const IntroLogin = () => {
               const key = `login-${item.method}`
               switch (item.method) {
                 case 'google':
-                  return <GoogleLoginButton key={key} onClick={login} />
+                  return <GoogleLoginButton key={key} onClick={() => login('google')} />
                 case 'openid':
-                  return <Button key={key} onClick={login} block>OpenID: Kasetsart University</Button>
+                  return <Button key={key} onClick={dummyLogin} block>OpenID: Kasetsart University</Button>
               }
             })}
           </Space>
@@ -39,7 +50,7 @@ const IntroLogin = () => {
         <>
           <p>กรุณาเตรียมตัวให้พร้อมและเข้าสู่การสอบ</p>
           <Space direction="vertical">
-            <Button onClick={login} block>เข้าสู่การสอบ</Button>
+            <Button onClick={dummyLogin} block>เข้าสู่การสอบ</Button>
           </Space>
         </>
       }
