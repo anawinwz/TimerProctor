@@ -7,9 +7,12 @@ import { fetchAPI } from '../utils/api'
 
 class Auth {
   @observable loggingIn = false
+
   @persist @observable userId = ''
   @persist @observable displayName = ''
-  @persist('object') @observable idCheck = {
+  @persist @observable photoURL = ''
+
+  @observable idCheck = {
     sendState: ['IDLE', ''],
     accepted: null,
     reason: ''
@@ -60,9 +63,13 @@ class Auth {
       userEmail: user.email
     })
     
-    const { status, token, message } = response
+    const { status, token, info, message } = response
     if (status && status === 'ok') {
       saveToken(token)
+
+      const { displayName, photoURL } = info
+      this.setUser({ userId: user.uid, displayName, photoURL })
+      
       return true
     } else {
       throw new Error(message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ')
@@ -70,9 +77,9 @@ class Auth {
   }
 
   @action
-  setUser({ userId, displayName }) {
-    this.userId = userId
+  setUser({ displayName, photoURL }) {
     this.displayName = displayName
+    this.photoURL = photoURL
   }
 
   @action
