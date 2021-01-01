@@ -1,6 +1,10 @@
 import WebSocket from 'ws'
 
-export const jsonResponse = (status = 'ok', message = '') => ({ status, message })
+export const jsonResponse = (status = 'ok', message) => {
+  if (!message) return { status }
+  if (typeof message === 'string') return { status, message }
+  return { status, ...message }
+}
 
 export const wsBroadcast = (app, data = {}, target = 'all') => {
   const clients = target === 'all' ? app.locals.wss.clients : app.locals[target]
