@@ -4,11 +4,12 @@ const { Schema } = mongoose
 
 const schema = new Schema(
   {
-    _id: Schema.Types.ObjectId,
+    firebaseUID: String,
     email: String,
-    authentication: {
-      provider: { type: String, enum: ['temp', 'google'] },
-      uid: String,
+    info: {
+      displayName: String,
+      photoURL: String,
+      lastUpdated: { type: Date, default: Date.now }
     }
   }
 )
