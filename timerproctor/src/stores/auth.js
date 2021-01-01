@@ -41,17 +41,28 @@ class Auth {
         return auth.signInWithPopup(provider)
           .then(result => {
             const { user, credential } = result
-            this.setUser({
-              userId: user.uid,
-              displayName: user.displayName
-            })
-            return true
+            return this.login({ user, credential })
           })
       })
       .catch(e => {
         this.loggingIn = false
         throw e
       })
+  }
+
+  @action
+  async login({ user, credential }) {
+    const response = await fetchAPI(`/users/login`, {
+      userId: user.uid,
+      userEmail: user.email
+    })
+    
+    const { status, token, message } = response
+    if (status && status === 'ok') {
+      return token
+    } else {
+      throw new Error(message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ')
+    }
   }
 
   @action
