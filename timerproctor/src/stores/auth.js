@@ -2,6 +2,7 @@ import { action, computed, observable } from 'mobx'
 import { persist, create } from 'mobx-persist'
 import firebase from 'firebase/app'
 import { auth } from '../utils/firebase'
+import { saveToken } from '../utils/token'
 import { fetchAPI } from '../utils/api'
 
 class Auth {
@@ -61,7 +62,8 @@ class Auth {
     
     const { status, token, message } = response
     if (status && status === 'ok') {
-      return token
+      saveToken(token)
+      return true
     } else {
       throw new Error(message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ')
     }
