@@ -46,6 +46,8 @@ class Auth {
       })
       .catch(e => {
         this.loggingIn = false
+        if (e.message === 'The popup has been closed by the user before finalizing the operation.')
+          e.message = 'คุณปิดหน้าต่าง การเข้าสู่ระบบถูกยกเลิก กรุณาเริ่มใหม่'
         throw e
       })
   }
