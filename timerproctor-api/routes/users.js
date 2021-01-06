@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import User from '../models/user'
 import jwt from 'jsonwebtoken'
-import { getUserData } from '../utils/firebase'
+import { decodeToken, getUserData } from '../utils/firebase'
 import { jsonResponse, wsBroadcast } from '../utils/helpers'
 
 const fs = require('fs')
@@ -9,16 +9,18 @@ const fs = require('fs')
 const router = Router()
 
 router.post('/login', async (req, res, next) => {
-  const { userId: uid, userEmail: email } = req.body
-  if (!uid || !email) return res.json(jsonResponse('error', 'Access Denied.'))
+  const { idToken } = req.body
 
   try {
+    const decodedToken = await decodeToken(idToken)
+    if (!decodedToken) return res.json(jsonResponse('error', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้อง'))
+
+    const { uid } = decodedToken
+
     const userData = await getUserData({ uid })
-    if (!!userData.email && email !== userData.email) return res.json(jsonResponse('error', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้อง'))
+    const { email, displayName, photoURL } = userData
 
     let user = await User.findOne({ email })
-    const { displayName, photoURL } = userData
-
     if (!user) {
       const newUser = new User({
         firebaseUID: uid,
@@ -44,7 +46,7 @@ router.post('/login', async (req, res, next) => {
 
   } catch (err) {
     console.log(err)
-    res.json(jsonResponse('error', 'ไม่สามารถตรวจสอบความถูกต้องของข้อมูลได้'))
+    res.json(jsonResponse('error', 'การเข้าสู่ระบบล้มเหลว โปรดลองใหม่ภายหลัง'))
   }
 })
 

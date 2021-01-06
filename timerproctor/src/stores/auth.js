@@ -58,10 +58,8 @@ class Auth {
 
   @action
   async login({ user, credential }) {
-    const response = await fetchAPI(`/users/login`, {
-      userId: user.uid,
-      userEmail: user.email
-    })
+    const idToken = await user.getIdToken()
+    const response = await fetchAPI(`/users/login`, { idToken })
     
     const { status, token, info, message } = response
     if (status && status === 'ok') {
