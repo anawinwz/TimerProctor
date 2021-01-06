@@ -1,8 +1,44 @@
 import { Router } from 'express'
+import jwt from 'jsonwebtoken'
 import Exam from '../models/exam'
+import User from '../models/user'
 import { jsonResponse, wsBroadcast } from '../utils/helpers'
 
 const router = Router()
+
+router.post('/create', async (req, res, next) => {
+  try {
+    const { token } = req.body
+    const payload = jwt.verify(token, 'testaddons')
+    if (!payload) {
+      return jsonResponse('error', 'Access Denied.')
+    }
+
+    const { provider, id, ownerEmail, name, desc } = payload
+
+    let ownerUser = await User.findOne({ email: ownerEmail })
+    if (!ownerUser) {
+      const newUser = new User({ email: ownerEmail })
+      ownerUser = await newUser.save()
+    }
+
+    const newExam = new Exam({
+      name,
+      desc,
+      owner: ownerUser._id,
+      linked: {
+        provider,
+        id
+      }
+    })
+    await newExam.save()
+    
+    return res.json(jsonResponse('success'))
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการสร้างการสอบ'))
+  }
+  
+})
 
 router.get('/:id/info', async (req, res, next) => {
   try {
