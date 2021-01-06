@@ -32,6 +32,7 @@ router.post('/login', async (req, res, next) => {
       })
       user = await newUser.save()
     } else {
+      if (!user.firebaseUID || user.firebaseUID !== uid) user.firebaseUID = uid
       user.info.displayName = displayName
       user.info.photoURL = photoURL
       user.info.lastUpdated = Date.now()
