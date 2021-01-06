@@ -14,7 +14,7 @@ router.post('/create', async (req, res, next) => {
       return jsonResponse('error', 'Access Denied.')
     }
 
-    const { provider, id, ownerEmail, name, desc } = payload
+    const { provider, id, publicURL, ownerEmail, name, desc } = payload
 
     let ownerUser = await User.findOne({ email: ownerEmail })
     if (!ownerUser) {
@@ -32,7 +32,8 @@ router.post('/create', async (req, res, next) => {
         owner: ownerUser._id,
         linked: {
           provider,
-          id
+          id,
+          publicURL
         }
       })
       exam = await newExam.save()
