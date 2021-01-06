@@ -22,18 +22,24 @@ router.post('/create', async (req, res, next) => {
       ownerUser = await newUser.save()
     }
 
-    const newExam = new Exam({
-      name,
-      desc,
-      owner: ownerUser._id,
-      linked: {
-        provider,
-        id
-      }
+    let exam = await Exam.findOne({
+      linked: { provider, id }
     })
-    await newExam.save()
-    
-    return res.json(jsonResponse('success'))
+    if (!exam) {
+      const newExam = new Exam({
+        name,
+        desc,
+        owner: ownerUser._id,
+        linked: {
+          provider,
+          id
+        }
+      })
+      exam = await newExam.save()
+      return res.json(jsonResponse('success'))
+    } else {
+      return res.json(jsonResponse('error', 'การสอบนี้มีอยู่แล้วในระบบ'))
+    }
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการสร้างการสอบ'))
   }
