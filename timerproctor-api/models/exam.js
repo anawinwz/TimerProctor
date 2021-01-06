@@ -8,6 +8,10 @@ const schema = new Schema(
     name: String,
     desc: String,
     owner: { type: Schema.Types.ObjectId, ref: 'User' },
+    linked: {
+      provider: { type: String, enum: ['gforms'] },
+      id: { type: String }
+    },
     createdAt: { type: Date, default: Date.now },
     updatedAt: Date,
     timeWindow: {
