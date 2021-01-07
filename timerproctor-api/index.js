@@ -1,6 +1,6 @@
 import http from 'http'
 import { Server } from 'socket.io'
-import { authorize } from './utils/socket'
+import { authorize } from './utils/socketio-jwt'
 
 import app from './app'
 import routes from './routes'
