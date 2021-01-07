@@ -1,7 +1,7 @@
 import { action, computed, observable } from 'mobx'
 import { fetchAPI } from '../utils/api'
 
-class Exam {
+class ExamStore {
   @observable loading = false
   @observable error = null
 
@@ -9,6 +9,10 @@ class Exam {
   @observable name = ''
   @observable info = {}
   @observable annoucements = []
+
+  constructor(rootStore) {
+    this.rootStore = rootStore
+  }
 
   @action
   setId(id) {
@@ -69,5 +73,4 @@ class Exam {
   }
 }
 
-const ExamStore = new Exam()
 export default ExamStore

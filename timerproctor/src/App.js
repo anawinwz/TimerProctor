@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css'
 import './styles/globals.css'
 
-import store, { StoreContext } from './stores'
+import RootStore, { StoreContext } from './stores'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import AdminPage from './pages/admin'
@@ -12,7 +12,7 @@ import ProctorDemoPage from './pages/proctorDemo'
 
 function App() {
   return (
-    <StoreContext.Provider value={store}>
+    <StoreContext.Provider value={new RootStore()}>
       <Router>
         <Switch>
           <Route path="/admin" component={AdminPage} />

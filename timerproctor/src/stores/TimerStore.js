@@ -1,9 +1,13 @@
 import { action, computed, observable } from 'mobx'
 
-class Timer {
+class TimerStore {
   @observable isRunning = false
   @observable currentTime = 0
   @observable endTime = 0
+
+  constructor(rootStore) {
+    this.rootStore = rootStore
+  }
   
   @action
   set({ startTime, endTime }) {
@@ -62,5 +66,4 @@ class Timer {
   }
 }
 
-const TimerStore = new Timer()
 export default TimerStore

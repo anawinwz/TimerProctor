@@ -21,7 +21,7 @@ import FailedPage from './[id]/failed.js'
 
 const ExamPage = ({ match }) => {
   const [ws, setWS] = useState(null)
-  const { ExamStore: exam, AuthStore: auth } = useStore()
+  const { ExamStore: exam, AuthStore: auth, IDCheckStore: idCheck } = useStore()
 
   useEffect(() => {
     exam.getInfo({ id: match.params?.id })
@@ -41,10 +41,10 @@ const ExamPage = ({ match }) => {
             case 'examStatus': exam.updateStatus(payload); break
             case 'idCheckResponse':
               const { accepted, reason } = payload
-              auth.setIDCheckResult(accepted, reason)
+              idCheck.setResult(accepted, reason)
               if (accepted === false) {
-                auth.setIDCheckState(['IDLE', ''])
-                auth.setIDCheckResult(null, '')
+                idCheck.setSendState(['IDLE', ''])
+                idCheck.setResult(null, '')
               }
               break
             case 'examAnnoucement':

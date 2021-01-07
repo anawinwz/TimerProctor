@@ -1,16 +1,24 @@
 import { createContext, useContext } from 'react'
-import auth from './auth'
-import exam from './exam'
-import timer from './timer'
+import { create } from 'mobx-persist'
 
-export const store = {
-  AuthStore: auth,
-  ExamStore: exam,
-  TimerStore: timer
+import AuthStore from './AuthStore'
+import ExamStore from './ExamStore'
+import TimerStore from './TimerStore'
+import IDCheckStore from './IDCheckStore'
+
+export class RootStore {
+  constructor() {
+    const hydrate = create()
+    this.AuthStore = new AuthStore(this)
+    hydrate('auth', this.AuthStore)
+    this.ExamStore = new ExamStore(this)
+    this.TimerStore = new TimerStore(this)
+    this.IDCheckStore = new IDCheckStore(this)
+  }
 }
 
-export const StoreContext = createContext(store)
+export const StoreContext = createContext()
 
 export const useStore = () => useContext(StoreContext)
 
-export default store
+export default RootStore

@@ -8,25 +8,25 @@ import AuthenFaceCanvas from './AuthenFaceCanvas'
 const { Title } = Typography
 
 const AuthenCard = () => {
-  const { ExamStore: exam, AuthStore: auth } = useStore()
+  const { ExamStore: exam, IDCheckStore: idCheck } = useStore()
   const history = useHistory()
 
   useEffect(() => {
-    if (!exam.isPromptIDCheck || auth.idCheck.accepted === true) {
+    if (!exam.isPromptIDCheck || idCheck.accepted === true) {
       if (exam.status === 'started')
         history.replace(`/exams/${exam.id}/form`)
       else
         history.replace(`/exams/${exam.id}/waiting`)
-    } else if (auth.idCheck.accepted === false) {
+    } else if (idCheck.accepted === false) {
       showModal('error', 'ภาพของคุณถูกปฏิเสธ', (
         <>
           ภาพของคุณถูกปฏิเสธด้วยสาเหตุ<br />
-          <b>[{auth.idCheck.reason}]</b><br />
+          <b>[{idCheck.reason}]</b><br />
           กรุณาลองบันทึกภาพใหม่อีกครั้ง
         </>
       ))
     }
-  }, [exam.isPromptIDCheck, auth.idCheck.accepted])
+  }, [exam.isPromptIDCheck, idCheck.accepted])
 
   return (
     <Card className="text-center">
@@ -36,9 +36,9 @@ const AuthenCard = () => {
         เพื่อให้กรรมการคุมสอบตรวจและอนุมัติคุณเข้าสู่ห้องสอบ
       </p>
       <AuthenFaceCanvas
-        sendState={auth.idCheck.sendState}
-        setSendState={(state) => auth.setIDCheckState(state)}
-        onSubmitPhoto={(img) => auth.submitIDCheck(img)}
+        sendState={idCheck.sendState}
+        setSendState={(state) => idCheck.setSendState(state)}
+        onSubmitPhoto={(img) => idCheck.submit(img)}
       />
     </Card>
   )
