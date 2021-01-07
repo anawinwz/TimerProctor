@@ -4,6 +4,7 @@ import { authorize } from '@thream/socketio-jwt'
 
 import app from './app'
 import routes from './routes'
+import User from './models/user'
 import Exam from './models/exam'
 import { ioNamespace } from './utils/const'
 import { getExamIdFromSocket } from './utils/helpers'
@@ -21,7 +22,6 @@ const io = new Server(server, {
   }
 })
 
-io.on('connection', socket => socket.disconnect(true))
 io.of(ioNamespace)
   .use(authorize({
     secret: JWT_SOCKET_SECRET,
@@ -30,13 +30,22 @@ io.of(ioNamespace)
   .on('connection', async socket => {
     const examId = getExamIdFromSocket(socket)
     const exam = await Exam.findById(examId)
-    if (!exam) return socket.disconnect(true)
+    if (!exam) {
+      console.log(`Exam not found: ${examId}`)
+      return socket.disconnect(true)
+    }
 
     const { userId, role } = socket.decodedToken
     const user = await User.findById(userId)
-    if (!user) return socket.disconnect(true)
+    if (!user) {
+      console.log(`User not found: ${userId}`)
+      return socket.disconnect(true)
+    }
     
-    if (!role || ['proctor', 'testtaker'].includes(role)) return socket.disconnect(true)
+    if (!role || !['proctor', 'testtaker'].includes(role)) {
+      console.log(`Role incorrect: ${role}`)
+      return socket.disconnect(true)
+    }
     socket.join(role)
 
     console.log(`[socket.io] A ${role} ${userId} connected to ${examId}.`)
