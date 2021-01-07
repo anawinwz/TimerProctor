@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { Switch } from 'react-router-dom'
+import { io } from 'socket.io-client'
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores/index.js'
 
@@ -20,48 +21,45 @@ import CompletedPage from './[id]/completed.js'
 import FailedPage from './[id]/failed.js'
 
 const ExamPage = ({ match }) => {
-  const [ws, setWS] = useState(null)
-  const { ExamStore: exam, AuthStore: auth, IDCheckStore: idCheck } = useStore()
+  const [socket, setSocket] = useState(null)
+  const { ExamStore: exam, AuthStore: auth, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
 
   useEffect(() => {
     exam.getInfo({ id: match.params?.id })
   }, [match.params?.id])
 
   useEffect(() => {
-    if (auth.isLoggedIn) {
+    if (!socket && attempt.socketToken) {
       try {
-        const tempWs = new WebSocket('ws://localhost:5000/testtaker')
-        tempWs.onmessage = (evt) => {
-          const data = JSON.parse(evt?.data) || {}
-          const { type, payload }  = data
-          console.log(type, payload)
-
-          if (!type) return false
-          switch (type) {
-            case 'examStatus': exam.updateStatus(payload); break
-            case 'idCheckResponse':
-              const { accepted, reason } = payload
-              idCheck.setResult(accepted, reason)
-              if (accepted === false) {
-                idCheck.setSendState(['IDLE', ''])
-                idCheck.setResult(null, '')
-              }
-              break
-            case 'examAnnoucement':
-              const { text } = payload
-              exam.updateAnnoucement(text)
-          }
-        }
-        setWS(tempWs)
+        const tempSocket = io(`http://localhost:5000/exams/${exam.id}`)
+        tempSocket
+          .on('authenticated', () => {
+            setSocket(tempSocket)
+          })
+          .on('unauthorized', () => {
+            console.log(`Unauthorized!`)
+          })
+          .on('examStatus', payload => exam.updateStatus(payload))
+          .on('idCheckResponse', ({ accepted, reason }) => {
+            idCheck.setResult(accepted, reason)
+            if (accepted === false) {
+              idCheck.setSendState(['IDLE', ''])
+              idCheck.setResult(null, '')
+            }
+          })
+          .on('examAnnoucement', text => exam.updateAnnoucement(text))
+          .on('connect', () => {
+            tempSocket.emit('authenticate', { token: attempt.socketToken })
+          })
       } catch {
-        setWS(null)
+        setSocket(null)
       }
     }
     return () => {
-      if (ws) ws.close()
-      setWS(null)
+      if (socket) socket.close()
+      setSocket(null)
     }
-  }, [auth.isLoggedIn])
+  }, [socket, attempt.socketToken])
 
   if (exam.loading) return <Loading />
   if (exam.error) return <Error />
