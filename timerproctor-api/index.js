@@ -1,48 +1,42 @@
-  
 import http from 'http'
-import WebSocket from 'ws'
-import url from 'url'
+import { Server } from 'socket.io'
+import socketioJwt from 'socketio-jwt'
 
 import app from './app'
 import routes from './routes'
+import Exam from './models/exam'
+import { ioNamespace } from './utils/const'
+import { getExamIdFromSocket } from './utils/helpers'
 
 require('dotenv').config()
 
 const PORT = process.env.PORT || 5000
 
 const server = http.createServer(app)
-const wss = new WebSocket.Server({ server })
+const io = new Server(server)
 
-app.locals.testtakers = []
-app.locals.proctors = []
+io.of(ioNamespace)
+  .on('connection', socketioJwt.authorize({
+    secret: 'testsocketio',
+    timeout: 15000
+  }))
+  .on('authenticated', async socket => {
+    const examId = getExamIdFromSocket(socket)
+    const exam = await Exam.findById(examId)
+    if (!exam) return socket.disconnect(true)
 
-wss.shouldHandle = (req) => {
-  return true 
-}
-wss.on('connection', (ws, req) => {
-  const path = url.parse(req.url).pathname
-  if (path === '/testtaker') {
-    app.locals.testtakers.push(ws)
-    console.log(`[ws] A testtaker connected.`)
-  } else if (path === '/proctor') {
-    app.locals.proctors.push(ws)
-    console.log(`[ws] A proctor connected.`)
-  }
-})
-wss.on('close', (ws) => {
-  for (const type of ['testtakers', 'proctors']) {
-    const idx = app.locals[type].indexOf(ws)
-    if (idx !== -1) {
-      console.log(`[ws] A ${type} disconnected.`)
-      app.locals[type].splice(idx, 1)
-    }
-  }
-})
+    const { userId, role } = socket.decode_token
+    const user = await User.findById(userId)
+    if (!user) return socket.disconnect(true)
+    
+    if (!role || ['proctor', 'testtaker'].includes(role)) return socket.disconnect(true)
+    socket.join(role)
 
-app.locals.users = {}
-app.locals.wss = wss
+    console.log(`[socket.io] A ${role} ${userId} connected to ${examId}.`)
+  })
+
+app.locals.io = io
 app.use('/', routes)
-
 
 server.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`)
