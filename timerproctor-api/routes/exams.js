@@ -1,9 +1,11 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
-import { JWT_GAPPS_SECRET } from '../config'
+import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../config'
 import Exam from '../models/exam'
 import User from '../models/user'
 import { jsonResponse, wsBroadcast } from '../utils/helpers'
+import { authenticate } from '../middlewares/authentication'
+import Attempt from '../models/attempt'
 
 const router = Router()
 
@@ -53,6 +55,35 @@ router.get('/:id', async (req, res, next) => {
     const exam = await Exam.findById(req.params.id)
     if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
     return res.json(exam)
+  } catch {
+    return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
+router.post('/:id/attempt', authenticate, async (req, res, next) => {
+  try {
+    const { id: examId } = req.params
+    const { id: userId } = req.user
+    
+    let lastAttempt = await Attempt.findOne({ exam: examId, user: userId, status: { $ne: 'completed' } })
+    if (!lastAttempt) {
+      const newAttempt = new Attempt({
+        exam: examId,
+        user: userId
+      })
+      lastAttempt = await newAttempt.save()
+    }
+
+    const socketToken = jwt.sign({ userId, role: 'testtaker' }, JWT_SOCKET_SECRET)
+    const { status, idCheck } = lastAttempt
+    return res.json(jsonResponse('ok', {
+      socketToken,
+      status,
+      idCheck: {
+        accepted: idCheck.accepted,
+        reason: idCheck.reason
+      }
+    }))
   } catch {
     return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในระบบ'))
   }
