@@ -7,6 +7,7 @@ import routes from './routes'
 import Exam from './models/exam'
 import { ioNamespace } from './utils/const'
 import { getExamIdFromSocket } from './utils/helpers'
+import { JWT_SOCKET_SECRET } from './config'
 
 require('dotenv').config()
 
@@ -22,7 +23,7 @@ const io = new Server(server, {
 
 io.of(ioNamespace)
   .on('connection', socketioJwt.authorize({
-    secret: 'testsocketio',
+    secret: JWT_SOCKET_SECRET,
     timeout: 15000
   }))
   .on('authenticated', async socket => {
