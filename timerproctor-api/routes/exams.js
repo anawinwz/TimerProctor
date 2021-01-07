@@ -5,7 +5,7 @@ import Exam from '../models/exam'
 import User from '../models/user'
 import { authenticate } from '../middlewares/authentication'
 import { populateExam } from '../middlewares/exam'
-import { jsonResponse, wsBroadcast } from '../utils/helpers'
+import { jsonResponse, getExamNsp, wsBroadcast } from '../utils/helpers'
 import Attempt from '../models/attempt'
 
 const router = Router()
@@ -92,7 +92,7 @@ router.get('/:id/start', populateExam, async (req, res, next) => {
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'started')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
     
-    wsBroadcast(req.app, { type: 'examStatus', payload: 'started' }, 'testtakers')
+    getExamNsp(req.app, exam._id).to('testtaker').emit('examStatus', 'started')
   
     exam.timeWindow.realtime.status = 'started'
     exam.timeWindow.realtime.startedAt = new Date()
@@ -112,7 +112,7 @@ router.get('/:id/stop', populateExam, async (req, res, next) => {
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'stopped')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งยุติการสอบนี้ได้'))
 
-    wsBroadcast(req.app, { type: 'examStatus', payload: 'stopped' }, 'testtakers')
+    getExamNsp(req.app, exam._id).to('testtaker').emit('examStatus', 'stopped')
     
     exam.timeWindow.realtime.status = 'stopped'
     exam.timeWindow.realtime.stoppedAt = new Date()

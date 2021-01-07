@@ -12,6 +12,8 @@ export const getExamIdFromSocket = socket => {
   return name.match(ioNamespace)[1]
 }
 
+export const getExamNsp = (app, examId) => app.locals.io.of(`/exams/${examId}`)
+
 export const wsBroadcast = (app, data = {}, target = 'all') => {
   const clients = target === 'all' ? app.locals.wss.clients : app.locals[target]
   clients.forEach(function each(client) {
