@@ -11,7 +11,7 @@ class AttemptStore {
   }
 
   @action
-  getAttempt() {
+  async getAttempt() {
     const examId = this.examStore.id
     
     const { status: resStatus, message, payload } = await fetchAPIwithToken(`/exams/${examId}/attempt`, {})
