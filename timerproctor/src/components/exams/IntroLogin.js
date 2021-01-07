@@ -7,7 +7,7 @@ import { Card, Space, Button, message } from 'antd'
 import GoogleLoginButton from '../buttons/GoogleLoginButton'
 
 const IntroLogin = () => {
-  const { ExamStore: exam, AuthStore: auth } = useStore()
+  const { ExamStore: exam, AuthStore: auth, AttemptStore: attempt } = useStore()
   const loginMethods = exam.info?.authentication?.loginMethods || []
   
   const history = useHistory()
@@ -17,14 +17,14 @@ const IntroLogin = () => {
     history.replace(`/exams/${exam.id}/authenticate`)
   }, [history])
 
-  const login = useCallback(method => {
-    auth.doAuthen(method)
-      .then(() => {
-        history.replace(`/exams/${exam.id}/authenticate`)
-      })
-      .catch(err => {
-        message.error(err.message)
-      })
+  const login = useCallback(async method => {
+    try {
+      await auth.doAuthen(method)
+      await attempt.getAttempt()
+      history.replace(`/exams/${exam.id}/authenticate`)
+    } catch (err) {
+      message.error(err.message)
+    }
   }, [])
 
 

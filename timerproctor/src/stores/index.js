@@ -20,7 +20,7 @@ export class RootStore {
   }
 }
 
-export const StoreContext = createContext()
+export const StoreContext = createContext(RootStore)
 
 export const useStore = () => useContext(StoreContext)
 
