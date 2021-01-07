@@ -6,7 +6,7 @@ import { useStore } from '../../../stores'
 import Form from '../../../components/exams/Form'
 import Trackers from '../../../components/exams/Trackers'
 
-const FormPage = () => {
+const AttemptPage = () => {
   const { ExamStore: exam, TimerStore: timer } = useStore()
   const [count, setCount] = useState(0)
 
@@ -32,4 +32,4 @@ const FormPage = () => {
   )
 }
 
-export default observer(FormPage)
+export default observer(AttemptPage)

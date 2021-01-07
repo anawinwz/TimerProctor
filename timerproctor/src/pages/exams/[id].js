@@ -15,7 +15,7 @@ import ExamLayout, { ExamNormalLayout } from '../../layouts/exams.js'
 import IntroPage from './[id]/index.js'
 import AuthenPage from './[id]/authenticate.js'
 import WaitingPage from './[id]/waiting.js'
-import FormPage from './[id]/form.js'
+import AttemptPage from './[id]/attempt.js'
 import CompletedPage from './[id]/completed.js'
 import FailedPage from './[id]/failed.js'
 
@@ -71,7 +71,7 @@ const ExamPage = ({ match }) => {
       <LayoutRoute exact path={match.url} component={IntroPage} layout={DefaultLayout} />
       <LayoutRoute exact path={match.url + '/authenticate'} component={AuthenPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/waiting'} component={WaitingPage} layout={ExamLayout} />
-      <LayoutRoute exact path={match.url + '/form'} component={FormPage} layout={ExamNormalLayout} />
+      <LayoutRoute exact path={match.url + '/form'} component={AttemptPage} layout={ExamNormalLayout} />
       <LayoutRoute exact path={match.url + '/completed'} component={CompletedPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/failed'} component={FailedPage} layout={ExamLayout} />
     </Switch>
