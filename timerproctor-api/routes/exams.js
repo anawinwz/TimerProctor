@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
+import { JWT_GAPPS_SECRET } from '../config'
 import Exam from '../models/exam'
 import User from '../models/user'
 import { jsonResponse, wsBroadcast } from '../utils/helpers'
@@ -9,7 +10,7 @@ const router = Router()
 router.post('/create', async (req, res, next) => {
   try {
     const { token } = req.body
-    const payload = jwt.verify(token, 'testaddons')
+    const payload = jwt.verify(token, JWT_GAPPS_SECRET)
     if (!payload) {
       return jsonResponse('error', 'Access Denied.')
     }

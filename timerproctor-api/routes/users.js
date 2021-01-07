@@ -1,6 +1,8 @@
 import { Router } from 'express'
-import User from '../models/user'
 import jwt from 'jsonwebtoken'
+
+import { JWT_AUTHEN_SECRET } from '../config'
+import User from '../models/user'
 import { decodeToken, getUserData } from '../utils/firebase'
 import { jsonResponse, wsBroadcast } from '../utils/helpers'
 
@@ -39,7 +41,7 @@ router.post('/login', async (req, res, next) => {
       user = await user.save()
     }
 
-    const token = jwt.sign({ _id: user._id }, 'testtoken')
+    const token = jwt.sign({ _id: user._id }, JWT_AUTHEN_SECRET)
     return res.json(jsonResponse('ok', {
       token,
       info: { displayName, photoURL }

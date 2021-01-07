@@ -1,0 +1,3 @@
+export const JWT_AUTHEN_SECRET = process.env.JWT_AUTHEN_SECRET || 'AUTHEN_SECRET'
+export const JWT_SOCKET_SECRET = process.env.JWT_SOCKET_SECRET || 'SOCKET_SECRET'
+export const JWT_GAPPS_SECRET = process.env.JWT_GAPPS_SECRET || 'GAPPS_SECRET'
