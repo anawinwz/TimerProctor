@@ -1,9 +1,9 @@
 import WebSocket from 'ws'
 
-export const jsonResponse = (status = 'ok', message) => {
-  if (!message) return { status }
-  if (typeof message === 'string') return { status, message }
-  return { status, ...message }
+export const jsonResponse = (status = 'ok', payload) => {
+  if (!payload) return { status }
+  if (typeof payload === 'string') return { status, message: payload }
+  return { status, payload }
 }
 
 export const wsBroadcast = (app, data = {}, target = 'all') => {

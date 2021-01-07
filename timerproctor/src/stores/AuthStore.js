@@ -59,8 +59,9 @@ class AuthStore {
     const idToken = await user.getIdToken()
     const response = await fetchAPI(`/users/login`, { idToken })
     
-    const { status, token, info, message } = response
+    const { status, payload, message } = response
     if (status && status === 'ok') {
+      const { token, info } = payload
       saveToken(token)
 
       const { displayName, photoURL } = info
