@@ -14,9 +14,9 @@ export class RootStore {
     hydrate('auth', this.AuthStore)
     
     this.ExamStore = new ExamStore(this)
-    this.AttemptStore = new AttemptStore(this)
     this.TimerStore = new TimerStore(this)
     this.IDCheckStore = new IDCheckStore(this)
+    this.AttemptStore = new AttemptStore(this)
   }
 }
 
