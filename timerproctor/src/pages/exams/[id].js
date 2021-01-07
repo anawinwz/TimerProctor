@@ -29,18 +29,16 @@ const ExamPage = ({ match }) => {
   }, [match.params?.id])
 
   useEffect(() => {
-    if (!socket && attempt.socketToken) {
+    if (attempt.socketToken) {
       try {
-        const tempSocket = io(`http://localhost:5000/exams/${exam.id}`, {
-          extraHeaders: { Authorization: `Bearer ${attempt.socketToken}` }
-        })
+        const tempSocket = io(`http://localhost:5000/exams/${exam.id}`)
         tempSocket
-          .on('connect', () => {
+          .on('authenticated', () => {
+            console.log('Authenticated')
             setSocket(tempSocket)
           })
-          .on('connect_error', error => {
-            if (error.data?.type === 'UnauthorizedError')
-              console.log(`Unauthorized!`)
+          .on('unauthorized', error => {
+            console.log(`Unauthorized:`, error)
           })
           .on('examStatus', payload => exam.updateStatus(payload))
           .on('idCheckResponse', ({ accepted, reason }) => {
@@ -51,6 +49,7 @@ const ExamPage = ({ match }) => {
             }
           })
           .on('examAnnoucement', text => exam.updateAnnoucement(text))
+          .on('connect', () => tempSocket.emit('authenticate', { token: attempt.socketToken }))
       } catch {
         setSocket(null)
       }
@@ -59,7 +58,7 @@ const ExamPage = ({ match }) => {
       if (socket) socket.close()
       setSocket(null)
     }
-  }, [socket, attempt.socketToken])
+  }, [attempt.socketToken])
 
   if (exam.loading) return <Loading />
   if (exam.error) return <Error />
