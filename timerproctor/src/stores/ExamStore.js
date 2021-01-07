@@ -30,7 +30,7 @@ class ExamStore {
 
     try {
       this.loading = true
-      this.info = await fetchAPI(`/exams/${this.id}/info`)
+      this.info = await fetchAPI(`/exams/${this.id}`)
       this.name = this.info.name
       this.error = null
     } catch (err) {
