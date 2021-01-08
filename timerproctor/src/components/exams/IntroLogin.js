@@ -8,7 +8,7 @@ import GoogleLoginButton from '../buttons/GoogleLoginButton'
 
 const IntroLogin = () => {
   const { ExamStore: exam, AuthStore: auth, AttemptStore: attempt } = useStore()
-  const loginMethods = exam.info?.authentication?.loginMethods || []
+  const loginMethods = exam.info?.authentication?.login?.methods || []
   
   const history = useHistory()
   

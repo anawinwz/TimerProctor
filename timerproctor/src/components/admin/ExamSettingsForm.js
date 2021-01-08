@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from 'react'
+import { useCallback, useState } from 'react'
 import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button, Collapse } from 'antd'
 
 import { observer } from 'mobx-react'
@@ -20,7 +20,7 @@ const ExamSettingsForm = () => {
   const { ExamStore: exam } = useStore()
   const [toggles, setToggles] = useState({
     schedule: exam?.info?.timeWindow?.mode === 'schedule',
-    needLogin: !(exam?.info?.authentication?.loginMethods?.length === 0)
+    needLogin: !(exam?.info?.authentication?.login?.methods?.length === 0)
   })
 
   const onValuesChange = useCallback(values => {
@@ -30,7 +30,7 @@ const ExamSettingsForm = () => {
     if (timeWindowMode)
       changes.schedule = timeWindowMode === 'schedule'
 
-    const methods = values?.authentication?.loginMethods.method
+    const methods = values?.authentication?.login?.methods
     if (methods) {
       changes.openid = methods.includes('openid')
       changes.needLogin = !(methods.length === 0)
@@ -38,12 +38,6 @@ const ExamSettingsForm = () => {
 
     setToggles(toggles => ({ ...toggles, ...changes }) )
   }, [])
-  
-  const initialLoginMethods = useMemo(() => {
-    const loginMethods = exam?.info?.authentication?.loginMethods
-    if (!loginMethods) return ['google']
-    return loginMethods.map(item => item.method)
-  }, [exam?.info?.authentication?.loginMethods])
 
   return (
     <Form
@@ -81,7 +75,7 @@ const ExamSettingsForm = () => {
       </Form.Item>
 
       <Divider plain>การยืนยันตนผู้เข้าสอบ</Divider>
-      <Form.Item label="ต้องล็อกอินก่อน" name={['authentication', 'loginMethods', 'method']} initialValue={initialLoginMethods}>
+      <Form.Item label="ต้องล็อกอินก่อน" name={['authentication', 'login', 'methods']}>
         <Checkbox.Group
           options={opt_loginMethods}
         />
@@ -90,20 +84,20 @@ const ExamSettingsForm = () => {
         toggles.needLogin &&
         <Collapse style={{ marginBottom: '15px' }}>
           <Collapse.Panel header="ตั้งค่าล็อกอินทั่วไป" key="email">
-            <Form.Item label="โดเมนอีเมลที่อนุญาต" name={['authentication', 'loginMethods', 'email', 'allowedDomains']} help="เช่น ku.th, ku.ac.th มีผลกับวิธี <อีเมล> และ <บัญชี Google>">
+            <Form.Item label="โดเมนอีเมลที่อนุญาต" name={['authentication', 'login', 'email', 'allowedDomains']} help="เช่น ku.th, ku.ac.th มีผลกับวิธี <อีเมล> และ <บัญชี Google>">
               <Select mode="tags" tokenSeparators={[',']} placeholder="ปล่อยว่างคือไม่จำกัด" maxTagCount={6} open={false} />
             </Form.Item>
           </Collapse.Panel>
         { 
           toggles.openid &&
           <Collapse.Panel header="ตั้งค่า OpenID" key="openid">
-            <Form.Item label="Client ID" name={['authentication', 'loginMethods', 'openid', 'CLIENT_ID']}>
+            <Form.Item label="Client ID" name={['authentication', 'login', 'openid', 'CLIENT_ID']}>
               <Input />
             </Form.Item>
-            <Form.Item label="Client Secret" name={['authentication', 'loginMethods', 'openid', 'CLIENT_SECRET']}>
+            <Form.Item label="Client Secret" name={['authentication', 'login', 'openid', 'CLIENT_SECRET']}>
               <Input.Password />
             </Form.Item>
-            <Form.Item label="User Scope" name={['authentication', 'loginMethods', 'openid', 'USER_SCOPE']}>
+            <Form.Item label="User Scope" name={['authentication', 'login', 'openid', 'USER_SCOPE']}>
               <Input />
             </Form.Item>
           </Collapse.Panel>

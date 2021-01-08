@@ -31,11 +31,17 @@ const schema = new Schema(
       duration: { type: Number, default: 0 },
     },
     authentication: {
-      loginMethods: [
-        { 
-          method: { type: String, enum: ['google', 'openid', 'email'] }
+      login: {
+        methods: [{ type: String, enum: ['google', 'openid', 'email'] }],
+        email: {
+          allowedDomains: [{ type: String }]
+        },
+        openid: {
+          CLIENT_ID: String,
+          CLIENT_SECRET: String,
+          USER_SCOPE: String
         }
-      ],
+      },
       idCheckMode: { type: String, enum: ['none', 'prompt', 'post'], default: 'prompt' }
     }
   }
