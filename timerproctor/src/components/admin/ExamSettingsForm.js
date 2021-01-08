@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react'
-import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button, Collapse } from 'antd'
+import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button, Collapse, message } from 'antd'
 
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores/admin'
 
 import { timeWindowModes, loginMethods, idCheckModes } from '../../utils/const'
 import { toOptions } from '../../utils/form'
+import { fetchAPIwithToken } from '../../utils/api'
 
 const formLayout = { 
   labelCol: { span: 8 },
@@ -18,10 +19,26 @@ const opt_idCheckModes = toOptions(idCheckModes)
 
 const ExamSettingsForm = () => {
   const { ExamStore: exam } = useStore()
+
+  const [isSubmit, setIsSubmit] = useState(false)
   const [toggles, setToggles] = useState({
     schedule: exam?.info?.timeWindow?.mode === 'schedule',
     needLogin: !(exam?.info?.authentication?.login?.methods?.length === 0)
   })
+
+  const updateExam = useCallback(async (data) => {
+    setIsSubmit(true)
+    try {
+      const res = await fetchAPIwithToken(`/exams/${exam.id}/update`, data)
+      const { status } = res
+      if (status === 'ok') message.success(`อัปเดตข้อมูลการสอบเรียบร้อยแล้ว!`)
+      else message.error(res.message || 'เกิดข้อผิดพลาดในการอัปเดตข้อมูลการสอบ!')
+    } catch (err) {
+      message.error(`เกิดข้อผิดพลาด: ${err.message}`)
+    } finally {
+      setIsSubmit(false)
+    }
+  }, [exam?.id])
 
   const onValuesChange = useCallback(values => {
     let changes = {}
@@ -45,6 +62,7 @@ const ExamSettingsForm = () => {
       size="middle"
       initialValues={exam.info}
       onValuesChange={onValuesChange}
+      onFinish={updateExam}
     >
       <Divider plain>ทั่วไป</Divider>
       <Form.Item label="วิธีกำหนดเวลาสอบ" name={['timeWindow', 'mode']} initialValue="schedule">
@@ -112,7 +130,7 @@ const ExamSettingsForm = () => {
       </Form.Item>
       
       <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={isSubmit}>
           บันทึกการตั้งค่า
         </Button>
       </Form.Item>
