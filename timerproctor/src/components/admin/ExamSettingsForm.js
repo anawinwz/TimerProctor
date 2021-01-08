@@ -1,4 +1,8 @@
 import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button } from 'antd'
+
+import { observer } from 'mobx-react'
+import { useStore } from '../../stores/admin'
+
 import { timeWindowModes, loginMethods, idCheckModes } from '../../utils/const'
 import { toOptions } from '../../utils/form'
 
@@ -12,10 +16,12 @@ const opt_loginMethods = toOptions(loginMethods)
 const opt_idCheckModes = toOptions(idCheckModes)
 
 const ExamSettingsForm = () => {
+  const { ExamStore: exam } = useStore()
   return (
     <Form
       {...formLayout}
       size="middle"
+      initialValues={exam.info}
     >
       <Divider plain>ทั่วไป</Divider>
       <Form.Item label="วิธีกำหนดเวลาสอบ" name={['timeWindow', 'mode']} initialValue="schedule">
@@ -69,4 +75,4 @@ const ExamSettingsForm = () => {
   )
 }
 
-export default ExamSettingsForm
+export default observer(ExamSettingsForm)
