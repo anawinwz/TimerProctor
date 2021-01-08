@@ -14,9 +14,10 @@ export const idCheckModes = {
 }
 
 export const testerStatuses = {
-  loggedin: 'รออนุมัติเข้าสอบ',
+  loggedin: 'ล็อกอินแล้ว',
+  authenticating: 'รออนุมัติ',
   authenticated: 'รอเข้าสอบ',
-  started: 'ยังไม่ส่งคำตอบ',
+  started: 'กำลังทำ',
   completed: 'ส่งคำตอบแล้ว',
 }
 

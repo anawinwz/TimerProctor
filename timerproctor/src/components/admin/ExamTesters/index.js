@@ -51,7 +51,7 @@ const ExamTesters = ({ status }) => {
           style={{ marginBottom: '8px' }}
         >
           { 
-            status === 'loggedin' && 
+            status === 'authenticating' && 
             <Radio.Button value="approve"><CheckSquareOutlined /> โหมดอนุมัติ (1 จอ)</Radio.Button>
           }
           <Radio.Button value="grid"><TableOutlined /> ตารางภาพ</Radio.Button>

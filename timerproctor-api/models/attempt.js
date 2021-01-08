@@ -9,7 +9,7 @@ const schema = new Schema(
     status: {
       type: String,
       default: 'loggedin',
-      enum: ['loggedin', 'authenticated', 'started', 'completed', 'terminated']
+      enum: ['loggedin', 'authenticating', 'authenticated', 'started', 'completed', 'terminated']
     },
     idCheck: {
       accepted: { type: Boolean, default: false },
