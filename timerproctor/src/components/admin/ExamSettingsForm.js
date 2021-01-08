@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react'
 import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button } from 'antd'
 
 import { observer } from 'mobx-react'
@@ -17,11 +18,18 @@ const opt_idCheckModes = toOptions(idCheckModes)
 
 const ExamSettingsForm = () => {
   const { ExamStore: exam } = useStore()
+  const [mode, setMode] = useState(exam?.info?.timeWindow?.mode || 'schedule')
+  const onValuesChange = useCallback(changedValues => {
+    const newMode = changedValues?.timeWindow?.mode 
+    if (newMode) setMode(newMode)
+  }, [])
+
   return (
     <Form
       {...formLayout}
       size="middle"
       initialValues={exam.info}
+      onValuesChange={onValuesChange}
     >
       <Divider plain>ทั่วไป</Divider>
       <Form.Item label="วิธีกำหนดเวลาสอบ" name={['timeWindow', 'mode']} initialValue="schedule">
@@ -30,12 +38,17 @@ const ExamSettingsForm = () => {
           optionType="button"
         />
       </Form.Item>
-      <Form.Item label="วัน-เวลาเริ่มการสอบ" name={['timeWindow', 'schedule', 'startDate']}>
-        <DatePicker showTime />
-      </Form.Item>
-      <Form.Item label="วัน-เวลาสิ้นสุดการสอบ" name={['timeWindow', 'schedule', 'endDate']}>
-        <DatePicker showTime />
-      </Form.Item>
+      { 
+        mode === 'schedule' &&
+        <>
+          <Form.Item label="วัน-เวลาเริ่มการสอบ" name={['timeWindow', 'schedule', 'startDate']}>
+            <DatePicker showTime />
+          </Form.Item>
+          <Form.Item label="วัน-เวลาสิ้นสุดการสอบ" name={['timeWindow', 'schedule', 'endDate']}>
+            <DatePicker showTime />
+          </Form.Item>
+        </>
+      }
       <Form.Item label="จำกัดเวลาทำ (นาที)" name={['timer', 'duration']} initialValue={50}>
         <InputNumber />
       </Form.Item>
