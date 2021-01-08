@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 
-import { JWT_AUTHEN_SECRET } from '../config'
+import { JWT_ADMIN_AUTHEN_SECRET, JWT_AUTHEN_SECRET } from '../config'
 import User from '../models/user'
 import { decodeToken, getUserData } from '../utils/firebase'
 import { jsonResponse } from '../utils/helpers'
@@ -9,7 +9,7 @@ import { jsonResponse } from '../utils/helpers'
 const router = Router()
 
 router.post('/login', async (req, res, next) => {
-  const { idToken } = req.body
+  const { idToken, admin = false } = req.body
 
   try {
     const decodedToken = await decodeToken(idToken)
@@ -39,7 +39,7 @@ router.post('/login', async (req, res, next) => {
       user = await user.save()
     }
 
-    const token = jwt.sign({ _id: user._id }, JWT_AUTHEN_SECRET)
+    const token = jwt.sign({ _id: user._id }, admin ? JWT_ADMIN_AUTHEN_SECRET : JWT_AUTHEN_SECRET)
     return res.json(jsonResponse('ok', {
       token,
       info: { displayName, photoURL }
