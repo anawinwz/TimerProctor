@@ -2,6 +2,9 @@ import { useMemo } from 'react'
 import { Popover, List } from 'antd'
 import styled from 'styled-components'
 
+import { observer } from 'mobx-react'
+import { useStore } from '../../../stores/admin'
+
 import UserAvatar from '../UserAvatar'
 
 const PopoverHeader = styled('div')`
@@ -35,7 +38,7 @@ const PopoverContent = ({ user }) => {
                 <PopoverHeader>
                   <UserAvatar user={user} />
                   <p className="user-name">{ user.name }</p>
-                  <span className="user-role">{ user.role?.name }</span>
+                  <span className="user-role">{ user.email }</span>
                 </PopoverHeader>
               </List.Item>
             )
@@ -50,7 +53,13 @@ const PopoverContent = ({ user }) => {
 }
 
 
-const UserPopover = ({ user }) => {
+const UserPopover = () => {
+  const { AuthStore: auth } = useStore()
+  const user = useMemo(() => ({
+    name: auth.displayName,
+    email: auth.email,
+    avatar: auth.photoURL
+  }), [auth])
 
   return (
     <Popover
@@ -62,4 +71,4 @@ const UserPopover = ({ user }) => {
   )
 }
 
-export default UserPopover
+export default observer(UserPopover)

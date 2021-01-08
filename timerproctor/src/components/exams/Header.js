@@ -1,11 +1,11 @@
-
 import styled from 'styled-components'
-import useFormattedTimer from '../../hooks/useFormattedTimer'
 import { Card, Typography, Row, Col, Avatar, Progress } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import CenterContainer from '../CenterContainer'
 import { observer } from 'mobx-react'
+
+import CenterContainer from '../CenterContainer'
 import { useStore } from '../../stores'
+
 const { Title } = Typography
 
 const TimerProgress = styled(Progress)`

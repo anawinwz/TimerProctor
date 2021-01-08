@@ -1,6 +1,7 @@
 import { Layout, Row, Col } from 'antd'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+
 import UserPopover from './UserPopover'
 
 const HeaderBar = styled(Layout.Header)`
@@ -20,7 +21,7 @@ const Header = () => (
     <Row justify="space-between">
       <Col><Link className="logo" to="/admin">TimerProctor</Link></Col>
       <Col>
-        <UserPopover user={{ name: 'teacher@ku.th', role: { name: 'อาจารย์ผู้สอน' } }} />
+        <UserPopover />
       </Col>
     </Row>
   </HeaderBar>
