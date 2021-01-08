@@ -8,8 +8,8 @@ const schema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     status: {
       type: String,
-      default: 'login',
-      enum: ['login', 'authenticate', 'attempt', 'completed']
+      default: 'loggedin',
+      enum: ['loggedin', 'authenticated', 'started', 'completed', 'terminated']
     },
     idCheck: {
       accepted: { type: Boolean, default: false },

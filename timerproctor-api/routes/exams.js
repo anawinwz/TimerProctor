@@ -79,6 +79,9 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
       lastAttempt = await newAttempt.save()
     }
 
+    if (lastAttempt.status === 'terminated')
+      return res.json(jsonResponse('failed', 'คุณถูกเชิญออกจากห้องสอบแล้ว ไม่สามารถกลับเข้ามาได้อีก'))
+
     const socketToken = jwt.sign({ userId, role: 'testtaker' }, JWT_SOCKET_SECRET)
     const { status, idCheck } = lastAttempt
     return res.json(jsonResponse('ok', {
