@@ -1,5 +1,5 @@
 import { useCallback, useState, useMemo } from 'react'
-import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button } from 'antd'
+import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button, Collapse } from 'antd'
 
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores/admin'
@@ -18,10 +18,25 @@ const opt_idCheckModes = toOptions(idCheckModes)
 
 const ExamSettingsForm = () => {
   const { ExamStore: exam } = useStore()
-  const [mode, setMode] = useState(exam?.info?.timeWindow?.mode || 'schedule')
-  const onValuesChange = useCallback(changedValues => {
-    const newMode = changedValues?.timeWindow?.mode 
-    if (newMode) setMode(newMode)
+  const [toggles, setToggles] = useState({
+    schedule: exam?.info?.timeWindow?.mode === 'schedule',
+    needLogin: !(exam?.info?.authentication?.loginMethods?.length === 0)
+  })
+
+  const onValuesChange = useCallback(values => {
+    let changes = {}
+    
+    const timeWindowMode = values?.timeWindow?.mode 
+    if (timeWindowMode)
+      changes.schedule = timeWindowMode === 'schedule'
+
+    const methods = values?.authentication?.loginMethods.method
+    if (methods) {
+      changes.openid = methods.includes('openid')
+      changes.needLogin = !(methods.length === 0)
+    }
+
+    setToggles(toggles => ({ ...toggles, ...changes }) )
   }, [])
   
   const initialLoginMethods = useMemo(() => {
@@ -45,7 +60,7 @@ const ExamSettingsForm = () => {
         />
       </Form.Item>
       { 
-        mode === 'schedule' &&
+        toggles.schedule &&
         <>
           <Form.Item label="วัน-เวลาเริ่มการสอบ" name={['timeWindow', 'schedule', 'startDate']}>
             <DatePicker showTime />
@@ -62,15 +77,39 @@ const ExamSettingsForm = () => {
         <Switch />
       </Form.Item>
       <Form.Item label="คำชี้แจง" name={['desc']}>
-        <Input.TextArea />
+        <Input.TextArea rows={3} />
       </Form.Item>
 
       <Divider plain>การยืนยันตนผู้เข้าสอบ</Divider>
-      <Form.Item label="ต้องเข้าสู่ระบบก่อน" name={['authentication', 'loginMethods_method']} initialValue={initialLoginMethods}>
+      <Form.Item label="ต้องล็อกอินก่อน" name={['authentication', 'loginMethods', 'method']} initialValue={initialLoginMethods}>
         <Checkbox.Group
           options={opt_loginMethods}
         />
       </Form.Item>
+      { 
+        toggles.needLogin &&
+        <Collapse style={{ marginBottom: '15px' }}>
+          <Collapse.Panel header="ตั้งค่าล็อกอินทั่วไป" key="email">
+            <Form.Item label="โดเมนอีเมลที่อนุญาต" name={['authentication', 'loginMethods', 'email', 'allowedDomains']} help="เช่น ku.th, ku.ac.th มีผลกับวิธี <อีเมล> และ <บัญชี Google>">
+              <Select mode="tags" tokenSeparators={[',']} placeholder="ปล่อยว่างคือไม่จำกัด" maxTagCount={6} />
+            </Form.Item>
+          </Collapse.Panel>
+        { 
+          toggles.openid &&
+          <Collapse.Panel header="ตั้งค่า OpenID" key="openid">
+            <Form.Item label="Client ID" name={['authentication', 'loginMethods', 'openid', 'CLIENT_ID']}>
+              <Input />
+            </Form.Item>
+            <Form.Item label="Client Secret" name={['authentication', 'loginMethods', 'openid', 'CLIENT_SECRET']}>
+              <Input.Password />
+            </Form.Item>
+            <Form.Item label="User Scope" name={['authentication', 'loginMethods', 'openid', 'USER_SCOPE']}>
+              <Input />
+            </Form.Item>
+          </Collapse.Panel>
+        }
+        </Collapse>
+      }
       <Form.Item label="ตรวจสอบบัตรประจำตัว" name={['authentication', 'idCheckMode']} initialValue="prompt">
         <Radio.Group
           options={opt_idCheckModes}
@@ -79,10 +118,8 @@ const ExamSettingsForm = () => {
       </Form.Item>
 
       <Divider plain>กรรมการคุมสอบ</Divider>
-      <Form.Item name={['proctors']} wrapperCol={{ span: 24 }}>
-        <Select mode="tags" placeholder="เลือกกรรมการคุมสอบ">
-          <Select.Option value="a@ku.th">a@ku.th</Select.Option>
-        </Select>
+      <Form.Item name={['proctors']} wrapperCol={{ span: 24 }} help="ระบุอีเมลของกรรมการคุมสอบ สูงสุด 16 คน">
+        <Select mode="tags" placeholder="ปล่อยว่างคือไม่มีกรรมการคุมสอบ" maxTagCount={16} />
       </Form.Item>
       
       <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
