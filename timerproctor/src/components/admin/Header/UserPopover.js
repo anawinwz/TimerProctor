@@ -59,7 +59,7 @@ const UserPopover = () => {
     name: auth.displayName,
     email: auth.email,
     avatar: auth.photoURL
-  }), [auth])
+  }), [auth.userId])
 
   return (
     <Popover
