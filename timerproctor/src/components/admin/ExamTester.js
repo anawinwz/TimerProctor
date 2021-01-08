@@ -36,7 +36,7 @@ const ButtonCol = styled(Col)`
 `
 
 const ExamTester = ({ tester }) => {
-  const kickOut = useCallback(() => {
+  const terminate = useCallback(() => {
     Modal.confirm({
       title: `คุณแน่ใจหรือว่าต้องการเชิญ ${tester.name} ออกจากห้องสอบ?`,
       content: `การดำเนินการนี้ไม่สามารถยกเลิกได้`,
@@ -51,7 +51,7 @@ const ExamTester = ({ tester }) => {
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot.url})` }}>
         <div className="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
-            <ButtonCol span={6} onClick={kickOut}>
+            <ButtonCol span={6} onClick={terminate}>
               <StopOutlined /> เชิญออก
             </ButtonCol>
             <ButtonCol span={6}>
