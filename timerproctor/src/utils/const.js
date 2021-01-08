@@ -14,10 +14,10 @@ export const idCheckModes = {
 }
 
 export const testerStatuses = {
-  authenticate: 'รออนุมัติเข้าสอบ',
-  waiting: 'รอเข้าสอบ',
-  doing: 'ยังไม่ส่งคำตอบ',
-  submitted: 'ส่งคำตอบแล้ว',
+  loggedin: 'รออนุมัติเข้าสอบ',
+  authenticated: 'รอเข้าสอบ',
+  started: 'ยังไม่ส่งคำตอบ',
+  completed: 'ส่งคำตอบแล้ว',
 }
 
 export const photoRejectReasons = ['รูปไม่ชัดเจน', 'ประเภทบัตรไม่ถูกต้อง', 'บุคคลในภาพและในบัตรไม่ตรง']
