@@ -77,7 +77,8 @@ class AuthStore {
   }
 
   @action
-  setUser({ email, displayName, photoURL }) {
+  setUser({ userId, email, displayName, photoURL }) {
+    this.userId = userId
     this.email = email
     this.displayName = displayName
     this.photoURL = photoURL
