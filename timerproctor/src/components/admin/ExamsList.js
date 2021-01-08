@@ -18,8 +18,8 @@ const ExamsList = ({ pageSize = 5 }) => {
       const { status, payload, message } = res
       if (status === 'success') setExams(payload.exams)
       else throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบของฉัน')
-    } catch {
-      message.error('เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบของฉัน')
+    } catch (err) {
+      message.error(err.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบของฉัน')
     }
   }, [])
 

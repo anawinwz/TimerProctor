@@ -48,7 +48,7 @@ const ExamTester = ({ tester }) => {
   return (
     <>
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot.url})` }}>
-        <div class="hover-box">
+        <div className="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
             <ButtonCol span={6} onClick={kickOut}>
               <StopOutlined /> เชิญออก
