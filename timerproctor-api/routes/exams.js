@@ -12,9 +12,9 @@ const router = Router()
 
 router.get('/', adminAuthen, async (req, res, next) => {
   try {
-    const exams = Exam.find({ owner: req.user._id })
-    return res.json(jsonResponse('success', exams))
-  } catch {
+    const exams = await Exam.find({ owner: req.user._id })
+    return res.json(jsonResponse('success', { exams: exams }))
+  } catch (err) {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
   }
 })

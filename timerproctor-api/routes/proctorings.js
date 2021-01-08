@@ -7,8 +7,12 @@ const router = Router()
 
 router.get('/', adminAuthen, async (req, res, next) => {
   try {
-    const proctorings = Proctoring.find({ user: req.user._id }).populate('exam')
-    return res.json(jsonResponse('success', proctorings))
+    const proctorings = await Proctoring.find({ user: req.user._id }).populate('exam')
+    const exams = proctorings.map(proctoring => ({
+      ...proctoring.exam,
+      status: proctoring.status
+    }))
+    return res.json(jsonResponse('success', { proctorings: exams } ))
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
   }
