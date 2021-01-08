@@ -5,7 +5,7 @@ import Exam from '../models/exam'
 import User from '../models/user'
 import { authenticate } from '../middlewares/authentication'
 import { populateExam } from '../middlewares/exam'
-import { jsonResponse, getExamNsp, wsBroadcast } from '../utils/helpers'
+import { jsonResponse, getExamNsp } from '../utils/helpers'
 import Attempt from '../models/attempt'
 
 const router = Router()
