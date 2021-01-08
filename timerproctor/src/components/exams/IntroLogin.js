@@ -36,9 +36,9 @@ const IntroLogin = () => {
           <p>โปรดเข้าสู่ระบบเพื่อดำเนินการต่อ</p>
           
           <Space direction="vertical">
-            {loginMethods?.map(item => {
-              const key = `login-${item.method}`
-              switch (item.method) {
+            {loginMethods?.map(method => {
+              const key = `login-${method}`
+              switch (method) {
                 case 'google':
                   return <GoogleLoginButton key={key} onClick={() => login('google')} />
                 case 'openid':
