@@ -18,7 +18,7 @@ const statuses = {
   },
 }
 
-const StatusTag = ({ status }) => {
+const StatusTag = ({ status = 'unset' }) => {
   const { name, color } = statuses[status]
   return <Tag color={color} key={name}>
     { name }
