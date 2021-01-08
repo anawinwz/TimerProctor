@@ -10,6 +10,15 @@ import Attempt from '../models/attempt'
 
 const router = Router()
 
+router.get('/', adminAuthen, async (req, res, next) => {
+  try {
+    const exams = Exam.find({ owner: req.user._id })
+    return res.json(jsonResponse('success', exams))
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
+  }
+})
+
 router.post('/create', async (req, res, next) => {
   try {
     const { token } = req.body
