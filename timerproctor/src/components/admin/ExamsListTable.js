@@ -44,12 +44,12 @@ const columns = [
   },
 ]
 
-const TestsListTable = ({ pageSize = 5 }) => {
+const ExamsListTable = ({ pageSize = 5, dataSource = demoExams }) => {
   return (
     <Table
       size="middle"
       columns={columns}
-      dataSource={demoExams}
+      dataSource={dataSource}
       pagination={{ 
         position: ['bottomRight'],
         pageSize: pageSize,
@@ -58,4 +58,4 @@ const TestsListTable = ({ pageSize = 5 }) => {
   )
 }
 
-export default TestsListTable
+export default ExamsListTable
