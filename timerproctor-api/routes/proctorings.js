@@ -12,7 +12,7 @@ router.get('/', adminAuthen, async (req, res, next) => {
       ...proctoring.exam,
       status: proctoring.status
     }))
-    return res.json(jsonResponse('success', { proctorings: exams } ))
+    return res.json(jsonResponse('ok', { proctorings: exams } ))
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
   }

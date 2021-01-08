@@ -15,7 +15,7 @@ const ProctoringsList = () => {
     try {
       const res = await fetchAPIwithToken('/proctorings')
       const { status, payload, message } = res
-      if (status === 'success') setProctorings(payload.proctorings)
+      if (status === 'ok') setProctorings(payload.proctorings)
       else throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
     } catch {
       message.error('เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')

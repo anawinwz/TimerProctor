@@ -13,7 +13,7 @@ const router = Router()
 router.get('/', adminAuthen, async (req, res, next) => {
   try {
     const exams = await Exam.find({ owner: req.user._id })
-    return res.json(jsonResponse('success', { exams: exams }))
+    return res.json(jsonResponse('ok', { exams: exams }))
   } catch (err) {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
   }
@@ -50,7 +50,7 @@ router.post('/create', async (req, res, next) => {
         }
       })
       exam = await newExam.save()
-      return res.json(jsonResponse('success'))
+      return res.json(jsonResponse('ok'))
     } else {
       return res.json(jsonResponse('error', 'การสอบนี้มีอยู่แล้วในระบบ'))
     }
@@ -124,7 +124,7 @@ router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req,
       }
     })
 
-    return res.json(jsonResponse('success', { testers }))
+    return res.json(jsonResponse('ok', { testers }))
   } catch (err) {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }

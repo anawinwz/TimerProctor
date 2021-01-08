@@ -29,7 +29,7 @@ const ExamTesters = ({ status }) => {
     setIsLoading(true)
     try {
       const res = await fetchAPIwithToken(`/exams/5f991c780953aa4110686e76/testers?status=${status}&page=${page}&pageSize=${pageSize}`)
-      if (res.status === 'success') {
+      if (res.status === 'ok') {
         setTesters(res.payload.testers)
         setIsLoading(false)
       } else {
