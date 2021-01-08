@@ -17,3 +17,5 @@ router.get('/', adminAuthen, async (req, res, next) => {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
   }
 })
+
+export default router
