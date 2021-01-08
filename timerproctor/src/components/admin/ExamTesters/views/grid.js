@@ -1,4 +1,4 @@
-import { Col } from 'antd'
+import { Empty, Col } from 'antd'
 import ExamTester from '../../ExamTester'
 
 const colSizeMap = {
@@ -10,6 +10,7 @@ const colSizeMap = {
 }
 
 const GridView = ({ pageSize = 6, testers = [] }) => {
+  if (testers.length === 0) return <Empty />
   return testers.map(tester => (
     <Col { ...colSizeMap[pageSize] }>
       <ExamTester tester={tester} />
