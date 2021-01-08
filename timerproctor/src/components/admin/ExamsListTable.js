@@ -49,6 +49,7 @@ const ExamsListTable = ({ pageSize = 5, dataSource = demoExams }) => {
     <Table
       size="middle"
       columns={columns}
+      rowKey="_id"
       dataSource={dataSource}
       pagination={{ 
         position: ['bottomRight'],

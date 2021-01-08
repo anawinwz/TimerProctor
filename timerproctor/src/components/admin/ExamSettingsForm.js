@@ -33,7 +33,7 @@ const ExamSettingsForm = () => {
       <Form.Item label="จำกัดเวลาทำ (นาที)" name={['timer', 'duration']} initialValue={50}>
         <InputNumber />
       </Form.Item>
-      <Form.Item label="แสดงนาฬิกาจับเวลา" name={['timer', 'isShow']}>
+      <Form.Item label="แสดงนาฬิกาจับเวลา" name={['timer', 'isShow']} valuePropName="checked">
         <Switch />
       </Form.Item>
       <Form.Item label="คำชี้แจง" name={['desc']}>
@@ -56,7 +56,7 @@ const ExamSettingsForm = () => {
       <Divider plain>กรรมการคุมสอบ</Divider>
       <Form.Item name={['proctors']} wrapperCol={{ span: 24 }}>
         <Select mode="tags" placeholder="เลือกกรรมการคุมสอบ">
-          <Option value="a@ku.th">a@ku.th</Option>
+          <Select.Option value="a@ku.th">a@ku.th</Select.Option>
         </Select>
       </Form.Item>
       
