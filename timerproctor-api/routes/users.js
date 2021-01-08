@@ -6,8 +6,6 @@ import User from '../models/user'
 import { decodeToken, getUserData } from '../utils/firebase'
 import { jsonResponse } from '../utils/helpers'
 
-const fs = require('fs')
-
 const router = Router()
 
 router.post('/login', async (req, res, next) => {
