@@ -40,6 +40,12 @@ class ExamStore {
       this.loading = false
     }
   }
+
+  @action
+  updateInfo(info = {}) {
+    this.info = Object.assign({}, this.info, info)
+    if (info?.name) this.name = info.name
+  }
   
   @action
   updateStatus(status) {
