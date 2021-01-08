@@ -4,7 +4,7 @@ import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../config'
 import Exam from '../models/exam'
 import User from '../models/user'
 import { authenticate } from '../middlewares/authentication'
-import { populateExam } from '../middlewares/exam'
+import { onlyExamOwner, populateExam } from '../middlewares/exam'
 import { jsonResponse, getExamNsp } from '../utils/helpers'
 import Attempt from '../models/attempt'
 
@@ -85,7 +85,7 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
   }
 })
 
-router.get('/:id/start', populateExam, async (req, res, next) => {
+router.get('/:id/start', authenticate, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
 
@@ -105,7 +105,7 @@ router.get('/:id/start', populateExam, async (req, res, next) => {
   }
 })
 
-router.get('/:id/stop', populateExam, async (req, res, next) => {
+router.get('/:id/stop', authenticate, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
 
@@ -125,7 +125,7 @@ router.get('/:id/stop', populateExam, async (req, res, next) => {
   }
 })
 
-router.post('/:id/update', populateExam, async (req, res, next) => {
+router.post('/:id/update', authenticate, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
 

@@ -1,4 +1,5 @@
 import Exam from '../models/exam'
+import { jsonResponse } from '../utils/helpers'
 
 export const populateExam = async (req, res, next) => {
   try {
@@ -9,4 +10,9 @@ export const populateExam = async (req, res, next) => {
   } catch {
     return res.json(jsonResponse('failed', 'ไม่สามารถตรวจสอบข้อมูลการสอบได้'))
   }
+}
+
+export const onlyExamOwner = async (req, res, next) => {
+  if (req.user._id !== req.exam.owner) return next()
+  return res.json(jsonResponse('failed', 'Access Denied.'))
 }
