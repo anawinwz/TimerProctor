@@ -97,6 +97,39 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
   }
 })
 
+router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+  const { status } = req.query
+  if (status && !['loggedin', 'authenticated', 'started', 'completed'].includes(status))
+    return res.json(jsonResponse('error', 'Invalid request.'))
+
+  try {
+    const exam = req.exam
+    const attempts = await Attempt.find({
+      exam: exam._id, 
+      ...(status ? 
+        { status: status } : 
+        { status: { $ne: 'terminated' } }
+      )
+    })
+    .populate('user')
+
+    const testers = attempts.map(attempt => {
+      const { _id, user, status } = attempt
+      const { info: { displayName, photoURL } } = user
+      return {
+        _id,
+        name: displayName,
+        avatar: photoURL,
+        status
+      }
+    })
+
+    return res.json(jsonResponse('success', { testers }))
+  } catch (err) {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
 router.get('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
