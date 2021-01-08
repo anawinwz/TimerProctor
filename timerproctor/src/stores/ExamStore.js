@@ -45,8 +45,6 @@ class ExamStore {
   updateStatus(status) {
     if (this.timeWindow?.mode === 'realtime') 
       this.info.timeWindow.realtime.status = status
-
-    console.log(this.info)
   }
 
   @action
