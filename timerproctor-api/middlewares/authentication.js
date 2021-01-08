@@ -14,6 +14,7 @@ export const authenticate = async (req, res, next) => {
     if (!user) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลผู้ใช้'))
 
     req.user = user
+    req.fromAdmin = false
     return next()
   } catch (err) {
     return res.json(jsonResponse('failed', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ'))
@@ -30,6 +31,7 @@ export const adminAuthen = async (req, res, next) => {
     if (!user) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลผู้ใช้'))
 
     req.user = user
+    req.fromAdmin = true
     return next()
   } catch (err) {
     return res.json(jsonResponse('failed', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ'))
