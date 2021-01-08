@@ -10,4 +10,4 @@ const schema = new Schema(
   }
 )
 
-export default mongoose.model('Proctor', schema)
+export default mongoose.model('Proctoring', schema)
