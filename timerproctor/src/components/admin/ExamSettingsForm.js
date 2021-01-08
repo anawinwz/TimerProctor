@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useMemo } from 'react'
 import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button } from 'antd'
 
 import { observer } from 'mobx-react'
@@ -23,6 +23,12 @@ const ExamSettingsForm = () => {
     const newMode = changedValues?.timeWindow?.mode 
     if (newMode) setMode(newMode)
   }, [])
+  
+  const initialLoginMethods = useMemo(() => {
+    const loginMethods = exam?.info?.authentication?.loginMethods
+    if (!loginMethods) return ['google']
+    return loginMethods.map(item => item.method)
+  }, [exam?.info?.authentication?.loginMethods])
 
   return (
     <Form
@@ -60,7 +66,7 @@ const ExamSettingsForm = () => {
       </Form.Item>
 
       <Divider plain>การยืนยันตนผู้เข้าสอบ</Divider>
-      <Form.Item label="ต้องเข้าสู่ระบบก่อน" name={['authentication', 'loginMethods']} initialValue={['google']}>
+      <Form.Item label="ต้องเข้าสู่ระบบก่อน" name={['authentication', 'loginMethods_method']} initialValue={initialLoginMethods}>
         <Checkbox.Group
           options={opt_loginMethods}
         />
