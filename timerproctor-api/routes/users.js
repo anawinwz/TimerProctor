@@ -42,6 +42,7 @@ router.post('/login', async (req, res, next) => {
     const token = jwt.sign({ _id: user._id }, admin ? JWT_ADMIN_AUTHEN_SECRET : JWT_AUTHEN_SECRET)
     return res.json(jsonResponse('ok', {
       token,
+      email,
       info: { displayName, photoURL }
     }))
 

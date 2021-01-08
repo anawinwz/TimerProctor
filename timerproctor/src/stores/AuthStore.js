@@ -9,6 +9,8 @@ class AuthStore {
   @observable loggingIn = false
 
   @persist @observable userId = ''
+  
+  @persist @observable email = ''
   @persist @observable displayName = ''
   @persist @observable photoURL = ''
 
@@ -62,11 +64,11 @@ class AuthStore {
     
     const { status, payload, message } = response
     if (status && status === 'ok') {
-      const { token, info } = payload
+      const { token, email, info } = payload
       saveToken(token)
 
       const { displayName, photoURL } = info
-      this.setUser({ userId: user.uid, displayName, photoURL })
+      this.setUser({ userId: user.uid, email, displayName, photoURL })
       
       return true
     } else {
@@ -75,7 +77,8 @@ class AuthStore {
   }
 
   @action
-  setUser({ displayName, photoURL }) {
+  setUser({ email, displayName, photoURL }) {
+    this.email = email
     this.displayName = displayName
     this.photoURL = photoURL
   }
