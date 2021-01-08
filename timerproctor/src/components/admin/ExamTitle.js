@@ -1,9 +1,11 @@
+import { observer } from 'mobx-react'
 import { Typography } from 'antd'
 
 const { Title, Text } = Typography
 
 const ExamTitle = ({ exam, editable, onEdit }) => {
-  const { name, linked: { url } } = exam
+  const { name, linked } = exam
+  const publicURL = linked?.publicURL
   const editConfig = !editable ? false : {
     tooltip: 'แก้ไขชื่อการสอบ',
     autoSize: { maxRows: 1 },
@@ -19,9 +21,9 @@ const ExamTitle = ({ exam, editable, onEdit }) => {
       >
         { name }
       </Title>
-      <p><Text type="secondary">{ url }</Text></p>
+      <p><Text type="secondary">{ publicURL }</Text></p>
     </>
   )
 }
 
-export default ExamTitle
+export default observer(ExamTitle)

@@ -1,7 +1,9 @@
-import { useState } from 'react'
 import { Tabs } from 'antd'
 
-import demoExam from '../../../../assets/demoExam.json'
+import { observer } from 'mobx-react'
+import { useStore } from '../../../../stores/admin.js'
+
+import ExamOverviewLoading from '../../../../components/admin/loading/ExamOverview.js'
 
 import ContentBox from '../../../../components/admin/ContentBox'
 import ExamTitle from '../../../../components/admin/ExamTitle'
@@ -14,10 +16,11 @@ import ExamTesters from '../../../../components/admin/ExamTesters'
 const { TabPane } = Tabs
 
 const ExamOverview = () => {
-  const [exam, setExam] = useState(demoExam)
+  const { ExamStore: { loading, info: exam } } = useStore()
 
   const statuses = { all: 'ทั้งหมด', ...testerStatuses }
   
+  if (loading) return <ExamOverviewLoading />
   return (
     <ContentBox>
       <ExamTitle exam={exam} />
@@ -41,4 +44,4 @@ const ExamOverview = () => {
   )
 }
 
-export default ExamOverview
+export default observer(ExamOverview)
