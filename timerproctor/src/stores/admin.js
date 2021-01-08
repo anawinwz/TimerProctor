@@ -16,8 +16,8 @@ export class AdminRootStore {
   }
 }
 
-export const StoreContext = createContext(AdminRootStore)
+export const AdminStoreContext = createContext(AdminRootStore)
 
-export const useStore = () => useContext(StoreContext)
+export const useStore = () => useContext(AdminStoreContext)
 
 export default AdminRootStore
