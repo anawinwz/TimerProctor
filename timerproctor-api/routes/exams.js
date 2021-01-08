@@ -99,14 +99,14 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
 
 router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   const { status } = req.query
-  if (status && !['loggedin', 'authenticated', 'started', 'completed'].includes(status))
+  if (status && !['all', 'loggedin', 'authenticated', 'started', 'completed'].includes(status))
     return res.json(jsonResponse('error', 'Invalid request.'))
 
   try {
     const exam = req.exam
     const attempts = await Attempt.find({
       exam: exam._id, 
-      ...(status ? 
+      ...(status && status !== 'all' ? 
         { status: status } : 
         { status: { $ne: 'terminated' } }
       )
