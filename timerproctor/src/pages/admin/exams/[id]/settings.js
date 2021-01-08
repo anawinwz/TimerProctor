@@ -1,24 +1,32 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
+import { Skeleton } from 'antd'
 
-import demoExam from '../../../../assets/demoExam.json'
+import { observer } from 'mobx-react'
+import { useStore } from '../../../../stores/admin.js'
 
 import ContentBox from '../../../../components/admin/ContentBox'
 import ExamTitle from '../../../../components/admin/ExamTitle'
 import ExamSettingsForm from '../../../../components/admin/ExamSettingsForm'
 
+
 const ExamSettings = () => {
-  const [exam, setExam] = useState(demoExam)
+  const { ExamStore: { loading, info: exam }, ExamAdminStore: examAdmin } = useStore()
 
   const onEditName = useCallback(name => {
-    setExam(exam => setExam({ ...exam, name }))
-  }, [setExam])
+    examAdmin?.editName(name)
+  }, [examAdmin])
   
   return (
     <ContentBox>
-      <ExamTitle exam={exam} editable={true} onEdit={onEditName} />
-      <ExamSettingsForm />
+      { loading ? 
+        <Skeleton /> :
+        <>
+          <ExamTitle exam={exam} editable={true} onEdit={onEditName} />
+          <ExamSettingsForm /> 
+        </>
+      }
     </ContentBox>
   )
 }
 
-export default ExamSettings
+export default observer(ExamSettings)
