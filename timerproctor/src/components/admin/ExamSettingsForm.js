@@ -91,7 +91,7 @@ const ExamSettingsForm = () => {
         <Collapse style={{ marginBottom: '15px' }}>
           <Collapse.Panel header="ตั้งค่าล็อกอินทั่วไป" key="email">
             <Form.Item label="โดเมนอีเมลที่อนุญาต" name={['authentication', 'loginMethods', 'email', 'allowedDomains']} help="เช่น ku.th, ku.ac.th มีผลกับวิธี <อีเมล> และ <บัญชี Google>">
-              <Select mode="tags" tokenSeparators={[',']} placeholder="ปล่อยว่างคือไม่จำกัด" maxTagCount={6} />
+              <Select mode="tags" tokenSeparators={[',']} placeholder="ปล่อยว่างคือไม่จำกัด" maxTagCount={6} open={false} />
             </Form.Item>
           </Collapse.Panel>
         { 
@@ -115,11 +115,6 @@ const ExamSettingsForm = () => {
           options={opt_idCheckModes}
           optionType="button"
         />
-      </Form.Item>
-
-      <Divider plain>กรรมการคุมสอบ</Divider>
-      <Form.Item name={['proctors']} wrapperCol={{ span: 24 }} help="ระบุอีเมลของกรรมการคุมสอบ สูงสุด 16 คน">
-        <Select mode="tags" placeholder="ปล่อยว่างคือไม่มีกรรมการคุมสอบ" maxTagCount={16} />
       </Form.Item>
       
       <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
