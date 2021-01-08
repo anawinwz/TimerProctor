@@ -3,8 +3,9 @@ import jwt from 'jsonwebtoken'
 import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../config'
 import Exam from '../models/exam'
 import User from '../models/user'
-import { jsonResponse, wsBroadcast } from '../utils/helpers'
 import { authenticate } from '../middlewares/authentication'
+import { populateExam } from '../middlewares/exam'
+import { jsonResponse, wsBroadcast } from '../utils/helpers'
 import Attempt from '../models/attempt'
 
 const router = Router()
@@ -50,20 +51,15 @@ router.post('/create', async (req, res, next) => {
   
 })
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const exam = await Exam.findById(req.params.id)
-    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
-    return res.json(exam)
-  } catch {
-    return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในระบบ'))
-  }
+router.get('/:id', populateExam, async (req, res, next) => {
+  const exam = req.exam
+  return res.json(exam)
 })
 
-router.post('/:id/attempt', authenticate, async (req, res, next) => {
+router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
   try {
-    const { id: examId } = req.params
-    const { id: userId } = req.user
+    const { _id: examId } = req.exam
+    const { _id: userId } = req.user
     
     let lastAttempt = await Attempt.findOne({ exam: examId, user: userId, status: { $ne: 'completed' } })
     if (!lastAttempt) {
@@ -89,11 +85,10 @@ router.post('/:id/attempt', authenticate, async (req, res, next) => {
   }
 })
 
-router.get('/:id/start', async (req, res, next) => {
+router.get('/:id/start', populateExam, async (req, res, next) => {
   try {
-    const exam = await Exam.findById(req.params.id)
+    const exam = req.exam
 
-    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'started')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
     
@@ -110,11 +105,10 @@ router.get('/:id/start', async (req, res, next) => {
   }
 })
 
-router.get('/:id/stop', async (req, res, next) => {
+router.get('/:id/stop', populateExam, async (req, res, next) => {
   try {
-    const exam = await Exam.findById(req.params.id)
+    const exam = req.exam
 
-    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'stopped')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งยุติการสอบนี้ได้'))
 
@@ -131,11 +125,10 @@ router.get('/:id/stop', async (req, res, next) => {
   }
 })
 
-router.post('/:id/update', async (req, res, next) => {
+router.post('/:id/update', populateExam, async (req, res, next) => {
   try {
-    const exam = await Exam.findById(req.params.id)
+    const exam = req.exam
 
-    if (!exam) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลการสอบดังกล่าว'))
     Object.assign(exam, req.body)
     await exam.save()
 
