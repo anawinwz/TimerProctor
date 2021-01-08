@@ -7,7 +7,7 @@ import ExamStore from './ExamStore'
 export class AdminRootStore {
   constructor() {
     const hydrate = create()
-    this.AuthStore = new AuthStore(this)
+    this.AuthStore = new AuthStore(this, true)
     hydrate('admin_auth', this.AuthStore)
     
     this.ExamStore = new ExamStore(this)

@@ -12,8 +12,9 @@ class AuthStore {
   @persist @observable displayName = ''
   @persist @observable photoURL = ''
 
-  constructor(rootStore) {
+  constructor(rootStore, fromAdmin = false) {
     this.rootStore = rootStore
+    this.fromAdmin = fromAdmin
   }
 
   @computed
@@ -57,7 +58,7 @@ class AuthStore {
   @action
   async login({ user, credential }) {
     const idToken = await user.getIdToken()
-    const response = await fetchAPI(`/users/login`, { idToken })
+    const response = await fetchAPI(`/users/login`, { idToken, admin: this.fromAdmin })
     
     const { status, payload, message } = response
     if (status && status === 'ok') {
