@@ -50,7 +50,7 @@ const ExamSettingsForm = () => {
         </>
       }
       <Form.Item label="จำกัดเวลาทำ (นาที)" name={['timer', 'duration']} initialValue={50}>
-        <InputNumber />
+        <InputNumber min={1} />
       </Form.Item>
       <Form.Item label="แสดงนาฬิกาจับเวลา" name={['timer', 'isShow']} valuePropName="checked">
         <Switch />
