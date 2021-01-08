@@ -41,6 +41,7 @@ const ExamTester = ({ tester }) => {
       title: `คุณแน่ใจหรือว่าต้องการเชิญ ${tester.name} ออกจากห้องสอบ?`,
       content: `การดำเนินการนี้ไม่สามารถยกเลิกได้`,
       okText: 'ยืนยันการเชิญออก',
+      okType: 'danger',
       cancelText: 'ยกเลิก',
     })
   }, [tester])
