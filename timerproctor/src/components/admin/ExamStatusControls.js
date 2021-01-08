@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
-import { Modal, Button, message } from 'antd'
-import { CaretRightFilled, StopFilled } from '@ant-design/icons'
+import { Modal, Button, Space, message } from 'antd'
+import { CaretRightFilled, StopFilled, SettingOutlined } from '@ant-design/icons'
 
+import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import { useStore } from '../../stores/admin'
 import { fetchAPIwithToken } from '../../utils/api'
@@ -40,13 +41,18 @@ const ExamStatusControls = () => {
 
   if (status === 'started') {
     return (
-      <>
+      <Space direction="horizontal">
         <Button type="danger" icon={<StopFilled />} onClick={stopExam}>สิ้นสุดการสอบ</Button> 
-        ดำเนินไปแล้ว ...
-      </>
+        <span>ดำเนินไปแล้ว...</span>
+      </Space>
     )
   }
-  return <Button type="primary" icon={<CaretRightFilled />} onClick={startExam}>เริ่มการสอบ</Button>
+  return (
+    <Space direction="horizontal">
+      <Button type="primary" icon={<CaretRightFilled />} onClick={startExam}>เริ่มการสอบ</Button>
+      <Link to={`/admin/exams/${exam.id}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
+    </Space>
+  )
 }
 
 export default observer(ExamStatusControls)
