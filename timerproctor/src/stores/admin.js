@@ -3,6 +3,7 @@ import { create } from 'mobx-persist'
 
 import AuthStore from './AuthStore'
 import ExamStore from './ExamStore'
+import ExamAdminStore from './admin/ExamAdminStore'
 
 export class AdminRootStore {
   constructor() {
@@ -11,6 +12,7 @@ export class AdminRootStore {
     hydrate('admin_auth', this.AuthStore)
     
     this.ExamStore = new ExamStore(this)
+    this.ExamAdminStore = new ExamAdminStore(this)
   }
 }
 
