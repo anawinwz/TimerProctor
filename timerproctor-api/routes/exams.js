@@ -139,31 +139,4 @@ router.post('/:id/update', populateExam, async (req, res, next) => {
   }
 })
 
-router.post('/demo/annoucement', (req, res, next) => {
-  const text = req.body?.text
-  wsBroadcast(req.app, { type: 'examAnnoucement', payload: { text } }, 'testtakers')
-  return res.json(jsonResponse('ok'))
-})
-
-router.get('/demo/create', async (req, res, next) => {
-  const newExam = new Exam({
-    name: 'ข้อสอบกลางภาค วิชา มนุษย์กับทะเล',
-    desc: `เป็นข้อสอบปรนัย 3 ข้อ <br/>
-    มีเวลาในการทำข้อสอบ 50 นาที<br/>
-    โดยจะเริ่มจับเวลาพร้อมกันทุกคน ขอให้นิสิตเข้าสู่ห้องสอบโดยเร็ว`,
-    timeWindow: {
-      mode: 'realtime',
-      realtime: {
-        status: 'pending'
-      }
-    },
-    timer: { duration: 50 },
-    authentication: {
-      loginMethods: [{ method: 'google' }]
-    }
-  })
-  const exam = await newExam.save()
-  res.json(jsonResponse('success', exam))
-})
-
 export default router
