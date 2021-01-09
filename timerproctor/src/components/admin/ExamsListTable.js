@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import StatusTag from './StatusTag'
 
 import demoExam from '~/assets/demoExam.json'
+import { rangeStr, shortDateStr } from '~/utils/date'
 const demoExams = [ demoExam, { ...demoExam, status: 'unset' } ]
 
 const columns = [
@@ -27,7 +28,7 @@ const columns = [
     render: (timeWindow, exam) => {
       if (exam.status === 'unset' || !timeWindow) return '-'
       if (timeWindow.mode === 'realtime') return 'ตามเวลาจริง'
-      return timeWindow.schedule?.startDate
+      return rangeStr(timeWindow.schedule?.startDate, timeWindow.schedule?.endDate)
     },
   },
   {
@@ -40,7 +41,7 @@ const columns = [
     title: 'แก้ไขล่าสุดเมื่อ',
     dataIndex: 'updatedAt',
     key: 'updatedAt',
-    render: (updatedAt, exam) => updatedAt || exam.createdAt
+    render: (updatedAt, exam) => shortDateStr(updatedAt || exam.createdAt)
   },
 ]
 
