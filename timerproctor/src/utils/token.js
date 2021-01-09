@@ -1,7 +1,7 @@
-const localStorage = window.localStorage
+const sessionStorage = window.sessionStorage
 
 const key = 'token'
 
-export const getToken = () => localStorage.getItem(key) || ''
-export const saveToken = token => localStorage.setItem(key, token)
-export const removeToken = () => localStorage.removeItem(key)
+export const getToken = () => sessionStorage.getItem(key) || ''
+export const saveToken = token => sessionStorage.setItem(key, token)
+export const removeToken = () => sessionStorage.removeItem(key)
