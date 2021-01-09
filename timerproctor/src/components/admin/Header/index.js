@@ -1,6 +1,7 @@
 import { Layout, Row, Col } from 'antd'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import Logo from '~/components/Logo'
 
 import UserPopover from './UserPopover'
 
@@ -8,18 +9,12 @@ const HeaderBar = styled(Layout.Header)`
   padding-top: 0;
   padding-bottom: 0;
   background-color: white;
-  .logo {
-    user-select: none;
-    font-weight: bold;
-    font-size: 24px;
-    color: black;
-  }
 `
 
 const Header = () => (
   <HeaderBar>
     <Row justify="space-between">
-      <Col><Link className="logo" to="/admin">TimerProctor</Link></Col>
+      <Col><Link to="/admin"><Logo /></Link></Col>
       <Col>
         <UserPopover />
       </Col>
