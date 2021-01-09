@@ -66,8 +66,8 @@ class ExamStore {
   @computed
   get status() {
     if (!this.timeWindow) return 'pending'
-    if (this.timeWindow.mode === 'realtime')
-      return this.timeWindow.realtime.status
+    if (this.timeWindow?.mode === 'realtime')
+      return this.timeWindow?.realtime?.status
     return 'pending'
   }
 
