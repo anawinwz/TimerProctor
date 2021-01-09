@@ -10,6 +10,7 @@ import { ioNamespace } from './utils/const'
 
 import { authorize } from './utils/socketio-jwt'
 import { getExamIdFromSocket } from './utils/helpers'
+import bindSocketListener from './socketio'
 
 const io = new Server(server, {
   cors: {
@@ -48,6 +49,8 @@ ioExam.on('connection', authorize({
     onSuccess()
 
     socket.join(role)
+
+    bindSocketListener(socket, role, user)
     console.log(`[socket.io] A ${role} ${userId} connected to ${examId}.`)
   }
 }))
