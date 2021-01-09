@@ -1,10 +1,11 @@
 import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Card, Space, Button, message, Modal } from 'antd'
+import { Card, Space, Button, message } from 'antd'
 import { observer } from 'mobx-react'
 import { useStore } from '~/stores/index'
 
 import { APIFailedError } from '~/utils/api'
+import { showModal } from '~/utils/modal'
 
 import GoogleLoginButton from '~/components/buttons/GoogleLoginButton'
 
@@ -28,10 +29,7 @@ const IntroLogin = () => {
         history.replace(`/exams/${exam.id}/authenticate`)
       } catch (err) {
         if (err instanceof APIFailedError) {
-          Modal.error({
-            title: 'ไม่สามารถขอเข้าสู่การสอบได้',
-            content: err.message
-          })
+          showModal('error', 'ไม่สามารถขอเข้าสู่การสอบได้', err.message)
         } else {
           throw err
         }
