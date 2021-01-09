@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx'
-import { fetchAPIwithToken } from '~/utils/api'
+import { APIFailedError, fetchAPIwithToken } from '~/utils/api'
 class AttemptStore {
   @observable status = 'login'
   @observable socketToken = ''
@@ -15,7 +15,8 @@ class AttemptStore {
     const examId = this.examStore.id
     
     const { status: resStatus, message, payload } = await fetchAPIwithToken(`/exams/${examId}/attempt`, {})
-    if (!resStatus || resStatus !== 'ok') throw new Error(message || 'ไม่สามารถขอเริ่มการสอบได้')
+    if (!resStatus || !['failed', 'ok'].includes(resStatus)) throw new Error(message || 'ไม่สามารถขอเริ่มการสอบได้')
+    else if (resStatus === 'failed') throw new APIFailedError(message)
 
     const { status, socketToken, idCheck: { accepted } } = payload
     this.status = status

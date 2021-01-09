@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Card, Space, Button, message, Modal } from 'antd'
 import { observer } from 'mobx-react'
 import { useStore } from '~/stores/index'
-import { Card, Space, Button, message } from 'antd'
+
+import { APIFailedError } from '~/utils/api'
 
 import GoogleLoginButton from '~/components/buttons/GoogleLoginButton'
 
@@ -20,8 +22,20 @@ const IntroLogin = () => {
   const login = useCallback(async method => {
     try {
       await auth.doAuthen(method)
-      await attempt.getAttempt()
-      history.replace(`/exams/${exam.id}/authenticate`)
+      
+      try {
+        await attempt.getAttempt()
+        history.replace(`/exams/${exam.id}/authenticate`)
+      } catch (err) {
+        if (err instanceof APIFailedError) {
+          Modal.error({
+            title: 'ไม่สามารถขอเข้าสู่การสอบได้',
+            content: err.message
+          })
+        } else {
+          throw err
+        }
+      }
     } catch (err) {
       message.error(err.message)
     }
