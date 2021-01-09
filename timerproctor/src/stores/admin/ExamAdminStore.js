@@ -1,10 +1,22 @@
-import { action } from 'mobx'
+import { action, observable } from 'mobx'
 import { fetchAPIwithToken } from '~/utils/api'
 
 class ExamAdminStore {
+  @observable counts = {}
+
   constructor(rootStore) {
     this.rootStore = rootStore
     this.examStore = rootStore.ExamStore
+  }
+
+  @action
+  async getCounts() {
+    try {
+      const examId = this.examStore?.id
+      const res = await fetchAPIwithToken(`/exams/${examId}/testers/count`)
+      const { status, payload } = res
+      if (status === 'ok') this.counts = Object.assign({}, this.counts, res.payload.counts)
+    } catch {}
   }
 
   @action
