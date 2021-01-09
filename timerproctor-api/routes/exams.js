@@ -1,12 +1,17 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
+import dot from 'dot-object'
+
 import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../config'
+
 import Exam from '../models/exam'
 import User from '../models/user'
+import Attempt from '../models/attempt'
 import { adminAuthen, authenticate } from '../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../middlewares/exam'
 import { jsonResponse, getExamNsp } from '../utils/helpers'
-import Attempt from '../models/attempt'
+
+dot.keepArray = true
 
 const router = Router()
 
@@ -179,8 +184,7 @@ router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req,
   try {
     const exam = req.exam
 
-    Object.assign(exam, req.body)
-    await exam.save()
+    await exam.update(dot.dot(req.body))
 
     return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
   } catch (err) {
