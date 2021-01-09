@@ -2,7 +2,7 @@ import { action, computed, observable } from 'mobx'
 import { persist } from 'mobx-persist'
 import firebase from 'firebase/app'
 import { auth } from '~/utils/firebase'
-import { saveToken } from '~/utils/token'
+import { removeToken, saveToken } from '~/utils/token'
 import { fetchAPI } from '~/utils/api'
 
 class AuthStore {
@@ -90,6 +90,7 @@ class AuthStore {
       await auth.signOut()
     } finally {
       this.setUser({ userId: '', email: '', displayName: '', photoURL: '' })
+      removeToken()
     }
   }
 }
