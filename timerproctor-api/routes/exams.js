@@ -211,7 +211,10 @@ router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req,
   try {
     const exam = req.exam
 
-    await Exam.updateOne({ _id: exam._id }, dot.dot(req.body))
+    let updates = req.body
+
+    updates.updatedAt = Date.now()
+    await Exam.updateOne({ _id: exam._id }, dot.dot(updates))
 
     return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
   } catch (err) {
