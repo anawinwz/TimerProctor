@@ -140,6 +140,33 @@ router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req,
   }
 })
 
+router.get('/:id/testers/count', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+  try {
+    const exam = req.exam
+    const results = await Attempt.aggregate([
+      { $match: { exam: exam._id } },
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ])
+
+    let counts = {}
+    let total = 0
+    for (const group of results) {
+      counts[group._id] = group.count
+      total += group.count
+    }
+    counts.all = total
+
+    return res.json(jsonResponse('ok', { counts } ))
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการนับจำนวนผู้เข้าสอบ'))
+  }
+})
+
 router.get('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
