@@ -1,4 +1,4 @@
-import CompletedCard from '../../../components/exams/CompletedCard'
+import CompletedCard from '~/components/exams/CompletedCard'
 
 const CompletedPage = () => {
   return (

@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react'
 import { Descriptions } from 'antd'
-import { idCheckModes } from '../../utils/const'
+import { idCheckModes } from '~/utils/const'
 
 const { Item } = Descriptions
 

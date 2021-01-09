@@ -1,7 +1,7 @@
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
-import ExamPage from './exams/[id].js'
+import ExamPage from './exams/[id]'
 
 const MainPage = () => (
   <Router>

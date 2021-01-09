@@ -1,5 +1,5 @@
 import { Button } from 'antd'
-import { Google } from '../icons'
+import { Google } from '~/components/icons'
 
 const GoogleLoginButton = (props) => (
   <Button {...props} block icon={<span className="anticon"><Google /></span>}>

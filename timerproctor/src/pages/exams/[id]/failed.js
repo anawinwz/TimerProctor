@@ -1,4 +1,4 @@
-import FailedCard from '../../../components/exams/FailedCard'
+import FailedCard from '~/components/exams/FailedCard'
 
 const FailedPage = () => {
   return (

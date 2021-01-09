@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react'
-import { useStore } from '../../stores'
+import { useStore } from '~/stores/index'
 import { Space, Card, Descriptions, Typography } from 'antd'
 const { Title } = Typography
 

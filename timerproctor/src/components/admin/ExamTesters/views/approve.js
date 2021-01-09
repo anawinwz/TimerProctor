@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Empty, Space, Typography, Button, Popconfirm, Radio, Image } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { photoRejectReasons } from '../../../../utils/const'
+import { photoRejectReasons } from '~/utils/const'
 
 const { Title } = Typography
 const radioStyle = {

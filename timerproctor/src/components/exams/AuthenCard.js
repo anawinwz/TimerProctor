@@ -2,8 +2,8 @@ import { Card, Typography, Modal } from 'antd'
 import { observer } from 'mobx-react'
 import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useStore } from '../../stores'
-import { showModal } from '../../utils/modal'
+import { useStore } from '~/stores/index'
+import { showModal } from '~/utils/modal'
 import AuthenFaceCanvas from './AuthenFaceCanvas'
 const { Title } = Typography
 

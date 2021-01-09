@@ -2,11 +2,11 @@ import { useCallback } from 'react'
 import { Skeleton } from 'antd'
 
 import { observer } from 'mobx-react'
-import { useStore } from '../../../../stores/admin.js'
+import { useStore } from '~/stores/admin'
 
-import ContentBox from '../../../../components/admin/ContentBox'
-import ExamTitle from '../../../../components/admin/ExamTitle'
-import ExamSettingsForm from '../../../../components/admin/ExamSettingsForm'
+import ContentBox from '~/components/admin/ContentBox'
+import ExamTitle from '~/components/admin/ExamTitle'
+import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
 
 
 const ExamSettings = () => {

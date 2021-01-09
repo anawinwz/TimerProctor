@@ -1,8 +1,8 @@
 import { CheckOutlined, CloseOutlined, ExclamationCircleOutlined, SendOutlined } from '@ant-design/icons'
 import { Modal, List, Badge, Empty, message, Tabs, Card, Space, Button, Popconfirm, Radio, Typography, Input, InputNumber, Form } from 'antd'
 import { useCallback, useState, useEffect } from 'react'
-import DefaultLayout from '../layouts/default.js'
-import { fetchAPI } from '../utils/api.js'
+import DefaultLayout from '~/layouts/default'
+import { fetchAPI } from '~/utils/api'
 
 const { TabPane } = Tabs
 const { Title } = Typography

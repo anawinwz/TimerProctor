@@ -3,8 +3,8 @@ import { Card, Typography, Row, Col, Avatar, Progress } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { observer } from 'mobx-react'
 
-import CenterContainer from '../CenterContainer'
-import { useStore } from '../../stores'
+import CenterContainer from '~/components/CenterContainer'
+import { useStore } from '~/stores/index'
 
 const { Title } = Typography
 

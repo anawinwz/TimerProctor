@@ -1,6 +1,6 @@
-import Header from '../components/admin/Header'
-import Breadcrumb from '../components/admin/Breadcrumb'
-import CenterContainer from '../components/CenterContainer'
+import Header from '~/components/admin/Header'
+import Breadcrumb from '~/components/admin/Breadcrumb'
+import CenterContainer from '~/components/CenterContainer'
 
 const headerMargin = {
   marginTop: '10px'

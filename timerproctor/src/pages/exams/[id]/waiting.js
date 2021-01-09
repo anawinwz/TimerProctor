@@ -1,7 +1,7 @@
 
 import { observer } from 'mobx-react'
-import { useStore } from '../../../stores'
-import WaitingCard from '../../../components/exams/WaitingCard'
+import { useStore } from '~/stores/index'
+import WaitingCard from '~/components/exams/WaitingCard'
 import { Redirect } from 'react-router-dom'
 
 const WaitingPage = () => {

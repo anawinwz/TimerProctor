@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { message, Typography } from 'antd'
 
-import { fetchAPIwithToken } from '../../utils/api'
+import { fetchAPIwithToken } from '~/utils/api'
 
 import ContentBox from './ContentBox'
 import ExamsListTable from './ExamsListTable'

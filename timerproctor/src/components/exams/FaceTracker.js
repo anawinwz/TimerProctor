@@ -1,8 +1,8 @@
 import { useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
-import { getStream } from '../../utils/camera'
-import { detectAllFaces } from '../../utils/faceDetection'
-import { showModal } from '../../utils/modal'
+import { getStream } from '~/utils/camera'
+import { detectAllFaces } from '~/utils/faceDetection'
+import { showModal } from '~/utils/modal'
 
 const Video = styled('video')`
   pointer-events: none;

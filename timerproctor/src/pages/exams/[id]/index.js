@@ -1,6 +1,6 @@
 import { Space } from 'antd'
-import IntroCard from '../../../components/exams/IntroCard'
-import IntroLogin from '../../../components/exams/IntroLogin'
+import IntroCard from '~/components/exams/IntroCard'
+import IntroLogin from '~/components/exams/IntroLogin'
 
 const IntroPage = () => {
   return (

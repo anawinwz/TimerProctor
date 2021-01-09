@@ -1,5 +1,5 @@
 import { action, computed, observable } from 'mobx'
-import { fetchAPI } from '../utils/api'
+import { fetchAPI } from '~/utils/api'
 
 class ExamStore {
   @observable loading = false

@@ -2,11 +2,11 @@ import { useCallback, useState } from 'react'
 import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button, Collapse, message } from 'antd'
 
 import { observer } from 'mobx-react'
-import { useStore } from '../../stores/admin'
+import { useStore } from '~/stores/admin'
 
-import { timeWindowModes, loginMethods, idCheckModes } from '../../utils/const'
-import { toOptions } from '../../utils/form'
-import { fetchAPIwithToken } from '../../utils/api'
+import { timeWindowModes, loginMethods, idCheckModes } from '~/utils/const'
+import { toOptions } from '~/utils/form'
+import { fetchAPIwithToken } from '~/utils/api'
 
 const formLayout = { 
   labelCol: { span: 8 },

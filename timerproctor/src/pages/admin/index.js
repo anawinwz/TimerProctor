@@ -1,13 +1,13 @@
 import { Switch } from 'react-router-dom'
 
-import LayoutRoute from '../../components/LayoutRoute.js'
-import DefaultLayout from '../../layouts/default.js'
-import AdminLayout from '../../layouts/admin.js'
+import LayoutRoute from '~/components/LayoutRoute'
+import DefaultLayout from '~/layouts/default'
+import AdminLayout from '~/layouts/admin'
 
-import LoginPage from './login.js'
-import DashboardPage from './dashboard.js'
-import ExamsPage from './exams/index.js'
-import ExamPage from './exams/[id].js'
+import LoginPage from './login'
+import DashboardPage from './dashboard'
+import ExamsPage from './exams/index'
+import ExamPage from './exams/[id]'
 
 const AdminPage = () => {
   return (

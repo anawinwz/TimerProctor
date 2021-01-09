@@ -1,4 +1,4 @@
-import ExamsList from '../../../components/admin/ExamsList'
+import ExamsList from '~/components/admin/ExamsList'
 
 const AdminExams = () => {
   return (

@@ -1,9 +1,9 @@
 import { action, computed, observable } from 'mobx'
 import { persist } from 'mobx-persist'
 import firebase from 'firebase/app'
-import { auth } from '../utils/firebase'
-import { saveToken } from '../utils/token'
-import { fetchAPI } from '../utils/api'
+import { auth } from '~/utils/firebase'
+import { saveToken } from '~/utils/token'
+import { fetchAPI } from '~/utils/api'
 
 class AuthStore {
   @observable loggingIn = false

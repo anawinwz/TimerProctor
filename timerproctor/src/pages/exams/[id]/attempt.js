@@ -2,9 +2,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
-import { useStore } from '../../../stores'
-import Form from '../../../components/exams/Form'
-import Trackers from '../../../components/exams/Trackers'
+import { useStore } from '~/stores/index'
+import Form from '~/components/exams/Form'
+import Trackers from '~/components/exams/Trackers'
 
 const AttemptPage = () => {
   const { ExamStore: exam, TimerStore: timer } = useStore()

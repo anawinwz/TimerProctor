@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react'
-import { useStore } from '../../stores'
+import { useStore } from '~/stores/index'
 import { Card, Space, Button, message } from 'antd'
 
-import GoogleLoginButton from '../buttons/GoogleLoginButton'
+import GoogleLoginButton from '~/components/buttons/GoogleLoginButton'
 
 const IntroLogin = () => {
   const { ExamStore: exam, AuthStore: auth, AttemptStore: attempt } = useStore()

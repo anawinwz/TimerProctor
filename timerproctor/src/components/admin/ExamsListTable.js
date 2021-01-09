@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import StatusTag from './StatusTag'
 
-import demoExam from '../../assets/demoExam.json'
+import demoExam from '~/assets/demoExam.json'
 const demoExams = [ demoExam, { ...demoExam, status: 'unset' } ]
 
 const columns = [

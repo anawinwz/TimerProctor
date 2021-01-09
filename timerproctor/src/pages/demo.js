@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { Button, Space } from 'antd'
-import DefaultLayout from '../layouts/default'
+import { Button } from 'antd'
+import DefaultLayout from '~/layouts/default'
 
 const LargeButton = styled(Button)`
   transform: scale(2.0);

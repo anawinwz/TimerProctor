@@ -1,4 +1,4 @@
-import AuthenCard from '../../../components/exams/AuthenCard'
+import AuthenCard from '~/components/exams/AuthenCard'
 
 const AuthenPage = () => {
   return (

@@ -1,5 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import DefaultLayout from '../../layouts/default.js'
+import DefaultLayout from '~/layouts/default'
 
 const Loading = () => (
   <DefaultLayout>

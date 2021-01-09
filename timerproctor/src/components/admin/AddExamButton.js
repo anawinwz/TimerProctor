@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { Button, Modal } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
-import GoogleFormsMenu from '../../assets/images/google-forms-menu.png'
+import GoogleFormsMenu from '~/assets/images/google-forms-menu.png'
 
 const AddExamButton = () => {
   const [isShow, setIsShow] = useState(false)

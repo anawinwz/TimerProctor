@@ -1,5 +1,5 @@
 import { Result } from 'antd'
-import DefaultLayout from '../../layouts/default.js'
+import DefaultLayout from '~/layouts/default'
 
 const NotFound = () => (
   <DefaultLayout>

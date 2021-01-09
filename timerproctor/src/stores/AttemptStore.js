@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx'
-import { fetchAPIwithToken } from '../utils/api'
+import { fetchAPIwithToken } from '~/utils/api'
 class AttemptStore {
   @observable status = 'login'
   @observable socketToken = ''

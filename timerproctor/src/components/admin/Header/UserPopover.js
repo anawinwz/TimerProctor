@@ -3,7 +3,7 @@ import { Popover, List } from 'antd'
 import styled from 'styled-components'
 
 import { observer } from 'mobx-react'
-import { useStore } from '../../../stores/admin'
+import { useStore } from '~/stores/admin'
 
 import UserAvatar from '../UserAvatar'
 

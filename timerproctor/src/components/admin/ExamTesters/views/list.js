@@ -1,5 +1,5 @@
 import { Col, List, Avatar } from 'antd'
-import { testerStatuses } from '../../../../utils/const'
+import { testerStatuses } from '~/utils/const'
 
 const ListView = ({ pageSize = 8, testers = [] }) => {
   return (

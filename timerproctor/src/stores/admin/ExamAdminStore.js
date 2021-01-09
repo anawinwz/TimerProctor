@@ -1,5 +1,5 @@
 import { action } from 'mobx'
-import { fetchAPIwithToken } from '../../utils/api'
+import { fetchAPIwithToken } from '~/utils/api'
 
 class ExamAdminStore {
   constructor(rootStore) {

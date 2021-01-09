@@ -1,6 +1,6 @@
 import { Card, Result, Alert } from 'antd'
 import { observer } from 'mobx-react'
-import { useStore } from '../../stores'
+import { useStore } from '~/stores/index'
 
 const WaitingAnnoucement = observer(() => {
   const { ExamStore: { annoucements } } = useStore()

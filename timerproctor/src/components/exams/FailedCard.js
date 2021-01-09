@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, Result, Button } from 'antd'
 import { observer } from 'mobx-react'
-import { useStore } from '../../stores'
+import { useStore } from '~/stores/index'
 
 const FailedCard = () => {
   const [msg, setMsg] = useState(['การสอบล้มเหลว', 'คุณใช้เวลาในการทำข้อสอบนานเกินกว่าเวลาที่กำหนดไว้'])

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { observer } from 'mobx-react'
-import { useStore } from '../../../stores/admin.js'
+import { useStore } from '~/stores/admin'
 
-import ExamSettingsPage from './[id]/settings.js'
-import ExamOverviewPage from './[id]/overview.js'
+import ExamSettingsPage from './[id]/settings'
+import ExamOverviewPage from './[id]/overview'
 
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam } = useStore()

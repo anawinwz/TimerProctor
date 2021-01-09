@@ -5,7 +5,7 @@ import { CheckSquareOutlined, TableOutlined, UnorderedListOutlined } from '@ant-
 import ApproveView from './views/approve'
 import GridView from './views/grid'
 import ListView from './views/list'
-import { fetchAPIwithToken } from '../../../utils/api'
+import { fetchAPIwithToken } from '~/utils/api'
 
 const ExamTesters = ({ status }) => {
   const [viewMode, setViewMode] = useState(status === 'authenticate' ? 'approve' : 'grid')
