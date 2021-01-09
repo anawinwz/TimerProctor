@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Popover, List } from 'antd'
 import styled from 'styled-components'
 
@@ -20,11 +21,11 @@ const PopoverHeader = styled('div')`
   }
 `
 
-const PopoverContent = ({ user }) => {
+const PopoverContent = ({ user = {}, onLogout = () => {} }) => {
   const popoverList = useMemo(() => 
     [
       { type: 'avatar' },
-      { type: 'menu', name: 'ออกจากระบบ' }
+      { type: 'menu', name: 'ออกจากระบบ', onClick: onLogout }
     ]
   , [])
   return (
@@ -45,7 +46,7 @@ const PopoverContent = ({ user }) => {
             break
           }
           case 'menu':
-            return <List.Item><a href="#">{ item.name }</a></List.Item>
+            return <List.Item><a onClick={item.onClick}>{ item.name }</a></List.Item>
         }
       }}
     />
@@ -55,16 +56,22 @@ const PopoverContent = ({ user }) => {
 
 const UserPopover = () => {
   const { AuthStore: auth } = useStore()
+  const history = useHistory()
   const user = useMemo(() => ({
     name: auth.displayName,
     email: auth.email,
     avatar: auth.photoURL
   }), [auth.userId])
 
+  const logout = useCallback(async () => {
+    await auth.logout()
+    history.push('/admin/login')
+  }, [])
+
   return (
     <Popover
       placement="bottomLeft"
-      content={<PopoverContent user={user} />}
+      content={<PopoverContent user={user} onLogout={logout} />}
     >
       <UserAvatar user={user} />
     </Popover>
