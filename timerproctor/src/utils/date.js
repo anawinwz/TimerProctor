@@ -5,7 +5,8 @@ moment.locale('th')
 const formats = {
   time: 'LT',
   shortNoTime: 'D MMM YYYY',
-  short: 'D MMM YYYY LT'
+  short: 'D MMM YYYY LT',
+  full: 'D MMMM YYYY LT'
 }
 export const dateStr = (date, type = 'short') => date ? moment(date).format(formats[type]) : '-'
 

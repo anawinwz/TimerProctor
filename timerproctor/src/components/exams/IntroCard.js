@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react'
 import { useStore } from '~/stores/index'
 import { Space, Card, Descriptions, Typography } from 'antd'
+import { rangeStr } from '~/utils/date'
 const { Title } = Typography
 
 const TimeWindowMode = (examInfo) => {
@@ -9,7 +10,7 @@ const TimeWindowMode = (examInfo) => {
 
   const setting = timeWindow[timeWindow.mode]
   if (timeWindow.mode === 'schedule') {
-    return `${setting.startDate} ถึง ${setting.endDate}`
+    return rangeStr(setting.startDate, setting.endDate, 'full')
   }
   return 'ผู้สอนจะให้สัญญาณเริ่ม-สิ้นสุดการสอบด้วยตนเอง'
 }
