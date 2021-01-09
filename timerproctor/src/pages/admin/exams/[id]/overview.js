@@ -17,11 +17,12 @@ import ExamTesters from '~/components/admin/ExamTesters'
 const { TabPane } = Tabs
 
 const ExamOverview = () => {
-  const { ExamStore: examStore } = useStore()
+  const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
   const { loading, info: exam } = examStore
-  
-  useEffect(() => {
-    examStore?.getInfo()
+
+  useEffect(async () => {
+    await examStore?.getInfo()
+    examAdmin?.getCounts()
   }, [])
 
   const statuses = { all: 'ทั้งหมด', ...testerStatuses }
@@ -38,7 +39,7 @@ const ExamOverview = () => {
             return (
               <TabPane
                 key={key}
-                tab={<>{ statuses[key] } <WhiteBadge count={0} showZero /></>}
+                tab={<>{ statuses[key] } <WhiteBadge count={examAdmin.counts?.[key] || 0} showZero /></>}
               >
                 <ExamTesters status={key} />
               </TabPane>
