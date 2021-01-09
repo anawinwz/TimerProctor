@@ -7,9 +7,14 @@ import { observer } from 'mobx-react'
 import { useStore } from '~/stores/admin'
 import { fetchAPIwithToken } from '~/utils/api'
 
+const ExamSettingsButton = observer(({ examId = '' }) => (
+  <Link to={`/admin/exams/${examId}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
+))
+
 const ExamStatusControls = () => {
   const { ExamStore: exam } = useStore()
   const status = exam?.status
+  const timeWindowMode = exam?.timeWindow?.mode
 
   const controlExam = useCallback(async (id, mode) => {
     if (!id) return false
@@ -39,6 +44,7 @@ const ExamStatusControls = () => {
     })
   }, [exam?.id])
 
+  if (timeWindowMode === 'schedule') return <ExamSettingsButton examId={exam.id} />
   if (status === 'started') {
     return (
       <Space direction="horizontal">
@@ -50,7 +56,7 @@ const ExamStatusControls = () => {
   return (
     <Space direction="horizontal">
       <Button type="primary" icon={<CaretRightFilled />} onClick={startExam}>เริ่มการสอบ</Button>
-      <Link to={`/admin/exams/${exam.id}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
+      <ExamSettingsButton examId={exam.id} />
     </Space>
   )
 }
