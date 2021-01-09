@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Switch } from 'react-router-dom'
-import { io } from 'socket.io-client'
+
 import { observer } from 'mobx-react'
 import { useStore } from '~/stores/index'
 
@@ -12,6 +12,8 @@ import LayoutRoute from '~/components/LayoutRoute'
 import DefaultLayout from '~/layouts/default'
 import ExamLayout, { ExamNormalLayout } from '~/layouts/exams'
 
+import { showModal } from '~/utils/modal'
+
 import IntroPage from './[id]/index'
 import AuthenPage from './[id]/authenticate'
 import WaitingPage from './[id]/waiting'
@@ -20,8 +22,8 @@ import CompletedPage from './[id]/completed'
 import FailedPage from './[id]/failed'
 
 const ExamPage = ({ match }) => {
-  const [socket, setSocket] = useState(null)
-  const { ExamStore: exam, AuthStore: auth, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
+  const { ExamStore: exam, SocketStore: socketStore, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
+  const [socketLoading, setSocketLoading] = useState(false)
 
   useEffect(() => {
     exam.getInfo({ id: match.params?.id })
@@ -30,14 +32,11 @@ const ExamPage = ({ match }) => {
   useEffect(() => {
     if (attempt.socketToken) {
       try {
-        const tempSocket = io(`http://localhost:5000/exams/${exam.id}`)
-        tempSocket
-          .on('authenticated', () => {
-            console.log('Authenticated')
-            setSocket(tempSocket)
-          })
+        setSocketLoading(true)
+        socketStore.init(`http://localhost:5000/exams/${exam.id}`)
+          .on('authenticated', () => setSocketLoading(false))
           .on('unauthorized', error => {
-            console.log(`Unauthorized:`, error)
+            throw error
           })
           .on('examStatus', payload => exam.updateStatus(payload))
           .on('idCheckResponse', ({ accepted, reason }) => {
@@ -48,20 +47,21 @@ const ExamPage = ({ match }) => {
             }
           })
           .on('examAnnoucement', text => exam.updateAnnoucement(text))
-          .on('connect', () => tempSocket.emit('authenticate', { token: attempt.socketToken }))
+          .on('connect', () => socketStore.socket.emit('authenticate', { token: attempt.socketToken }))
+          .connect()
       } catch {
-        setSocket(null)
+        showModal('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้', 'กรุณาเข้าสู่การสอบใหม่อีกครั้ง')
+        socketStore.destroy()
       }
     }
     return () => {
-      if (socket) socket.close()
-      setSocket(null)
+      socketStore.destroy()
     }
   }, [attempt.socketToken])
 
-  if (exam.loading) return <Loading />
-  if (exam.error) return <Error />
-  if (!exam.info.name) return <NotFound />
+  if (exam.loading || socketLoading) return <Loading />
+  else if (exam.error) return <Error />
+  else if (!exam.info.name) return <NotFound />
   return (
     <Switch>
       <LayoutRoute exact path={match.url} component={IntroPage} layout={DefaultLayout} />

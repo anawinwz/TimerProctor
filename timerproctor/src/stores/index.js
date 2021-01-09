@@ -8,6 +8,7 @@ import ExamStore from './ExamStore'
 import AttemptStore from './AttemptStore'
 import TimerStore from './TimerStore'
 import IDCheckStore from './IDCheckStore'
+import SocketStore from './SocketStore'
 
 export class RootStore {
   constructor() {
@@ -21,6 +22,7 @@ export class RootStore {
     this.TimerStore = new TimerStore(this)
     this.IDCheckStore = new IDCheckStore(this)
     this.AttemptStore = new AttemptStore(this)
+    this.SocketStore = new SocketStore(this)
   }
 }
 
