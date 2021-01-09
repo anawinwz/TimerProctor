@@ -1,5 +1,10 @@
 import { Switch } from 'react-router-dom'
 
+import { observer } from 'mobx-react'
+import { useStore } from '~/stores/admin'
+
+import Loading from '~/components/exams/Loading'
+
 import LayoutRoute from '~/components/LayoutRoute'
 import DefaultLayout from '~/layouts/default'
 import AdminLayout from '~/layouts/admin'
@@ -10,6 +15,8 @@ import ExamsPage from './exams/index'
 import ExamPage from './exams/[id]'
 
 const AdminPage = () => {
+  const { AppStore: { hydrated } } = useStore()
+  if (!hydrated) return <Loading />
   return (
     <Switch>
       <LayoutRoute exact path="/admin/login" component={LoginPage} layout={DefaultLayout} />
@@ -20,4 +27,4 @@ const AdminPage = () => {
   )
 }
 
-export default AdminPage
+export default observer(AdminPage)

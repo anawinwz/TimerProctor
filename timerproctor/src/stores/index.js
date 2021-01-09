@@ -1,6 +1,8 @@
 import { createContext, useContext } from 'react'
 import { create } from 'mobx-persist'
 
+import AppStore from './AppStore'
+
 import AuthStore from './AuthStore'
 import ExamStore from './ExamStore'
 import AttemptStore from './AttemptStore'
@@ -9,9 +11,11 @@ import IDCheckStore from './IDCheckStore'
 
 export class RootStore {
   constructor() {
+    this.AppStore = new AppStore()
+
     const hydrate = create()
     this.AuthStore = new AuthStore(this)
-    hydrate('auth', this.AuthStore)
+    hydrate('auth', this.AuthStore).then(() => this.AppStore.hydrateFinish())
     
     this.ExamStore = new ExamStore(this)
     this.TimerStore = new TimerStore(this)
