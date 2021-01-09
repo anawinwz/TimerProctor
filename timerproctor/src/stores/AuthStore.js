@@ -83,6 +83,15 @@ class AuthStore {
     this.displayName = displayName
     this.photoURL = photoURL
   }
+
+  @action
+  async logout() {
+    try {
+      await auth.signOut()
+    } finally {
+      this.setUser({ userId: '', email: '', displayName: '', photoURL: '' })
+    }
+  }
 }
 
 export default AuthStore
