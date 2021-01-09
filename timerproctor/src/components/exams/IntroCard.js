@@ -2,6 +2,8 @@ import { observer } from 'mobx-react'
 import { useStore } from '~/stores/index'
 import { Space, Card, Descriptions, Typography } from 'antd'
 import { rangeStr } from '~/utils/date'
+import { nl2br } from '~/utils/const'
+
 const { Title } = Typography
 
 const TimeWindowMode = (examInfo) => {
@@ -31,7 +33,7 @@ const IntroCard = () => {
 
         <div className="text-center">
           <Title level={4}>คำชี้แจงการสอบจากอาจารย์ผู้สอน</Title>
-          <p dangerouslySetInnerHTML={{ __html: examInfo.desc }}></p>
+          <p dangerouslySetInnerHTML={{ __html: nl2br(examInfo.desc) }}></p>
         </div>
       </Card>
     </Space>

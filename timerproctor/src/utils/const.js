@@ -1,3 +1,5 @@
+export const nl2br = str => str.replace(/\n/g, `<br />`)
+
 export const timeWindowModes = {
   realtime: 'ให้สัญญาณเริ่ม-สิ้นสุดด้วยตนเอง',
   schedule: 'กำหนดล่วงหน้า',
