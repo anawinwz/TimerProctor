@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Card, Space, Typography, message } from 'antd'
 import { observer } from 'mobx-react'
 import { useStore } from '~/stores/admin'
-import { Card, message } from 'antd'
 
+import Logo from '~/components/Logo'
 import GoogleLoginButton from '~/components/buttons/GoogleLoginButton'
 
 const IntroLogin = () => {
@@ -22,7 +23,11 @@ const IntroLogin = () => {
 
   return (
     <Card className="text-center">
-      <GoogleLoginButton onClick={() => login('google')} />
+      <Space direction="vertical">
+        <Logo size="large" />
+        <Typography.Title level={4}>ระบบจัดการการสอบ</Typography.Title>
+        <GoogleLoginButton onClick={() => login('google')} />
+      </Space>
     </Card>
   )
 }
