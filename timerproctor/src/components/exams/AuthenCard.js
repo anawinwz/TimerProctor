@@ -14,7 +14,7 @@ const AuthenCard = () => {
   useEffect(() => {
     if (!exam.isPromptIDCheck || idCheck.accepted === true) {
       if (exam.status === 'started')
-        history.replace(`/exams/${exam.id}/form`)
+        history.replace(`/exams/${exam.id}/attempt`)
       else
         history.replace(`/exams/${exam.id}/waiting`)
     } else if (idCheck.accepted === false) {
