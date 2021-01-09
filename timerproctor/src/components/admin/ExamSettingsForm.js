@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Form, Divider, Radio, Checkbox, DatePicker, InputNumber, Switch, Input, Select, Button, Collapse, message } from 'antd'
+import moment from 'moment'
 
 import { observer } from 'mobx-react'
 import { useStore } from '~/stores/admin'
@@ -44,6 +45,18 @@ const ExamSettingsForm = () => {
     }
   }, [exam?.id])
 
+  const prepareValues = useCallback(info => {
+    const startDate = info?.timeWindow?.schedule?.startDate
+    if (startDate) info.timeWindow.schedule.startDate = moment(startDate)
+    
+    const endDate = info?.timeWindow?.schedule?.endDate
+    if (endDate) info.timeWindow.schedule.endDate = moment(endDate)
+
+    return info
+  }, [])
+
+  const initialValues = useMemo(() => prepareValues(exam.info), [exam?.info])
+
   const onValuesChange = useCallback(values => {
     let changes = {}
     
@@ -64,7 +77,7 @@ const ExamSettingsForm = () => {
     <Form
       {...formLayout}
       size="middle"
-      initialValues={exam.info}
+      initialValues={initialValues}
       onValuesChange={onValuesChange}
       onFinish={updateExam}
     >
