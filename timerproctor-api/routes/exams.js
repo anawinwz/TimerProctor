@@ -67,9 +67,14 @@ router.get('/:id', populateExam, async (req, res, next) => {
 
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
   try {
-    const { _id: examId } = req.exam
-    const { _id: userId } = req.user
+    const { _id: examId, authentication } = req.exam
+    const { _id: userId, email } = req.user
     
+    const allowedDomains = authentication?.login?.email?.allowedDomains || []
+    const userDomain = email.split('@')[1]
+    if (allowedDomains.length > 0 && !allowedDomains.includes(userDomain)) 
+      return res.json(jsonResponse('failed', `คุณไม่สามารถใช้อีเมล @${userDomain} เข้าสอบได้`))
+
     let lastAttempt = await Attempt.findOne({ exam: examId, user: userId, status: { $ne: 'completed' } })
     if (!lastAttempt) {
       const newAttempt = new Attempt({
@@ -93,7 +98,7 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
       }
     }))
   } catch {
-    return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในระบบ'))
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
 })
 
