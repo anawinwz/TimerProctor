@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Tabs } from 'antd'
 
 import { observer } from 'mobx-react'
@@ -16,7 +17,12 @@ import ExamTesters from '~/components/admin/ExamTesters'
 const { TabPane } = Tabs
 
 const ExamOverview = () => {
-  const { ExamStore: { loading, info: exam } } = useStore()
+  const { ExamStore: examStore } = useStore()
+  const { loading, info: exam } = examStore
+  
+  useEffect(() => {
+    examStore?.getInfo()
+  }, [])
 
   const statuses = { all: 'ทั้งหมด', ...testerStatuses }
   

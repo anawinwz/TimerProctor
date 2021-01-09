@@ -31,8 +31,12 @@ const ExamSettingsForm = () => {
     try {
       const res = await fetchAPIwithToken(`/exams/${exam.id}/update`, data)
       const { status } = res
-      if (status === 'ok') message.success(`อัปเดตข้อมูลการสอบเรียบร้อยแล้ว!`)
-      else message.error(res.message || 'เกิดข้อผิดพลาดในการอัปเดตข้อมูลการสอบ!')
+      if (status === 'ok') {
+        message.success(`อัปเดตข้อมูลการสอบเรียบร้อยแล้ว!`)
+        exam.getInfo({ reload: true })
+      } else {
+        message.error(res.message || 'เกิดข้อผิดพลาดในการอัปเดตข้อมูลการสอบ!')
+      }
     } catch (err) {
       message.error(`เกิดข้อผิดพลาด: ${err.message}`)
     } finally {

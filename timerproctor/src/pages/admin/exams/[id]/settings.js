@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { Skeleton } from 'antd'
 
 import { observer } from 'mobx-react'
@@ -10,7 +10,12 @@ import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
 
 
 const ExamSettings = () => {
-  const { ExamStore: { loading, info: exam }, ExamAdminStore: examAdmin } = useStore()
+  const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
+  const { loading, info: exam } = examStore
+  
+  useEffect(() => {
+    examStore?.getInfo()
+  }, [])
 
   const onEditName = useCallback(name => {
     examAdmin?.editName(name)

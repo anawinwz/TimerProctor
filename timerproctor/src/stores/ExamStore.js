@@ -4,6 +4,7 @@ import { fetchAPI } from '~/utils/api'
 class ExamStore {
   @observable loading = false
   @observable error = null
+  @observable lastFetch = 0
 
   @observable id = ''
   @observable name = ''
@@ -22,7 +23,7 @@ class ExamStore {
   @action
   async getInfo(options = {}) {
     const { id, reload = false } = options
-    if (!reload && this.info.name && (!id || this.id === id)) {
+    if (!reload && this.info?.name && (!id || this.id === id) && Date.now() - this.lastFetch < 15000) {
       return this.info
     }
 
@@ -32,6 +33,7 @@ class ExamStore {
       this.loading = true
       this.info = await fetchAPI(`/exams/${this.id}`)
       this.name = this.info.name
+      this.lastFetch = Date.now()
       this.error = null
     } catch (err) {
       this.info = {}
