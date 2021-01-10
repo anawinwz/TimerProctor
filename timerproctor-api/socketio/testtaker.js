@@ -23,6 +23,7 @@ export default (socket, user = {}) => {
 
       getExamNsp(examId).to('proctor').emit('idCheckRequest', {
         id: socketInfo.id,
+        socketId: socket.id,
         photoURL: image,
         timestamp: timestamp
       })
