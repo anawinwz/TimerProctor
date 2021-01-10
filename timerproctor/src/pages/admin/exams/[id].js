@@ -25,6 +25,10 @@ const AdminExamPage = ({ match }) => {
             throw error
           })
           .on('newTester', tester => examAdmin.addTester(tester))
+          .on('newTesterStatus', payload => {
+            const { id, status } = payload
+            examAdmin.updateTester(id, { status })
+          })
           .on('idCheckRequest', payload => {
             const { id, socketId, photoURL, timestamp } = payload
             examAdmin.updateTester(id, {
