@@ -3,10 +3,21 @@ import { fetchAPIwithToken } from '~/utils/api'
 
 class ExamAdminStore {
   @observable counts = {}
+  @observable socketToken = ''
 
   constructor(rootStore) {
     this.rootStore = rootStore
     this.examStore = rootStore.ExamStore
+  }
+
+  @action
+  async startProctor() {
+    try {
+      const examId = this.examStore?.id
+      const res = await fetchAPIwithToken(`/exams/${examId}/startProctor`, {})
+      const { status, payload } = res
+      if (status === 'ok') this.socketToken = payload.socketToken
+    } catch {}
   }
 
   @action
