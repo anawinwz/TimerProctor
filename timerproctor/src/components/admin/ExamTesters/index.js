@@ -1,19 +1,23 @@
-import { useState, useCallback, useEffect } from 'react'
-import { Row, Radio, Pagination, message } from 'antd'
+import { useState, useCallback } from 'react'
+import { Row, Radio, Pagination } from 'antd'
 import { CheckSquareOutlined, TableOutlined, UnorderedListOutlined } from '@ant-design/icons'
+
+import { observer } from 'mobx-react-lite'
+import { useStore } from '~/stores/admin'
 
 import ApproveView from './views/approve'
 import GridView from './views/grid'
 import ListView from './views/list'
-import { fetchAPIwithToken } from '~/utils/api'
 
 const ExamTesters = ({ status }) => {
+  const { ExamAdminStore: examAdmin } = useStore()
+
   const [viewMode, setViewMode] = useState(status === 'authenticate' ? 'approve' : 'grid')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(6)
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [testers, setTesters] = useState([])
+  const isLoading = examAdmin?.loading || false
+  const testers = examAdmin?.testers || []
 
   const changePage = useCallback(page => {
     setPage(page)
@@ -25,20 +29,10 @@ const ExamTesters = ({ status }) => {
     setViewMode(e.target.value)
   }, [])
 
-  useEffect(async () => {
-    setIsLoading(true)
-    try {
-      const res = await fetchAPIwithToken(`/exams/5f991c780953aa4110686e76/testers?status=${status}&page=${page}&pageSize=${pageSize}`)
-      if (res.status === 'ok') {
-        setTesters(res.payload.testers)
-        setIsLoading(false)
-      } else {
-        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลหน้านี้')
-      }
-    } catch (err) {
-      message.error(err.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลหน้านี้')
-    }
-  }, [status, page, pageSize])
+  const filteredTesters = useMemo(() => {
+    return testers.filter(tester => tester.staus === viewMode)
+      .slice((page - 1) * pageSize, page * pageSize)
+  }, [page, pageSize, viewMode])
 
   return (
     <>
@@ -54,14 +48,17 @@ const ExamTesters = ({ status }) => {
             status === 'authenticating' && 
             <Radio.Button value="approve"><CheckSquareOutlined /> โหมดอนุมัติ (1 จอ)</Radio.Button>
           }
-          <Radio.Button value="grid"><TableOutlined /> ตารางภาพ</Radio.Button>
+          {
+            !['loggedin', 'authenticating'].includes(status) &&
+            <Radio.Button value="grid"><TableOutlined /> ตารางภาพ</Radio.Button>
+          }
           <Radio.Button value="list"><UnorderedListOutlined /> รายชื่อ</Radio.Button>
         </Radio.Group>
       </Row>
       <Row justify="center" gutter={4}>
-        { viewMode === 'approve' && <ApproveView testers={testers} /> }
-        { viewMode === 'grid' && <GridView pageSize={pageSize} testers={testers} /> }
-        { viewMode === 'list' && <ListView pageSize={pageSize} testers={testers} /> }
+        { viewMode === 'approve' && <ApproveView testers={filteredTesters} /> }
+        { viewMode === 'grid' && <GridView pageSize={pageSize} testers={filteredTesters} /> }
+        { viewMode === 'list' && <ListView pageSize={pageSize} testers={filteredTesters} /> }
       </Row>
       { viewMode !== 'approve' &&
         <Row justify="center">
@@ -81,4 +78,4 @@ const ExamTesters = ({ status }) => {
   )
 }
 
-export default ExamTesters
+export default observer(ExamTesters)
