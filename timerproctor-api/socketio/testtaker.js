@@ -9,6 +9,7 @@ export default (socket, user = {}) => {
   socket.on('idCheck', async (data, callback) => {
     const { image, timestamp } = data
     if (!socketInfo || !image || !timestamp) {
+      console.log('[idCheck] data incomplete:', socketInfo, image, timestamp)
       return callback({ err: true })
     }
     try {
@@ -28,7 +29,8 @@ export default (socket, user = {}) => {
         timestamp: timestamp
       })
       callback({ err: false })
-    } catch {
+    } catch (err) {
+      console.log('[idCheck] unhandled err:', err)
       callback({ err: true })
     }
   })
