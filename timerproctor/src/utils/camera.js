@@ -29,5 +29,5 @@ export const getSnapshot = (videoEl, scale) => {
   canvas.width = videoEl.videoWidth * scale
   canvas.height = videoEl.videoHeight * scale
   canvas.getContext('2d').drawImage(videoEl, 0, 0, canvas.width, canvas.height)
-  return canvas.toDataURL()
+  return canvas.toDataURL('image/jpeg')
 }
