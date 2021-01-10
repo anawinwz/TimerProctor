@@ -36,6 +36,12 @@ const AdminExamPage = ({ match }) => {
               }
             })
           })
+          .on('newSnapshot', payload => {
+            const { id, url } = payload
+            examAdmin.updateTester(id, {
+              lastSnapshot: { url: url }
+            })
+          })
           .connect()
       } catch {
         showModal('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้', 'กรุณาลองใหม่อีกครั้ง')
