@@ -42,6 +42,7 @@ const AdminExamPage = ({ match }) => {
               lastSnapshot: { url: url }
             })
           })
+          .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
           .connect()
       } catch {
         showModal('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้', 'กรุณาลองใหม่อีกครั้ง')
