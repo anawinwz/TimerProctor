@@ -13,15 +13,17 @@ const WindowTracker = ({ signal }) => {
       } else {
         setLastFocus(timestamp)
         signal({
-          time: timestamp,
-          type: 'unfocus',
+          timestamp: timestamp,
+          type: 'window',
+          event: 'unfocus',
           msg: 'พบการสลับหน้าต่าง/แท็บ'
         })
       }
     } else if (lastFocus) {
       signal({
-        time: timestamp,
-        type: 'focus',
+        timestamp: timestamp,
+        type: 'window',
+        event: 'focus',
         diff: timestamp - lastFocus
       })
       setLastFocus(null)

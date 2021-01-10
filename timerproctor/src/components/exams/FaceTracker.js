@@ -33,9 +33,9 @@ const FaceTracker = ({ signal = () => {} }) => {
       const faces = detections.length
       if (faces === 0 || faces > 1) {
         signal({
-          time: timestamp,
+          timestamp: timestamp,
           type: 'face',
-          faces: faces,
+          facesCount: faces,
           msg: faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
         })
       }
