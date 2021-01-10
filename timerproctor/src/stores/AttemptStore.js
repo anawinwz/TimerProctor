@@ -9,7 +9,6 @@ class AttemptStore {
     this.rootStore = rootStore
     this.authStore = this.rootStore.authStore
     this.examStore = this.rootStore.ExamStore
-    this.idCheckStore = this.rootStore.IDCheckStore
     this.socketStore = this.rootStore.SocketStore
   }
 
@@ -21,10 +20,9 @@ class AttemptStore {
     if (!resStatus || !['failed', 'ok'].includes(resStatus)) throw new Error(message || 'ไม่สามารถขอเริ่มการสอบได้')
     else if (resStatus === 'failed') throw new APIFailedError(message)
 
-    const { status, socketToken, idCheck: { accepted } } = payload
+    const { status, socketToken } = payload
     this.status = status
     this.socketToken = socketToken
-    if (accepted) this.idCheckStore.setResult(accepted)
   }
 
   @action
