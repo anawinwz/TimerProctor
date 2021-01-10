@@ -8,10 +8,11 @@ const schema = new Schema(
     timestamp: { type: Date, default: Date.now },
     type: {
       type: String,
-      enum: ['snapshot', 'noFaceDetected', 'tabSwitching']
+      enum: ['snapshot', 'face', 'window']
     },
     info: {
-      facesCount: Number
+      facesCount: Number,
+      windowEvent: String
     },
     evidence: {
       type: { type: String, enum: ['photo'] },
