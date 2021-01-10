@@ -49,6 +49,11 @@ export default (socket, user = {}) => {
 
     newEvent.save(err => {
       if (err) return callback({ err: true })
+
+      getExamNsp(examId).to('proctor').emit('newSnapshot', {
+        id: socketInfo.id,
+        url: image
+      })
       callback({ err: false })
     })
   })
