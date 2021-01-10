@@ -37,7 +37,7 @@ const ApproveView = ({ testers = [] }) => {
   const item = testers[0]
   return (
     <Space direction="vertical" className="text-center" style={{ display: 'block' }}>
-      <Image src={item.lastSnapshot?.url} width="100%" style={{ maxWidth: '360px' }} />
+      <Image src={item.idCheck?.photoURL} width="100%" style={{ maxWidth: '360px' }} />
       <Title key={3}>{ item.name }</Title>
       <Space direction="horizontal">
         <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item._id, 'approve')}>อนุมัติ</Button>
