@@ -107,6 +107,18 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
   }
 })
 
+router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, next) => {
+  try {
+    const { _id: userId } = req.user
+    const socketToken = jwt.sign({ id: userId, userId, role: 'proctor' }, JWT_SOCKET_SECRET)
+    return res.json(jsonResponse('ok', {
+      socketToken
+    }))
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
 router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   const { status } = req.query
   if (status && !['all', 'loggedin', 'authenticating', 'authenticated', 'started', 'completed'].includes(status))
