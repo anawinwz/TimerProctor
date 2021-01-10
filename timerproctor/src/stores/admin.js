@@ -6,6 +6,7 @@ import AppStore from './AppStore'
 import AuthStore from './AuthStore'
 import ExamStore from './ExamStore'
 import ExamAdminStore from './admin/ExamAdminStore'
+import SocketStore from './SocketStore'
 
 export class AdminRootStore {
   constructor() {
@@ -17,6 +18,7 @@ export class AdminRootStore {
     
     this.ExamStore = new ExamStore(this)
     this.ExamAdminStore = new ExamAdminStore(this)
+    this.SocketStore = new SocketStore(this)
   }
 }
 
