@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom'
 const WaitingPage = () => {
   const { ExamStore: exam } = useStore()
 
-  if (exam.status === 'started') return <Redirect to={`/exams/${exam.id}/form`} />
+  if (exam.status === 'started') return <Redirect to={`/exams/${exam.id}/attempt`} />
   return (
     <>
       <WaitingCard />
