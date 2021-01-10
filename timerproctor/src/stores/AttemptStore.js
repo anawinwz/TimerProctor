@@ -1,13 +1,16 @@
 import { action, observable } from 'mobx'
 import { APIFailedError, fetchAPIwithToken } from '~/utils/api'
+import { storage } from '~/utils/firebase'
 class AttemptStore {
   @observable status = 'login'
   @observable socketToken = ''
 
   constructor(rootStore) {
     this.rootStore = rootStore
+    this.authStore = this.rootStore.authStore
     this.examStore = this.rootStore.ExamStore
     this.idCheckStore = this.rootStore.IDCheckStore
+    this.socketStore = this.rootStore.SocketStore
   }
 
   @action
@@ -22,6 +25,28 @@ class AttemptStore {
     this.status = status
     this.socketToken = socketToken
     if (accepted) this.idCheckStore.setResult(accepted)
+  }
+
+  @action
+  submitSnapshot(image) {
+    const socket = this.socketStore?.socket
+    return new Promise(async (resolve, reject) => {
+      try {
+        const ext = image.includes('/png') ? 'png' : 'jpeg'
+        const timestamp = Date.now()
+        const ref = `${this.authStore.userId}/${this.examStore.id}/snaps/${timestamp}.${ext}`
+      
+        await storage.ref(ref).putString(image, 'data_url')
+
+        const url = await storage.ref(ref).getDownloadURL()
+        socket.emit('snapshot', { image: url, facesCount: 1, timestamp: timestamp }, data => {
+          if (data?.err) return reject(new Error(data.err))
+          resolve()
+        })
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
 }
 
