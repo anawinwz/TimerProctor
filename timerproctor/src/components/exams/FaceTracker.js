@@ -55,7 +55,7 @@ const FaceTracker = ({ signal = () => {} }) => {
 
   useEffect(() => {
     const interval = setInterval(tracker, 3000)
-    const snapshotInterval = setInterval(takeSnapshot, 15000)
+    const snapshotInterval = setInterval(takeSnapshot, 7000)
     return () => {
       clearInterval(interval)
       clearInterval(snapshotInterval)
