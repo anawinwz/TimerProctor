@@ -46,10 +46,18 @@ ioExam.on('connection', authorize({
       return onError({ message: 'บทบาทผู้ใช้ไม่ถูกต้อง' }, 'invalid_role')
     }
     
+    if (user.socketId) {
+      const oldSocketId = user.socketId
+      const oldSocket = socket.nsp?.sockets?.[oldSocketId]
+      if (oldSocket) oldSocket.disconnect(true)
+    }
+
+    user.socketId = socket.id
+    user = await user.save()
     onSuccess()
 
     socket.join(role)
-
+    
     bindSocketListener(socket, role, user)
     console.log(`[socket.io] A ${role} ${userId} connected to ${examId}.`)
   }
