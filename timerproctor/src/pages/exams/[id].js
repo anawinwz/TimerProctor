@@ -33,7 +33,7 @@ const ExamPage = ({ match }) => {
     if (attempt.socketToken) {
       try {
         setSocketLoading(true)
-        socketStore.init(`http://localhost:5000/exams/${exam.id}`)
+        socketStore.init(`/exams/${exam.id}`)
           .on('authenticated', () => setSocketLoading(false))
           .on('unauthorized', error => {
             throw error

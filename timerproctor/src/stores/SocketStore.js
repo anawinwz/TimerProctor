@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 import { io } from 'socket.io-client'
-
+import { baseUrl } from '~/utils/api'
 class SocketStore {
   @observable socket
   constructor(rootStore) {
@@ -14,6 +14,7 @@ class SocketStore {
     if (typeof opts.autoConnect === 'undefined') 
       opts.autoConnect = false
 
+    if (!url.includes('http')) url = `${baseUrl}${url}`
     this.socket = io(url, opts)
     return this.socket
   }
