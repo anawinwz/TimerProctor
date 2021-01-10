@@ -21,7 +21,7 @@ const ExamTesters = ({ status }) => {
   const [pageSize, setPageSize] = useState(6)
 
   const isLoading = examAdmin?.loading || false
-  const testers = examAdmin?.testers || []
+  const testers = examAdmin.testers.toJS()
 
   const changePage = useCallback(page => {
     setPage(page)
@@ -33,11 +33,13 @@ const ExamTesters = ({ status }) => {
     setViewMode(e.target.value)
   }, [])
 
-  const filteredTesters = useMemo(() => 
-    status === 'all' ? 
-    testers : 
-    testers.filter(tester => tester.status === status)
-  , [status])
+  const filteredTesters = useMemo(() => {
+    return (
+      status === 'all' ? 
+      testers : 
+      testers.filter(tester => tester.status === status)
+    )
+  }, [testers, status])
 
   const pagedTesters = useMemo(() => {
     return filteredTesters.slice((page - 1) * pageSize, page * pageSize)
