@@ -73,7 +73,7 @@ router.get('/:id', populateExam, async (req, res, next) => {
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
   try {
     const { _id: examId, authentication } = req.exam
-    const { _id: userId, email } = req.user
+    const { _id: userId, email, info } = req.user
     
     const allowedDomains = authentication?.login?.email?.allowedDomains || []
     const userDomain = email.split('@')[1]
@@ -91,6 +91,14 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
 
     if (lastAttempt.status === 'terminated')
       return res.json(jsonResponse('failed', 'คุณถูกเชิญออกจากห้องสอบแล้ว ไม่สามารถกลับเข้ามาได้อีก'))
+
+    const { displayName, photoURL } = info
+    getExamNsp(examId).to('proctor').emit('newTester', {
+      _id: lastAttempt._id,
+      name: displayName,
+      avatar: photoURL,
+      status: lastAttempt.status
+    })
 
     const socketToken = jwt.sign({ id: lastAttempt._id, userId, role: 'testtaker' }, JWT_SOCKET_SECRET)
     const { status, idCheck } = lastAttempt
