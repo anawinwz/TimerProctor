@@ -2,6 +2,8 @@ import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import dot from 'dot-object'
 
+import dayjs from '../utils/dayjs'
+
 import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../config'
 
 import Exam from '../models/exam'
@@ -72,8 +74,16 @@ router.get('/:id', populateExam, async (req, res, next) => {
 
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
   try {
-    const { _id: examId, authentication } = req.exam
+    const { _id: examId, authentication, timeWindow } = req.exam
     const { _id: userId, email, info } = req.user
+
+    const { mode, schedule } = timeWindow
+    if (mode === 'schedule') {
+      const startDate = schedule?.startDate
+      const endDate = schedule?.endDate
+      if (startDate && endDate && !dayjs().isBetween(startDate, endDate, '[]'))
+        return res.json(jsonResponse('failed', 'ขณะนี้ยังไม่ถึงเวลาเข้าสอบ'))
+    }
     
     const allowedDomains = authentication?.login?.email?.allowedDomains || []
     const userDomain = email.split('@')[1]
