@@ -97,7 +97,8 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
       _id: lastAttempt._id,
       name: displayName,
       avatar: photoURL,
-      status: lastAttempt.status
+      status: lastAttempt.status,
+      lastSnapshot: lastAttempt?.snapshot
     })
 
     const socketToken = jwt.sign({ id: lastAttempt._id, userId, role: 'testtaker' }, JWT_SOCKET_SECRET)
