@@ -1,4 +1,5 @@
 import { Col, List, Avatar } from 'antd'
+import { observer } from 'mobx-react-lite'
 import { testerStatuses } from '~/utils/const'
 
 const ListView = ({ pageSize = 8, testers = [] }) => {
@@ -21,4 +22,4 @@ const ListView = ({ pageSize = 8, testers = [] }) => {
   )
 }
 
-export default ListView
+export default observer(ListView)

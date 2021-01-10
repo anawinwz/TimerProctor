@@ -1,6 +1,9 @@
 import { useCallback, useState } from 'react'
 import { Empty, Space, Typography, Button, Popconfirm, Radio, Image } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+
+import { observer } from 'mobx-react-lite'
+
 import { photoRejectReasons } from '~/utils/const'
 
 const { Title } = Typography
@@ -51,4 +54,4 @@ const ApproveView = ({ testers = [] }) => {
   )
 }
 
-export default ApproveView
+export default observer(ApproveView)

@@ -1,4 +1,5 @@
 import { Empty, Col } from 'antd'
+import { observer } from 'mobx-react-lite'
 import ExamTester from '../../ExamTester'
 
 const colSizeMap = {
@@ -18,4 +19,4 @@ const GridView = ({ pageSize = 6, testers = [] }) => {
   ))
 }
 
-export default GridView
+export default observer(GridView)
