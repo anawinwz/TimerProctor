@@ -11,6 +11,7 @@ const schema = new Schema(
       default: 'loggedin',
       enum: ['loggedin', 'authenticating', 'authenticated', 'started', 'completed', 'terminated']
     },
+    socketId: String,
     idCheck: {
       accepted: { type: Boolean, default: false },
       reason: { type: String, default: '' },
