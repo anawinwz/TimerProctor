@@ -122,15 +122,21 @@ router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req,
       )
     })
     .populate('user')
+    .populate('lastSnapshot')
 
     const testers = attempts.map(attempt => {
-      const { _id, user, status } = attempt
+      const { _id, user, lastSnapshot, status } = attempt
       const { info: { displayName, photoURL } } = user
       return {
         _id,
         name: displayName,
         avatar: photoURL,
-        status
+        status,
+        ...(lastSnapshot && {
+          lastSnapshot: {
+            url: lastSnapshot.evidence?.url
+          }
+        })
       }
     })
 
