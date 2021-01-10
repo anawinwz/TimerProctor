@@ -33,7 +33,11 @@ const ApproveView = ({ testers = [] }) => {
   const [reason, setReason] = useState('รูปไม่ชัดเจน')
   const responseUser = useCallback((userId, mode, reason) => {
     socketStore.socket.emit('idCheckResponse', { id: userId, mode, reason }, data => {
-      examAdmin.updateTester(userId, { checkedByMe: true })
+      if (data?.err) return false
+      examAdmin.updateTester(userId, 
+        mode === 'accept' ? { status: 'authenticated', ...(data.update) } : 
+        { checkedByMe: true }
+      )
     })
   }, [socketStore.socket])
 
