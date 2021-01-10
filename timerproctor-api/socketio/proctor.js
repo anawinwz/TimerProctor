@@ -4,15 +4,15 @@ import { getExamIdFromSocket, getExamNsp } from '../utils/helpers'
 export default (socket, user = {}) => {
   const socketInfo = socket?.attempt
   const examId = getExamIdFromSocket(socket)
-  socket.on('idCheckResponse', async (data, callback) => {
+  socket.on('idCheckResponse', async (data) => {
     const { id, mode, reason } = data
     if (!['accept', 'reject'].includes(mode))
-      return callback({ err: true })
+      return false
     
     try {
       let attempt = await Attempt.findById(id)
       const socketId = attempt.socketId
-      if (!socketId) return callback({ err: true })
+      if (!socketId) return false
 
       const accepted = mode === 'accept'
       const rejectReason = !accepted ? (reason || 'ไม่ระบุเหตุผล') : ''
@@ -23,9 +23,10 @@ export default (socket, user = {}) => {
       await attempt.save() 
       
       getExamNsp(examId).to(socketId).emit('idCheckResponse', { accepted, reason: rejectReason })
-      callback({ err: false })
-    } catch {
-      callback({ err: true })
+      return true
+    } catch (err) {
+      console.log('[proctor/idCheckResponse] Unhandled: ', err)
+      return false
     }
   })
 }
