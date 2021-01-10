@@ -12,7 +12,8 @@ const schema = new Schema(
     },
     info: {
       facesCount: Number,
-      windowEvent: String
+      windowEvent: String,
+      timeDiff: Number
     },
     evidence: {
       type: { type: String, enum: ['photo'] },
