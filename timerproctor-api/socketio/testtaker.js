@@ -14,6 +14,7 @@ export default (socket, user = {}) => {
     }
     try {
       let attempt = await Attempt.findById(socketInfo.id)
+      attempt.status = 'authenticating'
       attempt.idCheck.photoURL = image
       attempt.idCheck.timestamp = timestamp
       attempt.idCheck.accepted = false
