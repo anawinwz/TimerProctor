@@ -22,12 +22,12 @@ export const getStream = () => new Promise(async(resolve, reject) => {
   }
 })
 
-export const getSnapshot = (videoEl, scale) => {
-  scale = scale || 1
+export const getSnapshot = (videoEl, options = {}) => {
+  const { scale = 1, quality = 0.92 } = options
 
   const canvas = document.createElement('canvas')
   canvas.width = videoEl.videoWidth * scale
   canvas.height = videoEl.videoHeight * scale
   canvas.getContext('2d').drawImage(videoEl, 0, 0, canvas.width, canvas.height)
-  return canvas.toDataURL('image/jpeg')
+  return canvas.toDataURL('image/jpeg', quality)
 }
