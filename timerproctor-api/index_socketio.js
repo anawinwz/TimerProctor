@@ -57,6 +57,7 @@ ioExam.on('connection', authorize({
     user = await user.save()
     onSuccess()
 
+    socket.attempt = decoded
     socket.join(role)
     
     bindSocketListener(socket, role, user)
