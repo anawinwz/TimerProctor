@@ -3,6 +3,7 @@ import { Empty, Space, Typography, Button, Popconfirm, Radio, Image } from 'antd
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
+import { useStore } from '~/stores/admin'
 
 import { photoRejectReasons } from '~/utils/const'
 
@@ -27,10 +28,12 @@ const RejectReasonRadios = ({ currentReason, setReason }) => {
 }
 
 const ApproveView = ({ testers = [] }) => {
+  const { SocketStore: socketStore } = useStore()
+
   const [reason, setReason] = useState('รูปไม่ชัดเจน')
   const responseUser = useCallback((userId, mode, reason) => {
-    console.log(userId, mode, reason)
-  }, [])
+    socketStore.socket.emit('idCheckResponse', { id: userId, mode, reason })
+  }, [socketStore.socket])
 
   if (testers.length === 0) return <Empty />
   
@@ -40,7 +43,7 @@ const ApproveView = ({ testers = [] }) => {
       <Image src={item.idCheck?.photoURL} width="100%" style={{ maxWidth: '360px' }} />
       <Title key={3}>{ item.name }</Title>
       <Space direction="horizontal">
-        <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item._id, 'approve')}>อนุมัติ</Button>
+        <Button type="primary" icon={<CheckOutlined />} onClick={() => responseUser(item._id, 'accept')}>อนุมัติ</Button>
         <Popconfirm
           title={<RejectReasonRadios currentReason={reason} setReason={setReason} />}
           onConfirm={() => responseUser(item._id, 'reject', reason)}
