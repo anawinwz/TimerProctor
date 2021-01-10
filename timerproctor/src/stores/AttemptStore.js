@@ -7,7 +7,7 @@ class AttemptStore {
 
   constructor(rootStore) {
     this.rootStore = rootStore
-    this.authStore = this.rootStore.authStore
+    this.authStore = this.rootStore.AuthStore
     this.examStore = this.rootStore.ExamStore
     this.socketStore = this.rootStore.SocketStore
   }
