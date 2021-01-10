@@ -5,6 +5,7 @@ import { JWT_SOCKET_SECRET } from './config'
 
 import User from './models/user'
 import Exam from './models/exam'
+import Attempt from './models/attempt'
 
 import { ioNamespace } from './utils/const'
 
@@ -35,7 +36,7 @@ ioExam.on('connection', authorize({
       return onError({ message: 'ไม่พบห้องสอบ' }, 'exam_notfound')
     }
 
-    const { userId, role } = decoded
+    const { id, userId, role } = decoded
     let user = await User.findById(userId)
     if (!user) {
       console.log(`User not found: ${userId}`)
@@ -53,8 +54,8 @@ ioExam.on('connection', authorize({
       if (oldSocket) oldSocket.disconnect(true)
     }
 
-    user.socketId = socket.id
-    user = await user.save()
+    await Attempt.findByIdAndUpdate(id, { socketId: socket.id })
+    
     onSuccess()
 
     socket.attempt = decoded
