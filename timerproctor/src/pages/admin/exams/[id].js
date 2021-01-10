@@ -33,7 +33,8 @@ const AdminExamPage = ({ match }) => {
               idCheck: {
                 photoURL: photoURL,
                 timestamp: timestamp
-              }
+              },
+              checkedByMe: undefined
             })
           })
           .on('newSnapshot', payload => {

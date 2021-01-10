@@ -28,16 +28,19 @@ const RejectReasonRadios = ({ currentReason, setReason }) => {
 }
 
 const ApproveView = ({ testers = [] }) => {
-  const { SocketStore: socketStore } = useStore()
+  const { SocketStore: socketStore, ExamAdminStore: examAdmin } = useStore()
 
   const [reason, setReason] = useState('รูปไม่ชัดเจน')
   const responseUser = useCallback((userId, mode, reason) => {
-    socketStore.socket.emit('idCheckResponse', { id: userId, mode, reason })
+    socketStore.socket.emit('idCheckResponse', { id: userId, mode, reason }, data => {
+      examAdmin.updateTester(userId, { checkedByMe: true })
+    })
   }, [socketStore.socket])
 
-  if (testers.length === 0) return <Empty />
+  const queue = testers.filter(tester => !tester.checkedByMe)
+  if (queue.length === 0) return <Empty />
   
-  const item = testers[0]
+  const item = queue[0]
   return (
     <Space direction="vertical" className="text-center" style={{ display: 'block' }}>
       <Image src={item.idCheck?.photoURL} width="100%" style={{ maxWidth: '360px' }} />
