@@ -1,3 +1,4 @@
+import io from '../index_socketio'
 import { ioNamespace } from './const'
 
 export const jsonResponse = (status = 'ok', payload) => {
@@ -11,4 +12,4 @@ export const getExamIdFromSocket = socket => {
   return name.match(ioNamespace)[1]
 }
 
-export const getExamNsp = (app, examId) => app.locals.io.of(`/exams/${examId}`)
+export const getExamNsp = (examId) => io.of(`/exams/${examId}`)
