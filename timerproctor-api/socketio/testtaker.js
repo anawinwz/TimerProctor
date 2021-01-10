@@ -11,26 +11,28 @@ export default (socket, user = {}) => {
     if (!socketInfo || !image || !timestamp) {
       return callback({ err: true })
     }
+    try {
+      let attempt = await Attempt.findById(socketInfo.id)
+      attempt.idCheck.photoURL = image
+      attempt.idCheck.timestamp = timestamp
+      attempt.idCheck.accepted = false
+      attempt.idCheck.reason = ''
+      attempt.idCheck.checker = ''
+      attempt.idCheck.checkedAt = null
+      attempt = await attempt.save()
 
-    let attempt = await Attempt.findById(socketInfo.id)
-    attempt.idCheck.photoURL = image
-    attempt.idCheck.timestamp = timestamp
-    attempt.idCheck.accepted = false
-    attempt.idCheck.reason = ''
-    attempt.idCheck.checker = ''
-    attempt.idCheck.checkedAt = null
-    attempt = await attempt.save()
-
-    getExamNsp(examId).to('proctor').emit('idCheckRequest', {
-      id: socketInfo.id,
-      name: user?.info?.displayName,
-      image: image
-    })
-    
-    callback({})
+      getExamNsp(examId).to('proctor').emit('idCheckRequest', {
+        id: socketInfo.id,
+        name: user?.info?.displayName,
+        image: image
+      })
+      callback({ err: false })
+    } catch {
+      callback({ err: true })
+    }
   })
 
-  socket.on('snapshot', (data, callback) => {
+  socket.on('snapshot', async (data, callback) => {
     const { image, facesCount, timestamp } = data
     if (!socketInfo || !image || !facesCount || !timestamp) {
       return callback({ err: true })
@@ -47,7 +49,7 @@ export default (socket, user = {}) => {
       }
     })
 
-    newEvent.save(err => {
+    newEvent.save(async (err, newEvent) => {
       if (err) return callback({ err: true })
 
       getExamNsp(examId).to('proctor').emit('newSnapshot', {
@@ -55,6 +57,12 @@ export default (socket, user = {}) => {
         url: image
       })
       callback({ err: false })
+      
+      try {
+        let attempt = await Attempt.findById(socketInfo.id)
+        attempt.lastSnapshot = newEvent._id
+        await attempt.save()
+      } catch {}
     })
   })
 
