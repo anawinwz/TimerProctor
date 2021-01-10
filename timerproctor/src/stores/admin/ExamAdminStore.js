@@ -51,7 +51,7 @@ class ExamAdminStore {
 
     this.testers.push(tester)
     this.counts.all += 1
-    this.counts?.[tester?.status] += 1
+    this.counts[tester.status] += 1
   }
 
   @action

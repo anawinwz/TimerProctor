@@ -11,7 +11,7 @@ import ExamOverviewPage from './[id]/overview'
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
 
-  useEffect(() => {
+  useEffect(async () => {
     await exam.getInfo({ id: match.params?.id })
     await examAdmin.startProctor()
   }, [match.params?.id])
