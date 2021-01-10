@@ -26,6 +26,7 @@ export const ioExam = io.of(ioNamespace)
 ioExam.on('connection', authorize({
   secret: JWT_SOCKET_SECRET,
   timeout: 15000,
+  decodedPropertyName: 'attempt',
   additional_auth: async (decoded, onSuccess, onError, socket) => {
     const examId = getExamIdFromSocket(socket)
     const exam = await Exam.findById(examId)
