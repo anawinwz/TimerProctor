@@ -1,6 +1,10 @@
 import { useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
-import { getStream } from '~/utils/camera'
+
+import { observer } from 'mobx-react-lite'
+import { useStore } from '~/stores/index'
+
+import { getSnapshot, getStream } from '~/utils/camera'
 import { detectAllFaces } from '~/utils/faceDetection'
 import { showModal } from '~/utils/modal'
 
@@ -11,6 +15,7 @@ const Video = styled('video')`
 `
 
 const FaceTracker = ({ signal = () => {} }) => {
+  const { AttemptStore: attempt } = useStore()
   const camInput = useRef()
 
   useEffect(() => {
@@ -25,6 +30,12 @@ const FaceTracker = ({ signal = () => {} }) => {
       }
     })()
   }, [])
+
+  const takeSnapshot = useCallback(() => {
+    const video = camInput.current
+    const image = getSnapshot(video, { quality: 0.7 })
+    attempt.submitSnapshot(image)
+  })
 
   const tracker = useCallback(() => {
     const video = camInput.current
@@ -44,10 +55,14 @@ const FaceTracker = ({ signal = () => {} }) => {
 
   useEffect(() => {
     const interval = setInterval(tracker, 3000)
-    return () => clearInterval(interval)
+    const snapshotInterval = setInterval(takeSnapshot, 15000)
+    return () => {
+      clearInterval(interval)
+      clearInterval(snapshotInterval)
+    }
   }, [])
 
   return <Video ref={camInput} autoPlay muted playsInline preload="none" />
 }
 
-export default FaceTracker
+export default observer(FaceTracker)
