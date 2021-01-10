@@ -36,7 +36,7 @@ ioExam.on('connection', authorize({
     }
 
     const { userId, role } = decoded
-    const user = await User.findById(userId)
+    let user = await User.findById(userId)
     if (!user) {
       console.log(`User not found: ${userId}`)
       return onError({ message: 'ไม่พบข้อมูลผู้ใช้' }, 'user_notfound')
