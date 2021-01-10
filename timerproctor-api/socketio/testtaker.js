@@ -5,6 +5,7 @@ import { getExamIdFromSocket, getExamNsp } from '../utils/helpers'
 export default (socket, user = {}) => {
   const socketInfo = socket?.attempt
   const examId = getExamIdFromSocket(socket)
+
   socket.on('idCheck', async (data, callback) => {
     const { image, timestamp } = data
     if (!socketInfo || !image || !timestamp) {
@@ -28,6 +29,7 @@ export default (socket, user = {}) => {
     
     callback({})
   })
+
   socket.on('snapshot', (data, callback) => {
     const { image, facesCount, timestamp } = data
     if (!socketInfo || !image || !facesCount || !timestamp) {
@@ -47,6 +49,34 @@ export default (socket, user = {}) => {
 
     newEvent.save(err => {
       if (err) return callback({ err: true })
+      callback({ err: false })
+    })
+  })
+
+  socket.on('signal', (data, callback) => {
+    const { type, timestamp } = data
+    let newEvent = new AttemptEvent({
+      attempt: socketInfo.id,
+      timestamp,
+      type
+    })
+
+    switch (type) {
+      case 'window':
+        newEvent.info = {
+          windowEvent: data.event,
+          timeDiff: data.diff
+        }
+        break
+      case 'face':
+        newEvent.info = { facesCount: data.facesCount }
+        break
+    }
+
+    newEvent.save((err, newEvent) => {
+      if (err) return callback({ err: true })
+
+      getExamNsp(examId).to('proctor').emit('newEvent', newEvent)
       callback({ err: false })
     })
   })
