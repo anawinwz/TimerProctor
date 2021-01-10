@@ -24,7 +24,7 @@ class IDCheckStore {
   }
 
   @action
-  async submit(image = '') {
+  submit(image = '') {
     const socket = this.socketStore?.socket
     return new Promise(async (resolve, reject) => {
       if (!socket) reject(new Error('การเชื่อมต่อเซิร์ฟเวอร์ขาดหาย'))
