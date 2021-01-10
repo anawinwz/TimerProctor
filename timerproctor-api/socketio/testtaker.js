@@ -18,8 +18,8 @@ export default (socket, user = {}) => {
       attempt.idCheck.timestamp = timestamp
       attempt.idCheck.accepted = false
       attempt.idCheck.reason = ''
-      attempt.idCheck.checker = ''
-      attempt.idCheck.checkedAt = null
+      attempt.idCheck.checker = undefined
+      attempt.idCheck.checkedAt = undefined
       attempt = await attempt.save()
 
       getExamNsp(examId).to('proctor').emit('idCheckRequest', {
