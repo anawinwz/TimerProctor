@@ -24,6 +24,7 @@ const AdminExamPage = ({ match }) => {
           .on('unauthorized', error => {
             throw error
           })
+          .on('newTester', tester => examAdmin.addTester(tester))
           .connect()
       } catch {
         showModal('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้', 'กรุณาลองใหม่อีกครั้ง')
