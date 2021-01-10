@@ -25,6 +25,17 @@ const AdminExamPage = ({ match }) => {
             throw error
           })
           .on('newTester', tester => examAdmin.addTester(tester))
+          .on('idCheckRequest', payload => {
+            const { id, socketId, photoURL, timestamp } = payload
+            examAdmin.updateTester(id, {
+              status: 'authenticating',
+              socketId: socketId,
+              idCheck: {
+                photoURL: photoURL,
+                timestamp: timestamp
+              }
+            })
+          })
           .connect()
       } catch {
         showModal('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้', 'กรุณาลองใหม่อีกครั้ง')
