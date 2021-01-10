@@ -7,12 +7,13 @@ import Form from '~/components/exams/Form'
 import Trackers from '~/components/exams/Trackers'
 
 const AttemptPage = () => {
-  const { ExamStore: exam, TimerStore: timer } = useStore()
+  const { ExamStore: exam, TimerStore: timer, SocketStore: socketStore } = useStore()
   const [count, setCount] = useState(0)
 
   useEffect(() => {
     timer.set({ endTime: exam.info?.timer?.duration * 60  })
     timer.start()
+    socketStore.socket.emit('start')
   }, [])
 
   const onLoad = useCallback(() => {
