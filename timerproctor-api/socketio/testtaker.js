@@ -70,7 +70,7 @@ export default (socket, user = {}) => {
     })
   })
 
-  socket.on('start', (callback) => {
+  socket.on('start', async (callback) => {
     try {
       let attempt = await Attempt.findById(socketInfo.id)
       attempt.status = 'started'
@@ -80,7 +80,7 @@ export default (socket, user = {}) => {
     } catch {}
   })
 
-  socket.on('fail', (callback) => {
+  socket.on('fail', async (callback) => {
     try {
       let attempt = await Attempt.findById(socketInfo.id)
       attempt.status = 'started'
@@ -90,7 +90,7 @@ export default (socket, user = {}) => {
     } catch {}
   })
 
-  socket.on('complete', (callback) => {
+  socket.on('complete', async (callback) => {
     try {
       let attempt = await Attempt.findById(socketInfo.id)
       attempt.status = 'started'
