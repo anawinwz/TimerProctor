@@ -1,6 +1,6 @@
 
 import { useCallback, useEffect, useState } from 'react'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { Redirect } from 'react-router-dom'
 import { useStore } from '~/stores/index'
 import Form from '~/components/exams/Form'

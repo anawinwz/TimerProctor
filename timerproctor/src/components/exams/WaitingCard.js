@@ -1,5 +1,5 @@
 import { Card, Result, Alert } from 'antd'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
 const WaitingAnnoucement = observer(() => {

@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 import { Space, Card, Descriptions, Typography } from 'antd'
 import { rangeStr } from '~/utils/date'

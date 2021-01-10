@@ -1,5 +1,5 @@
 
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 import WaitingCard from '~/components/exams/WaitingCard'
 import { Redirect } from 'react-router-dom'

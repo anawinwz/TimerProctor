@@ -1,5 +1,5 @@
 import { Card, Typography, Modal } from 'antd'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useStore } from '~/stores/index'

@@ -1,5 +1,5 @@
 import { Redirect } from 'react-router-dom'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import Header from '~/components/admin/Header'

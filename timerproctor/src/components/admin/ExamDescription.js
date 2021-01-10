@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { Descriptions } from 'antd'
 import { idCheckModes } from '~/utils/const'
 import { rangeStr, shortDateStr } from '~/utils/date'

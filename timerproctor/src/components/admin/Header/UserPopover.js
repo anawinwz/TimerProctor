@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { Popover, List } from 'antd'
 import styled from 'styled-components'
 
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import UserAvatar from '../UserAvatar'

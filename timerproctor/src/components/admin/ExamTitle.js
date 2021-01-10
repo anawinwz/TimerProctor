@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { Typography } from 'antd'
 
 const { Title, Text } = Typography

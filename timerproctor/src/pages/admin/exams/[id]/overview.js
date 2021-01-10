@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Tabs } from 'antd'
 
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import ExamOverviewLoading from '~/components/admin/loading/ExamOverview'

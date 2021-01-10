@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Card, Result, Button } from 'antd'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
 const FailedCard = () => {

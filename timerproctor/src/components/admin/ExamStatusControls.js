@@ -3,7 +3,7 @@ import { Modal, Button, Space, message } from 'antd'
 import { CaretRightFilled, StopFilled, SettingOutlined } from '@ant-design/icons'
 
 import { Link } from 'react-router-dom'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 import { fetchAPIwithToken } from '~/utils/api'
 

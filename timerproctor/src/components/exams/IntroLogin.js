@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Card, Space, Button, message } from 'antd'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
 import { APIFailedError } from '~/utils/api'

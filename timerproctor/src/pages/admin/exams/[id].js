@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { observer } from 'mobx-react'
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import ExamSettingsPage from './[id]/settings'
