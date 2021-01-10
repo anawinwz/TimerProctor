@@ -2,8 +2,17 @@ import { action, observable } from 'mobx'
 import { fetchAPIwithToken } from '~/utils/api'
 
 class ExamAdminStore {
-  @observable counts = {}
+  @observable loading = false
   @observable socketToken = ''
+  @observable counts = {
+    all: 0,
+    loggedin: 0,
+    authenticating: 0,
+    authenticated: 0,
+    started: 0,
+    completed: 0
+  }
+  @observable testers = []
 
   constructor(rootStore) {
     this.rootStore = rootStore
@@ -18,6 +27,22 @@ class ExamAdminStore {
       const { status, payload } = res
       if (status === 'ok') this.socketToken = payload.socketToken
     } catch {}
+  }
+
+  @action
+  async getTesters() {
+    try {
+      this.loading = true
+      const examId = this.examStore?.id
+      const res = await fetchAPIwithToken(`/exams/${examId}/testers`)
+      if (res.status === 'ok') {
+        this.testers = res.payload.testers
+      } else {
+        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลหน้านี้')
+      }
+    } finally {
+      this.loading = false
+    }
   }
 
   @action

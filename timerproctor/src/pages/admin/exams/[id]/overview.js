@@ -23,6 +23,7 @@ const ExamOverview = () => {
   useEffect(async () => {
     await examStore?.getInfo()
     examAdmin?.getCounts()
+    examAdmin?.getTesters()
   }, [])
 
   const statuses = { all: 'ทั้งหมด', ...testerStatuses }
