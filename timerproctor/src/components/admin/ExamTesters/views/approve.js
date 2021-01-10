@@ -34,11 +34,11 @@ const ApproveView = ({ testers = [] }) => {
   const responseUser = useCallback((userId, mode, reason) => {
     socketStore.socket.emit('idCheckResponse', { id: userId, mode, reason }, data => {
       if (data?.err) return false
-      examAdmin.updateTester(userId, 
-        mode === 'accept' ? { status: 'authenticated', ...(data.update) } : 
-        { checkedByMe: true }
-      )
     })
+    examAdmin.updateTester(userId, 
+      mode === 'accept' ? { status: 'authenticated' } : 
+      { checkedByMe: true }
+    )
   }, [socketStore.socket])
 
   const queue = testers.filter(tester => !tester.checkedByMe)
