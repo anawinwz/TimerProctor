@@ -47,6 +47,8 @@ class ExamAdminStore {
 
   @action
   addTester(tester = {}) {
+    if (this.updateTester(tester?._id, tester)) return true
+
     this.testers.push(tester)
     this.counts.all += 1
     this.counts?.[tester?.status] += 1
@@ -55,12 +57,15 @@ class ExamAdminStore {
   @action
   updateTester(_id, changes = {}) {
     const idx = this.testers.findIndex(tester => tester?._id == _id)
+    if (idx === -1) return false
+
     const oldStatus = this.testers[idx]?.status
     this.testers[idx] = Object.assign({}, this.testers[idx], changes)
     if (oldStatus && changes?.status) {
       this.counts[oldStatus] -= 1
       this.counts[changes.status] += 1
     }
+    return true
   }
 
   @action
