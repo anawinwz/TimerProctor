@@ -70,6 +70,36 @@ export default (socket, user = {}) => {
     })
   })
 
+  socket.on('start', (callback) => {
+    try {
+      let attempt = await Attempt.findById(socketInfo.id)
+      attempt.status = 'started'
+      attempt = await attempt.save()
+
+      getExamNsp(examId).to('proctor').emit('newTesterStatus', { id: socketInfo.id, status: 'started' })
+    } catch {}
+  })
+
+  socket.on('fail', (callback) => {
+    try {
+      let attempt = await Attempt.findById(socketInfo.id)
+      attempt.status = 'started'
+      attempt = await attempt.save()
+
+      getExamNsp(examId).to('proctor').emit('newTesterStatus', { id: socketInfo.id, status: 'completed' })
+    } catch {}
+  })
+
+  socket.on('complete', (callback) => {
+    try {
+      let attempt = await Attempt.findById(socketInfo.id)
+      attempt.status = 'started'
+      attempt = await attempt.save()
+
+      getExamNsp(examId).to('proctor').emit('newTesterStatus', { id: socketInfo.id, status: 'completed' })
+    } catch {}
+  })
+
   socket.on('signal', (data, callback) => {
     const { type, timestamp } = data
     let newEvent = new AttemptEvent({
