@@ -9,10 +9,14 @@ import ApproveView from './views/approve'
 import GridView from './views/grid'
 import ListView from './views/list'
 
+const gridDisabled = ['loggedin', 'authenticating', 'completed']
+
 const ExamTesters = ({ status }) => {
   const { ExamAdminStore: examAdmin } = useStore()
 
-  const [viewMode, setViewMode] = useState(status === 'authenticate' ? 'approve' : 'grid')
+  const [viewMode, setViewMode] = useState(status === 'authenticating' ? 'approve' : 
+    (gridDisabled.includes(status) ? 'list' : 'grid')
+  )
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(6)
 
@@ -54,7 +58,7 @@ const ExamTesters = ({ status }) => {
             <Radio.Button value="approve"><CheckSquareOutlined /> โหมดอนุมัติ (1 จอ)</Radio.Button>
           }
           {
-            !['loggedin', 'authenticating'].includes(status) &&
+            !gridDisabled.includes(status) &&
             <Radio.Button value="grid"><TableOutlined /> ตารางภาพ</Radio.Button>
           }
           <Radio.Button value="list"><UnorderedListOutlined /> รายชื่อ</Radio.Button>
