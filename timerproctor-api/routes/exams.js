@@ -98,7 +98,8 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
       name: displayName,
       avatar: photoURL,
       status: lastAttempt.status,
-      lastSnapshot: lastAttempt?.snapshot
+      lastSnapshot: lastAttempt?.snapshot,
+      idCheck: lastAttempt.idCheck
     })
 
     const socketToken = jwt.sign({ id: lastAttempt._id, userId, role: 'testtaker' }, JWT_SOCKET_SECRET)
@@ -146,7 +147,7 @@ router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req,
     .populate('lastSnapshot')
 
     const testers = attempts.map(attempt => {
-      const { _id, user, lastSnapshot, status } = attempt
+      const { _id, user, lastSnapshot, status, idCheck } = attempt
       const { info: { displayName, photoURL } } = user
       return {
         _id,
@@ -157,7 +158,8 @@ router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req,
           lastSnapshot: {
             url: lastSnapshot.evidence?.url
           }
-        })
+        }),
+        idCheck: idCheck
       }
     })
 
