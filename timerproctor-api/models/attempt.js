@@ -12,6 +12,7 @@ const schema = new Schema(
       enum: ['loggedin', 'authenticating', 'authenticated', 'started', 'completed', 'terminated']
     },
     socketId: String,
+    lastSnapshot: { type: Schema.Types.ObjectId, ref: 'AttemptEvent' },
     idCheck: {
       photoURL: { type: String, default: '' },
       timestamp: { type: Date },
