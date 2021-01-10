@@ -13,6 +13,7 @@ const schema = new Schema(
     },
     socketId: String,
     idCheck: {
+      photoURL: { type: String, default: '' },
       accepted: { type: Boolean, default: false },
       reason: { type: String, default: '' },
       checker: { type: Schema.Types.ObjectId, ref: 'User' },
