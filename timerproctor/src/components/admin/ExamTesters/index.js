@@ -29,10 +29,15 @@ const ExamTesters = ({ status }) => {
     setViewMode(e.target.value)
   }, [])
 
-  const filteredTesters = useMemo(() => {
-    return testers.filter(tester => tester.staus === viewMode)
-      .slice((page - 1) * pageSize, page * pageSize)
-  }, [page, pageSize, viewMode])
+  const filteredTesters = useMemo(() => 
+    status === 'all' ? 
+    testers : 
+    testers.filter(tester => tester.status === status)
+  , [status])
+
+  const pagedTesters = useMemo(() => {
+    return filteredTesters.slice((page - 1) * pageSize, page * pageSize)
+  }, [filteredTesters, page, pageSize])
 
   return (
     <>
@@ -56,9 +61,9 @@ const ExamTesters = ({ status }) => {
         </Radio.Group>
       </Row>
       <Row justify="center" gutter={4}>
-        { viewMode === 'approve' && <ApproveView testers={filteredTesters} /> }
-        { viewMode === 'grid' && <GridView pageSize={pageSize} testers={filteredTesters} /> }
-        { viewMode === 'list' && <ListView pageSize={pageSize} testers={filteredTesters} /> }
+        { viewMode === 'approve' && <ApproveView testers={pagedTesters} /> }
+        { viewMode === 'grid' && <GridView pageSize={pageSize} testers={pagedTesters} /> }
+        { viewMode === 'list' && <ListView pageSize={pageSize} testers={pagedTesters} /> }
       </Row>
       { viewMode !== 'approve' &&
         <Row justify="center">
