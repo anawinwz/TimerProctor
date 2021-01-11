@@ -14,7 +14,7 @@ const ExamDescription = ({ exam = {} }) => {
       <Item label="ตรวจสอบบัตรประจำตัว">{ idCheckModes[authentication?.idCheckMode ] }</Item>
       { 
         timeWindow?.mode === 'realtime' ?
-        <Item label="เริ่มการสอบเมื่อ">{ shortDateStr(timeWindow?.realtime?.startedAt) }</Item>
+        <Item label="เริ่มการสอบครั้งล่าสุด">{ shortDateStr(timeWindow?.realtime?.startedAt) }</Item>
         :
         <Item label="กำหนดการสอบ">{ rangeStr(timeWindow?.schedule?.startDate, timeWindow?.schedule?.endDate) }</Item>
       }
