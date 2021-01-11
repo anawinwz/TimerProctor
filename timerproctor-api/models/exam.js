@@ -32,11 +32,11 @@ const schema = new Schema(
     },
     authentication: {
       login: {
-        methods: [{ type: String, enum: ['google', 'openid', 'email'] }],
+        methods: [{ type: String, enum: ['google', 'sso', 'email'] }],
         email: {
           allowedDomains: [{ type: String }]
         },
-        openid: {
+        sso: {
           CLIENT_ID: String,
           CLIENT_SECRET: String,
           USER_SCOPE: String

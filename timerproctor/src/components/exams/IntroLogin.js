@@ -53,8 +53,8 @@ const IntroLogin = () => {
               switch (method) {
                 case 'google':
                   return <GoogleLoginButton key={key} onClick={() => login('google')} />
-                case 'openid':
-                  return <Button key={key} onClick={dummyLogin} block>OpenID: Kasetsart University</Button>
+                case 'sso':
+                  return <Button key={key} onClick={dummyLogin} block>Single Sign-On</Button>
               }
             })}
           </Space>

@@ -66,7 +66,7 @@ const ExamSettingsForm = () => {
 
     const methods = values?.authentication?.login?.methods
     if (methods) {
-      changes.openid = methods.includes('openid')
+      changes.sso = methods.includes('sso')
       changes.needLogin = !(methods.length === 0)
     }
 
@@ -124,15 +124,15 @@ const ExamSettingsForm = () => {
             </Form.Item>
           </Collapse.Panel>
         { 
-          toggles.openid &&
-          <Collapse.Panel header="ตั้งค่า OpenID" key="openid">
-            <Form.Item label="Client ID" name={['authentication', 'login', 'openid', 'CLIENT_ID']}>
+          toggles.sso &&
+          <Collapse.Panel header={`ตั้งค่า ${loginMethods.sso}`} key="sso">
+            <Form.Item label="Client ID" name={['authentication', 'login', 'sso', 'CLIENT_ID']}>
               <Input />
             </Form.Item>
-            <Form.Item label="Client Secret" name={['authentication', 'login', 'openid', 'CLIENT_SECRET']}>
+            <Form.Item label="Client Secret" name={['authentication', 'login', 'sso', 'CLIENT_SECRET']}>
               <Input.Password />
             </Form.Item>
-            <Form.Item label="User Scope" name={['authentication', 'login', 'openid', 'USER_SCOPE']}>
+            <Form.Item label="User Scope" name={['authentication', 'login', 'sso', 'USER_SCOPE']}>
               <Input />
             </Form.Item>
           </Collapse.Panel>
