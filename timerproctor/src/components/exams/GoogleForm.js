@@ -1,3 +1,4 @@
+import { useState, useCallback } from 'react'
 import { Form, Typography, Space, Input, InputNumber, Select, Radio, Checkbox, DatePicker, Button, TimePicker } from 'antd'
 import YouTube from 'react-youtube'
 import { validateMessages, validators } from '~/utils/form'
@@ -12,7 +13,16 @@ const verticalChoices = {
 const placeholderText = 'คำตอบของคุณ'
 
 const GoogleForm = ({ form, onCompleted }) => {
-  const fields = form.fields
+  const [ sectionIdx, setSectionIdx ] = useState(0)
+
+  const { sections } = form
+  const isLastSection = sectionIdx + 1 === sections.length
+
+  const fields = sections[sectionIdx]
+  
+  const goBack = useCallback(() => setSectionIdx(prev => prev - 1))
+  const goNext = useCallback(() => setSectionIdx(prev => prev + 1))
+
   return (
     <Form
       layout="vertical"
@@ -101,7 +111,10 @@ const GoogleForm = ({ form, onCompleted }) => {
         })
       }
       <Form.Item>
-        <Button type="primary" htmlType="submit" size="large">ส่งคำตอบ</Button>
+        {sectionIdx > 0 && <Button type="ghost" onClick={goBack}>{'< ส่วนก่อนหน้า'}</Button> }
+        <Button type="primary" htmlType="submit" onClick={isLastSection ? onCompleted : goNext}>
+          {isLastSection ? 'ส่งคำตอบ' : 'ส่วนต่อไป >' }
+        </Button>
       </Form.Item>
     </Form>
   )
