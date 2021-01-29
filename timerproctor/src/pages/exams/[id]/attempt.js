@@ -6,29 +6,38 @@ import { useStore } from '~/stores/index'
 import Form from '~/components/exams/Form'
 import Trackers from '~/components/exams/Trackers'
 
+import { fetchAPIwithToken } from '~/utils/api'
+import { showModal } from '~/utils/modal'
+
 const AttemptPage = () => {
   const { ExamStore: exam, TimerStore: timer, SocketStore: socketStore } = useStore()
-  const [count, setCount] = useState(0)
+  const [completed, setCompleted] = useState(false)
+  const [form, setForm] = useState(null)
 
-  useEffect(() => {
-    timer.set({ endTime: exam.info?.timer?.duration * 60  })
-    timer.start()
-    socketStore?.socket?.emit('start')
+  useEffect(async () => {
+    const res = await fetchAPIwithToken(`/exams/${exam.id}/form`)
+    const { status, payload } = res
+    if (status === 'ok' && payload) {
+      setForm(payload)
+
+      timer.set({ endTime: exam.info?.timer?.duration * 60  })
+      timer.start()
+      socketStore?.socket?.emit('start')
+    } else {
+      showModal('error', 'ไม่สามารถโหลดเนื้อหาการสอบได้')
+    }
   }, [])
 
-  const onLoad = useCallback(() => {
-    setCount(prevState => prevState + 1)
+  const onCompleted = useCallback(() => {
+    setCompleted(true)
   }, [])
 
-  if (count > 1) return <Redirect to={`/exams/${exam.id}/completed`} />
+  if (completed) return <Redirect to={`/exams/${exam.id}/completed`} />
   else if (exam.status === 'stopped' || timer.isTimeout === true) return <Redirect to={`/exams/${exam.id}/failed`} />
   return (
     <>
       <Trackers />
-      <Form
-        formId="1FAIpQLScOZB90bgzMi0oNuqxSzqsiaEqkQSKIxlG5P5mDbTOxFgWLGA"
-        onLoad={onLoad}
-      />
+      <Form form={form} onCompleted={onCompleted} />
     </>
   )
 }

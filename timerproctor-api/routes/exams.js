@@ -12,6 +12,8 @@ import Attempt from '../models/attempt'
 import { adminAuthen, authenticate } from '../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../middlewares/exam'
 import { jsonResponse, getExamNsp } from '../utils/helpers'
+import { toForm } from '../utils/gform'
+import testform from './testform'
 
 dot.keepArray = true
 
@@ -70,6 +72,10 @@ router.post('/create', async (req, res, next) => {
 router.get('/:id', populateExam, async (req, res, next) => {
   const exam = req.exam
   return res.json(exam)
+})
+
+router.get('/:id/form', populateExam, async (req, res, next) => {
+  return res.json(jsonResponse('ok', toForm(testform)))
 })
 
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {

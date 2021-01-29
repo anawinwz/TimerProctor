@@ -67,7 +67,7 @@ const ExamPage = ({ match }) => {
       <LayoutRoute exact path={match.url} component={IntroPage} layout={DefaultLayout} />
       <LayoutRoute exact path={match.url + '/authenticate'} component={AuthenPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/waiting'} component={WaitingPage} layout={ExamLayout} />
-      <LayoutRoute exact path={match.url + '/attempt'} component={AttemptPage} layout={ExamNormalLayout} />
+      <LayoutRoute exact path={match.url + '/attempt'} component={AttemptPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/completed'} component={CompletedPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/failed'} component={FailedPage} layout={ExamLayout} />
     </Switch>
