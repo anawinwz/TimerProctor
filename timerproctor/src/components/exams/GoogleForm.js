@@ -1,4 +1,5 @@
 import { Form, Typography, Space, Input, InputNumber, Select, Radio, Checkbox, DatePicker, Button, TimePicker } from 'antd'
+import YouTube from 'react-youtube'
 import { validators } from '~/utils/form'
 
 const GoogleForm = ({ form, onCompleted }) => {
@@ -10,7 +11,7 @@ const GoogleForm = ({ form, onCompleted }) => {
     >
       {
         fields.map(field => {
-          const type = field.type
+          const { type } = field
 
           let isNumber = false
           field.rules = field.rules || []
@@ -48,6 +49,15 @@ const GoogleForm = ({ form, onCompleted }) => {
               break
             case 'time':
               ItemComponent = <TimePicker />
+              break
+            case 'youtube': 
+              ItemComponent = <YouTube
+                videoId={field.media.id}
+                opts={{
+                  width: field.media.width,
+                  height: field.media.height
+                }}
+              />
               break
             default:
               ItemComponent = <></>
