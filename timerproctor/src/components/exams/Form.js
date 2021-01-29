@@ -5,7 +5,7 @@ import GoogleForm from './GoogleForm'
 const Form = ({ form }) => {
   if (!form) return <Card><Loading /></Card>
   return (
-    <Card>
+    <Card style={{ marginTop: '100px' }}>
       <GoogleForm form={form} />
     </Card>
   )
