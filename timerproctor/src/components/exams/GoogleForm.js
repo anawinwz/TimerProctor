@@ -18,6 +18,7 @@ const GoogleForm = ({ form, onCompleted }) => {
       layout="vertical"
       validateMessages={validateMessages}
       size="large"
+      onFinish={onCompleted}
     >
       {
         fields.map(field => {
