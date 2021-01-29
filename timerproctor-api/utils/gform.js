@@ -85,6 +85,13 @@ const toFieldData = field => {
     if (options && options.length > 0)
       fieldData.answers = options.map(answer => answer[0])
 
+    if (fieldType === 'date') {
+      fieldData.showTime = answerData[7][0] == 1
+      fieldData.showYear = answerData[7][1] == 1
+    } else if (fieldType === 'time') {
+      fieldData.isDuration = answerData[6][0] == 1
+    }
+
     const validations = answerData[4]?.[0]
     if (validations) {
       let rule = {}
