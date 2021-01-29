@@ -11,3 +11,7 @@ export const validators = {
     value <= values[0] || value >= values[1] ? 
     Promise.resolve() : Promise.reject(rule.message || `ค่าต้องไม่อยู่ระหว่าง ${values[0]} - ${values[1]}`)
 }
+
+export const validateMessages = {
+  required: 'คำถามนี้จำเป็นต้องตอบ'
+}

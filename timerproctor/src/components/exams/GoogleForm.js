@@ -1,6 +1,6 @@
 import { Form, Typography, Space, Input, InputNumber, Select, Radio, Checkbox, DatePicker, Button, TimePicker } from 'antd'
 import YouTube from 'react-youtube'
-import { validators } from '~/utils/form'
+import { validateMessages, validators } from '~/utils/form'
 
 const verticalChoices = {
   display: 'block',
@@ -16,7 +16,7 @@ const GoogleForm = ({ form, onCompleted }) => {
   return (
     <Form
       layout="vertical"
-      validateMessages={{ required: 'คำถามนี้จำเป็นต้องตอบ' }}
+      validateMessages={validateMessages}
       size="large"
     >
       {
