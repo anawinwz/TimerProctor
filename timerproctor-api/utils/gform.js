@@ -15,6 +15,12 @@ const fieldTypes = {
   12: 'youtube'
 }
 
+const alignments = {
+  0: 'left',
+  1: 'center',
+  2: 'right'
+}
+
 const validationTypes = {
   1: 'number',
   2: 'string',
@@ -61,7 +67,8 @@ const toFieldData = field => {
     fieldData.media = {
       id: (fieldType === 'image') ? mediaData[0] : mediaData[3],
       width: mediaData[2][0],
-      height: mediaData[2][1]
+      height: mediaData[2][1],
+      align: alignments[mediaData[2][2]]
     }
   }
 
@@ -124,7 +131,7 @@ const toFieldData = field => {
           }
         break
       }
-      
+
       rule.message = message
       fieldData.rules.push(rule)
     }
