@@ -111,7 +111,14 @@ const toFieldData = field => {
         break
         case 'regExp':
           delete fieldData.rule.type
-          fieldData.rule.pattern = values[0]
+          if (['contains', 'match'].includes(mode)) {
+            fieldData.rule.pattern = values[0]
+          } else {
+            fieldData.rule.validator = {
+              name: `regExp_${mode}`,
+              values: values
+            }
+          }
         break
       }
       fieldData.rule.message = message
