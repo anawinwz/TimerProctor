@@ -151,11 +151,32 @@ const toFieldData = field => {
   return fieldData
 }
 
-export const toForm = data => (
-  {
+const toSections = fields => {
+  let sections = []
+  const breaks = fields.filter(field => field.type === 'section')
+  if (breaks.length === 0) {
+    return [fields]
+  } else {
+    let thisSection = []
+    for (const field of fields) {
+      if (field.type === 'section') {
+        sections.push(thisSection)
+        thisSection = []
+      }
+      thisSection.push(field)
+    }
+    sections.push(thisSection)
+    return sections
+  }
+}
+
+export const toForm = data => {
+  const fields = data[1][1].map(toFieldData)
+  return {
     id: data[14],
     name: data[1][8],
     desc: data[1][0],
-    fields: data[1][1].map(toFieldData)
+    fields: fields,
+    sections: toSections(fields)
   }
-)
+}
