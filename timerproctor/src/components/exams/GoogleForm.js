@@ -75,8 +75,9 @@ const GoogleForm = ({ form, onCompleted }) => {
               name={field.id}
               label={<Space direction="vertical">
                 <Typography.Title level={field.type === 'title' ? 4 : 5} style={{ margin: 0 }}>{ field.title }</Typography.Title>
-                <Typography.Text type="secondary">{ field.desc }</Typography.Text>
+                { field.type !== 'youtube' && <Typography.Text type="secondary">{ field.desc }</Typography.Text> }
               </Space>}
+              extra={field.type === 'youtube' ? field.desc : ''}
               rules={field.rules}
             >
               { ItemComponent }
