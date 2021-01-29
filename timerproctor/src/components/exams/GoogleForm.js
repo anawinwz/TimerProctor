@@ -2,6 +2,12 @@ import { Form, Typography, Space, Input, InputNumber, Select, Radio, Checkbox, D
 import YouTube from 'react-youtube'
 import { validators } from '~/utils/form'
 
+const verticalChoices = {
+  display: 'block',
+  height: '30px',
+  lineHeight: '30px',
+}
+
 const GoogleForm = ({ form, onCompleted }) => {
   const fields = form.fields
   return (
@@ -40,7 +46,8 @@ const GoogleForm = ({ form, onCompleted }) => {
               
               const options = field.answers.map(answer => ({
                 label: answer,
-                value: answer 
+                value: answer,
+                style: verticalChoices
               }))
               ItemComponent = <SubComponent options={options} />
               break
