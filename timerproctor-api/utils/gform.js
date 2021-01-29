@@ -68,9 +68,11 @@ const toFieldData = field => {
   const answerData = field[4]?.[0]
   if (answerData) {
     fieldData.id = answerData[0]
-    fieldData.rule = {
-      required: answerData[2] == 1
-    }
+    fieldData.rules = []
+
+    const isRequired = answerData[2] == 1
+    if (isRequired)
+      fieldData.rules.push({ required: answerData[2] == 1 })
 
     const options = answerData[1]
     if (options && options.length > 0)
@@ -78,50 +80,53 @@ const toFieldData = field => {
 
     const validations = answerData[4]?.[0]
     if (validations) {
+      let rule = {}
       const type = validationTypes[validations[0]]
       const mode = validationModes[validations[1]]
       const values = validations[2]
       const message = validations[3]
       
-      fieldData.rule.type = type
+      rule.type = type
       switch (type) {
         case 'string':
-          if (['url', 'email'].includes(mode)) fieldData.rule.type = mode
+          if (['url', 'email'].includes(mode)) rule.type = mode
           else {
-            fieldData.rule.validator = {
+            rule.validator = {
               name: mode,
               values: values
             }
           }
         break
         case 'length':
-          fieldData.rule.type = 'string'
-          fieldData.rule[mode] = values[0]
+          rule.type = 'string'
+          rule[mode] = values[0]
         break
         case 'number':
           if (mode === 'between') {
-            fieldData.rule.min = values[0]
-            fieldData.rule.max = values[1]
+            rule.min = values[0]
+            rule.max = values[1]
           } else if (mode !== 'isNumber') {
-            fieldData.rule.validator = {
+            rule.validator = {
               name: mode,
               values: values
             }
           }
         break
         case 'regExp':
-          delete fieldData.rule.type
+          delete rule.type
           if (['contains', 'match'].includes(mode)) {
-            fieldData.rule.pattern = values[0]
+            rule.pattern = values[0]
           } else {
-            fieldData.rule.validator = {
+            rule.validator = {
               name: `regExp_${mode}`,
               values: values
             }
           }
         break
       }
-      fieldData.rule.message = message
+      
+      rule.message = message
+      fieldData.rules.push(rule)
     }
   }
 
