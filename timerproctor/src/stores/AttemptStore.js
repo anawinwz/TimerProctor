@@ -37,7 +37,7 @@ class AttemptStore {
         await storage.ref(ref).putString(image, 'data_url')
 
         const url = await storage.ref(ref).getDownloadURL()
-        socket.emit('snapshot', { image: url, facesCount: 1, timestamp: timestamp }, data => {
+        socket?.emit('snapshot', { image: url, facesCount: 1, timestamp: timestamp }, data => {
           if (data?.err) return reject(new Error(data.err))
           resolve()
         })

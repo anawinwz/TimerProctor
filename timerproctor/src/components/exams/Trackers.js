@@ -14,7 +14,7 @@ const Trackers = () => {
     }
     delete sigData.msg
     
-    socketStore.socket.emit('signal', sigData, data => {
+    socketStore?.socket?.emit('signal', sigData, data => {
       if (data.err) console.log('signal error')
     })
   }, [])
