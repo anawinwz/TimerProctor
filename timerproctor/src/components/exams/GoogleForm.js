@@ -74,7 +74,7 @@ const GoogleForm = ({ form, onCompleted }) => {
             <Form.Item
               name={field.id}
               label={<Space direction="vertical">
-                <Typography.Title level={5} style={{ margin: 0 }}>{ field.title }</Typography.Title>
+                <Typography.Title level={field.type === 'title' ? 4 : 5} style={{ margin: 0 }}>{ field.title }</Typography.Title>
                 <Typography.Text type="secondary">{ field.desc }</Typography.Text>
               </Space>}
               rules={field.rules}
