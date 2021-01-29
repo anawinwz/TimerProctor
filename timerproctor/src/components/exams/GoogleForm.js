@@ -86,7 +86,7 @@ const GoogleForm = ({ form, onCompleted }) => {
 
           return (
             <Form.Item
-              name={field.id}
+              name={field.id ? `answer_${field.id}` : undefined}
               label={<Space direction="vertical">
                 <Typography.Title level={field.type === 'title' ? 4 : 5} style={{ margin: 0 }}>{ field.title }</Typography.Title>
                 { field.type !== 'youtube' && <Typography.Text type="secondary">{ field.desc }</Typography.Text> }
