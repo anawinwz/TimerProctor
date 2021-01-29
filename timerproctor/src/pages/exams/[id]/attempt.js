@@ -13,7 +13,7 @@ const AttemptPage = () => {
   useEffect(() => {
     timer.set({ endTime: exam.info?.timer?.duration * 60  })
     timer.start()
-    socketStore.socket.emit('start')
+    socketStore?.socket?.emit('start')
   }, [])
 
   const onLoad = useCallback(() => {

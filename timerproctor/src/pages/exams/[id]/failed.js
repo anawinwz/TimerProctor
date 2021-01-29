@@ -5,7 +5,7 @@ import FailedCard from '~/components/exams/FailedCard'
 
 const FailedPage = () => {
   const { SocketStore: socketStore } = useStore()
-  useEffect(() => socketStore.socket.emit('fail'), [])
+  useEffect(() => socketStore?.socket?.emit('fail'), [])
     
   return (
     <>
