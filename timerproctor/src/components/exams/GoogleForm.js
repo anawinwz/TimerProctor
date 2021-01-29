@@ -68,7 +68,7 @@ const GoogleForm = ({ form, onCompleted }) => {
         })
       }
       <Form.Item>
-        <Button htmlType="submit">Test</Button>
+        <Button type="primary" htmlType="submit" size="large">ส่งคำตอบ</Button>
       </Form.Item>
     </Form>
   )
