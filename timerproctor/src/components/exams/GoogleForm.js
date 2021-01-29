@@ -4,9 +4,12 @@ import { validators } from '~/utils/form'
 
 const verticalChoices = {
   display: 'block',
-  height: '30px',
-  lineHeight: '30px',
+  height: '35px',
+  lineHeight: '35px',
+  fontSize: '16px'
 }
+
+const placeholderText = 'คำตอบของคุณ'
 
 const GoogleForm = ({ form, onCompleted }) => {
   const fields = form.fields
@@ -14,6 +17,7 @@ const GoogleForm = ({ form, onCompleted }) => {
     <Form
       layout="vertical"
       validateMessages={{ required: 'คำถามนี้จำเป็นต้องตอบ' }}
+      size="large"
     >
       {
         fields.map(field => {
@@ -32,10 +36,10 @@ const GoogleForm = ({ form, onCompleted }) => {
           let ItemComponent, SubComponent
           switch (type) {
             case 'shortAnswer':
-              ItemComponent = isNumber ? <InputNumber style={{ width: '100%' }} /> : <Input />
+              ItemComponent = isNumber ? <InputNumber placeholder={placeholderText} style={{ width: '100%' }} /> : <Input placeholder={placeholderText} />
             break
             case 'paragraph':
-              ItemComponent = <Input.TextArea />
+              ItemComponent = <Input.TextArea placeholder={placeholderText} />
               break
             case 'dropdown':
               SubComponent = Select
