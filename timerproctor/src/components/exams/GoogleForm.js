@@ -68,10 +68,13 @@ const GoogleForm = ({ form, onCompleted }) => {
               ItemComponent = <SubComponent options={options} />
               break
             case 'date':
-              ItemComponent = <DatePicker showTime={field.showTime} />
+              ItemComponent = <DatePicker 
+                showTime={field.showTime}
+                format={`${field.showYear ? 'YYYY-' : ''}MM-DD${field.showTime ? ' HH:mm' : ''}`}
+              />
               break
             case 'time':
-              ItemComponent = <TimePicker />
+              ItemComponent = <TimePicker format={`HH:mm${field.isDuration ? ':ss' : ''}`} showNow={!field.isDuration} />
               break
             case 'youtube': 
               ItemComponent = <YouTube
