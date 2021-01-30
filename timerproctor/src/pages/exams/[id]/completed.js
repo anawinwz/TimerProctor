@@ -5,7 +5,7 @@ import CompletedCard from '~/components/exams/CompletedCard'
 
 const CompletedPage = () => {
   const { SocketStore: socketStore } = useStore()
-  useEffect(() => socketStore.socket.emit('complete'), [])
+  useEffect(() => socketStore?.socket?.emit('complete'), [])
   return (
     <>
       <CompletedCard />
