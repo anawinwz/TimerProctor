@@ -59,22 +59,13 @@ const GoogleForm = ({ form, onCompleted }) => {
             case 'multipleChoice':
               if (!SubComponent) SubComponent = Radio.Group
               
-              const isEtc = typeof field.answers.find(answer => answer === '') !== 'undefined'
-              const options = field.answers.filter(answer => answer)
-                .map(answer => ({
-                  label: answer,
-                  value: answer,
-                  style: verticalChoices
-                }))
-              if (!isEtc) {
-                ItemComponent = <SubComponent options={options} />
-              } else {
-                const Item = type === 'checkbox' ? Checkbox : Radio
-                ItemComponent = <>
-                  <SubComponent options={options} />
-                  <Item style={verticalChoices} disabled>อื่นๆ </Item>
-                </>
-              }
+              const options = field.answers.map(answer => ({
+                label: answer ? answer : <>อื่นๆ <Input disabled /></>,
+                value: answer,
+                disabled: !answer,
+                style: verticalChoices
+              }))
+              ItemComponent = <SubComponent options={options} />
               break
             case 'date':
               ItemComponent = <DatePicker showTime={field.showTime} />
