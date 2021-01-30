@@ -112,7 +112,7 @@ const GoogleForm = ({ form, onCompleted }) => {
       }
       <Form.Item>
         {sectionIdx > 0 && <Button type="ghost" onClick={goBack}>{'< ส่วนก่อนหน้า'}</Button> }
-        <Button type="primary" htmlType="submit" onClick={isLastSection ? onCompleted : goNext}>
+        <Button type="primary" htmlType={isLastSection ? 'submit' : 'button'} onClick={isLastSection ? undefined : goNext}>
           {isLastSection ? 'ส่งคำตอบ' : 'ส่วนต่อไป >' }
         </Button>
       </Form.Item>
