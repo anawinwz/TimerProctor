@@ -17,90 +17,98 @@ const GoogleForm = ({ form, onCompleted }) => {
 
   const { sections } = form
   const isLastSection = sectionIdx + 1 === sections.length
-
-  const fields = sections[sectionIdx]
   
   const goBack = useCallback(() => setSectionIdx(prev => prev - 1))
   const goNext = useCallback(() => setSectionIdx(prev => prev + 1))
 
   return (
     <Form
+      name="googleForms"
       layout="vertical"
       validateMessages={validateMessages}
       size="large"
       onFinish={onCompleted}
     >
       {
-        fields.map(field => {
-          const { type } = field
-
-          let isNumber = false
-          field.rules = field.rules || []
-          for (const idx in field.rules) {
-            if (field.rules[idx]?.type === 'number') isNumber = true
-            if (!field.rules[idx].validator) continue
-
-            const { name, values } = field.rules[idx].validator
-            field.rules[idx].validator = (validators[name]) ? validators[name](values) : () => Promise.resolve()
-          }
-          
-          let ItemComponent, SubComponent
-          switch (type) {
-            case 'shortAnswer':
-              ItemComponent = isNumber ? <InputNumber placeholder={placeholderText} style={{ width: '100%' }} /> : <Input placeholder={placeholderText} />
-            break
-            case 'paragraph':
-              ItemComponent = <Input.TextArea placeholder={placeholderText} />
-              break
-            case 'dropdown':
-              SubComponent = Select
-            case 'checkbox':
-              if (!SubComponent) SubComponent = Checkbox.Group
-            case 'multipleChoice':
-              if (!SubComponent) SubComponent = Radio.Group
-              
-              const options = field.answers.map(answer => ({
-                label: answer ? answer : <>อื่นๆ <Input disabled /></>,
-                value: answer,
-                disabled: !answer,
-                style: verticalChoices
-              }))
-              ItemComponent = <SubComponent options={options} />
-              break
-            case 'date':
-              ItemComponent = <DatePicker 
-                showTime={field.showTime}
-                format={`${field.showYear ? 'YYYY-' : ''}MM-DD${field.showTime ? ' HH:mm' : ''}`}
-              />
-              break
-            case 'time':
-              ItemComponent = <TimePicker format={`HH:mm${field.isDuration ? ':ss' : ''}`} showNow={!field.isDuration} />
-              break
-            case 'youtube': 
-              ItemComponent = <YouTube
-                videoId={field.media.id}
-                opts={{
-                  width: field.media.width,
-                  height: field.media.height
-                }}
-              />
-              break
-            default:
-              ItemComponent = <></>
-          }
-
+        Object.entries(sections).map(([idx, fields]) => {
           return (
-            <Form.Item
-              name={field.id ? `answer_${field.id}` : undefined}
-              label={<Space direction="vertical">
-                <Typography.Title level={field.type === 'title' ? 4 : 5} style={{ margin: 0 }}>{ field.title }</Typography.Title>
-                { field.type !== 'youtube' && <Typography.Text type="secondary">{ field.desc }</Typography.Text> }
-              </Space>}
-              extra={field.type === 'youtube' ? field.desc : ''}
-              rules={field.rules}
-            >
-              { ItemComponent }
-            </Form.Item>
+            <div key={`section${idx}`} className={idx != sectionIdx ? 'hidden' : ''}>
+            {
+              fields.map(field => {
+                const { type } = field
+
+                let isNumber = false
+                field.rules = field.rules || []
+                for (const idx in field.rules) {
+                  if (field.rules[idx]?.type === 'number') isNumber = true
+                  if (!field.rules[idx].validator) continue
+
+                  const { name, values } = field.rules[idx].validator
+                  field.rules[idx].validator = (validators[name]) ? validators[name](values) : () => Promise.resolve()
+                }
+                
+                let ItemComponent, SubComponent
+                switch (type) {
+                  case 'shortAnswer':
+                    ItemComponent = isNumber ? <InputNumber placeholder={placeholderText} style={{ width: '100%' }} /> : <Input placeholder={placeholderText} />
+                  break
+                  case 'paragraph':
+                    ItemComponent = <Input.TextArea placeholder={placeholderText} />
+                    break
+                  case 'dropdown':
+                    SubComponent = Select
+                  case 'checkbox':
+                    if (!SubComponent) SubComponent = Checkbox.Group
+                  case 'multipleChoice':
+                    if (!SubComponent) SubComponent = Radio.Group
+                    
+                    const options = field.answers.map(answer => ({
+                      label: answer ? answer : <>อื่นๆ <Input disabled /></>,
+                      value: answer,
+                      disabled: !answer,
+                      style: verticalChoices
+                    }))
+                    ItemComponent = <SubComponent options={options} />
+                    break
+                  case 'date':
+                    ItemComponent = <DatePicker 
+                      showTime={field.showTime}
+                      format={`${field.showYear ? 'YYYY-' : ''}MM-DD${field.showTime ? ' HH:mm' : ''}`}
+                    />
+                    break
+                  case 'time':
+                    ItemComponent = <TimePicker format={`HH:mm${field.isDuration ? ':ss' : ''}`} showNow={!field.isDuration} />
+                    break
+                  case 'youtube': 
+                    ItemComponent = <YouTube
+                      videoId={field.media.id}
+                      opts={{
+                        width: field.media.width,
+                        height: field.media.height
+                      }}
+                    />
+                    break
+                  default:
+                    ItemComponent = <></>
+                }
+
+                return (
+                  <Form.Item
+                    key={field.id || field.title}
+                    name={field.id ? `answer_${field.id}` : undefined}
+                    label={<Space direction="vertical">
+                      <Typography.Title level={field.type === 'title' ? 4 : 5} style={{ margin: 0 }}>{ field.title }</Typography.Title>
+                      { field.type !== 'youtube' && <Typography.Text type="secondary">{ field.desc }</Typography.Text> }
+                    </Space>}
+                    extra={field.type === 'youtube' ? field.desc : ''}
+                    rules={field.rules}
+                  >
+                    { ItemComponent }
+                  </Form.Item>
+                )
+              })
+            }
+            </div>
           )
         })
       }
