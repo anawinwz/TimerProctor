@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import dot from 'dot-object'
+import axios from 'axios'
 
 import dayjs from '../utils/dayjs'
 
@@ -74,10 +75,6 @@ router.get('/:id', populateExam, async (req, res, next) => {
   return res.json(exam)
 })
 
-router.get('/:id/form', populateExam, async (req, res, next) => {
-  return res.json(jsonResponse('ok', toForm(testform)))
-})
-
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
   try {
     const { _id: examId, authentication, timeWindow } = req.exam
@@ -131,6 +128,44 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
+})
+
+router.get('/:id/form', populateExam, async (req, res, next) => {
+  return res.json(jsonResponse('ok', toForm(testform)))
+})
+
+router.post('/:id/form/submit', populateExam, async (req, res, next) => {
+  const { body, exam } = req
+
+  const { linked } = exam
+  const { publicURL } = linked
+
+  const url = new URL(publicURL)
+  url.pathname = '/formResponse'
+  const submitURL = url.toString()
+
+  const submitParams = new URLSearchParams()
+  for (const [key, value] of body) {
+    if (key.match(/^answer_\d+$/))
+      submitParams.append(key.replace('answer_', 'entry.'), value)
+  }
+
+  axios.post(submitURL, submitParams, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  })
+  .then(result => {
+    const { status } = result
+    if (status == 200) {
+      res.json(jsonResponse('ok'))
+    } else {
+      console.log('GForms Error(then):', res.data)
+      res.json(jsonResponse('failed'))
+    }
+  })
+  .catch(err => {
+    console.log('GForms Error(catch):', err)
+    res.json(jsonResponse('failed'))
+  })
 })
 
 router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, next) => {

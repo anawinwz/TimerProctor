@@ -2,11 +2,11 @@ import { Card } from 'antd'
 import Loading from './Loading'
 import GoogleForm from './GoogleForm'
 
-const Form = ({ form }) => {
+const Form = ({ form, onCompleted }) => {
   if (!form) return <Card><Loading /></Card>
   return (
     <Card style={{ marginTop: '100px' }}>
-      <GoogleForm form={form} />
+      <GoogleForm form={form} onCompleted={onCompleted} />
     </Card>
   )
 }
