@@ -140,15 +140,22 @@ router.post('/:id/form/submit', populateExam, async (req, res, next) => {
   const { linked } = exam
   const { publicURL } = linked
 
-  const url = new URL(publicURL)
-  url.pathname = '/formResponse'
-  const submitURL = url.toString()
+  const submitURL = publicURL.replace('/viewform', '/formResponse')
 
   const submitParams = new URLSearchParams()
-  for (const [key, value] of body) {
-    if (key.match(/^answer_\d+$/))
-      submitParams.append(key.replace('answer_', 'entry.'), value)
+  for (const [key, value] of Object.entries(body)) {
+    if (key.match(/^answer_\d+$/)) {
+      const entry = key.replace('answer_', 'entry.')
+      if (Array.isArray(value)) {
+        value.map(v => submitParams.append(entry, v))
+      } else {
+        submitParams.append(entry, value)
+      }
+    }
   }
+  submitParams.append('pageHistory', [...Array(3).keys()])
+
+  console.log(submitParams)
 
   axios.post(submitURL, submitParams, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
