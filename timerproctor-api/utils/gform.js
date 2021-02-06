@@ -1,3 +1,4 @@
+import cheerio from 'cheerio'
 const fieldTypes = {
   0: 'shortAnswer',
   1: 'paragraph',
@@ -179,4 +180,14 @@ export const toForm = data => {
     fields: fields,
     sections: toSections(fields)
   }
+}
+
+export const getDataFromHTML = html => {
+  const $ = cheerio.load(html)
+  
+  const scriptElm = $('script').filter((idx, elm) => $(elm).html().includes('var FB_PUBLIC_LOAD_DATA_'))
+  if (!scriptElm) throw new Error('script element not found.')
+
+  const json = JSON.parse(scriptElm.html().replace(/^var FB_PUBLIC_LOAD_DATA_ = (.*);$/s, '$1'))
+  return json
 }
