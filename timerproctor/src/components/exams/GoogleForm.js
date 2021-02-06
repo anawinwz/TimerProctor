@@ -1,7 +1,17 @@
 import { useState, useCallback } from 'react'
 import { Form, Typography, Space, Input, InputNumber, Select, Radio, Checkbox, DatePicker, Button, TimePicker } from 'antd'
 import YouTube from 'react-youtube'
+import styled from 'styled-components'
 import { validateMessages, validators } from '~/utils/form'
+
+const StyledForm = styled(Form)`
+  .ant-form-item {
+    background: rgb(250, 250, 250);
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  .ant-form-item-with-help { margin-bottom: 24px; }
+`
 
 const verticalChoices = {
   display: 'block',
@@ -22,7 +32,7 @@ const GoogleForm = ({ form, onCompleted }) => {
   const goNext = useCallback(() => setSectionIdx(prev => prev + 1))
 
   return (
-    <Form
+    <StyledForm
       name="googleForms"
       layout="vertical"
       validateMessages={validateMessages}
@@ -118,7 +128,7 @@ const GoogleForm = ({ form, onCompleted }) => {
           {isLastSection ? 'ส่งคำตอบ' : 'ส่วนต่อไป >' }
         </Button>
       </Form.Item>
-    </Form>
+    </StyledForm>
   )
 }
 
