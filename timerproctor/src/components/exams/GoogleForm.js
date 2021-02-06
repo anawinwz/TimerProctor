@@ -14,6 +14,7 @@ const StyledForm = styled(Form)`
   }
   .ant-form-item-with-help { margin-bottom: 24px; }
   .ant-col-0 { display: none !important; }
+  .scale-label { margin-left: 10px; margin-right: 10px; }
 `
 
 const verticalChoices = {
@@ -108,6 +109,13 @@ const GoogleForm = ({ form, onCompleted }) => {
                       style: verticalChoices
                     }))
                     ItemComponent = <SubComponent options={options} />
+                    break
+                  case 'linearScale':
+                    ItemComponent = <Radio.Group>
+                      <label className="scale-label">{ field.labels.min }</label>
+                      { field.answers.map(answer => <Radio.Button value={answer}>{ answer }</Radio.Button> )}
+                      <label className="scale-label">{ field.labels.max }</label>
+                    </Radio.Group>
                     break
                   case 'date':
                     ItemComponent = <DatePicker 

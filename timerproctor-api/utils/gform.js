@@ -92,6 +92,11 @@ const toFieldData = field => {
       fieldData.showYear = answerData[7][1] == 1
     } else if (fieldType === 'time') {
       fieldData.isDuration = answerData[6][0] == 1
+    } else if (fieldType === 'linearScale') {
+      fieldData.labels = {
+        min: answerData[3][0],
+        max: answerData[3][1]
+      }
     }
 
     const validations = answerData[4]?.[0]
