@@ -3,6 +3,7 @@ import { Form, Typography, Space, Input, InputNumber, Select, Radio, Checkbox, D
 import YouTube from 'react-youtube'
 import styled from 'styled-components'
 import { validateMessages, validators } from '~/utils/form'
+import { getVW } from '~/utils/dom'
 
 const StyledForm = styled(Form)`
   .ant-form-item {
@@ -94,7 +95,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                     ItemComponent = <YouTube
                       videoId={field.media.id}
                       opts={{
-                        width: field.media.width,
+                        width: Math.min(field.media.width || 0, getVW() - 80),
                         height: field.media.height
                       }}
                     />
