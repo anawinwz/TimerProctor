@@ -4,6 +4,7 @@ import YouTube from 'react-youtube'
 import styled from 'styled-components'
 import { validateMessages, validators } from '~/utils/form'
 import { getVW } from '~/utils/dom'
+import { isMoment } from '~/utils/date'
 
 const StyledForm = styled(Form)`
   .ant-form-item {
@@ -32,6 +33,31 @@ const GoogleForm = ({ form, onCompleted }) => {
   
   const goBack = useCallback(() => setSectionIdx(prev => prev - 1))
   const goNext = useCallback(() => setSectionIdx(prev => prev + 1))
+  const onFinish = useCallback(fieldValues => {
+    let values = {}
+    for (const [typedKey, val] of Object.entries(fieldValues)) {
+      const [key, type] = typedKey.split(':')
+      values[key] = val
+      if (isMoment(val)) {
+        let timeInfo = {}
+        
+        if (type.startsWith('date')) {
+          if (type.includes('-year')) timeInfo.year = val.year()
+          timeInfo.month = val.month() + 1
+          timeInfo.day = val.day()
+        }
+        
+        if (type.startsWith('time') || type.includes('-time')) {
+          timeInfo.hour = val.hour()
+          timeInfo.minute = val.minute()
+          if (type.includes('-duration')) timeInfo.second = val.second()
+        }
+        
+        values[key] = timeInfo
+      }
+    }
+    onCompleted(values)
+  }, [])
 
   return (
     <StyledForm
@@ -39,7 +65,7 @@ const GoogleForm = ({ form, onCompleted }) => {
       layout="vertical"
       validateMessages={validateMessages}
       size="large"
-      onFinish={onCompleted}
+      onFinish={onFinish}
     >
       {
         Object.entries(sections).map(([idx, fields]) => {
@@ -48,6 +74,7 @@ const GoogleForm = ({ form, onCompleted }) => {
             {
               fields.map(field => {
                 const { type } = field
+                const colonType = `${type}${field.showTime ? '-time' : ''}${field.showYear ? '-year' : ''}${field.isDuration ? '-duration' : ''}`
 
                 let isNumber = false
                 field.rules = field.rules || []
@@ -107,7 +134,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                 return (
                   <Form.Item
                     key={field.id || field.title}
-                    name={field.id ? `answer_${field.id}` : undefined}
+                    name={field.id ? `answer_${field.id}:${colonType}` : undefined}
                     label={<Space direction="vertical">
                       <Typography.Title level={field.type === 'title' ? 4 : 5} style={{ margin: 0 }}>{ field.title }</Typography.Title>
                       { field.type !== 'youtube' && <Typography.Text type="secondary">{ field.desc }</Typography.Text> }

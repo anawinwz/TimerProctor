@@ -158,6 +158,10 @@ router.post('/:id/form/submit', populateExam, async (req, res, next) => {
       const entry = key.replace('answer_', 'entry.')
       if (Array.isArray(value)) {
         value.map(v => submitParams.append(entry, v))
+      } else if (typeof value === 'object' && value !== null) {
+        for (const [k, v] of Object.entries(value)) {
+          submitParams.append(`${entry}_${k}`, v)
+        }
       } else {
         submitParams.append(entry, value)
       }
@@ -166,6 +170,7 @@ router.post('/:id/form/submit', populateExam, async (req, res, next) => {
   submitParams.append('pageHistory', [...Array(3).keys()])
 
   console.log(submitParams)
+  // res.json(jsonResponse('failed'))
 
   axios.post(submitURL, submitParams, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -175,12 +180,12 @@ router.post('/:id/form/submit', populateExam, async (req, res, next) => {
     if (status == 200) {
       res.json(jsonResponse('ok'))
     } else {
-      console.log('GForms Error(then):', res.data)
+      console.log('GForms Error(then):', status)
       res.json(jsonResponse('failed'))
     }
   })
   .catch(err => {
-    console.log('GForms Error(catch):', err)
+    console.log('GForms Error(catch):', err.status)
     res.json(jsonResponse('failed'))
   })
 })
