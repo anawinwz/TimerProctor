@@ -2,6 +2,8 @@ import 'antd/dist/antd.css'
 import './styles/globals.css'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { ConfigProvider } from 'antd'
+import thTH from 'antd/lib/locale/th_TH'
 
 import RootStore, { StoreContext } from './stores/index'
 import AdminRootStore, { AdminStoreContext } from './stores/admin'
@@ -13,12 +15,14 @@ function App() {
   return (
     <StoreContext.Provider value={new RootStore()}>
       <AdminStoreContext.Provider value={new AdminRootStore()}>
-        <Router>
-          <Switch>
-            <Route path="/admin" component={AdminPage} />
-            <Route component={MainPage} />
-          </Switch>
-        </Router>
+        <ConfigProvider locale={thTH}>
+          <Router>
+            <Switch>
+              <Route path="/admin" component={AdminPage} />
+              <Route component={MainPage} />
+            </Switch>
+          </Router>
+        </ConfigProvider>
       </AdminStoreContext.Provider>
     </StoreContext.Provider>
   )
