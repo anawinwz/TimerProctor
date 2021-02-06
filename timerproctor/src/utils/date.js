@@ -8,6 +8,9 @@ const formats = {
   short: 'D MMM YYYY LT',
   full: 'D MMMM YYYY LT'
 }
+
+export const isMoment = (obj) => moment.isMoment(obj)
+
 export const dateStr = (date, type = 'short') => date ? moment(date).format(formats[type]) : '-'
 
 export const shortDateStr = (date) => dateStr(date, 'short')
