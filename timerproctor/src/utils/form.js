@@ -13,5 +13,14 @@ export const validators = {
 }
 
 export const validateMessages = {
-  required: 'คำถามนี้จำเป็นต้องตอบ'
+  required: 'คำถามนี้จำเป็นต้องตอบ',
+  types: {
+    string: 'ต้องเป็นข้อความ',
+    number: 'ต้องเป็นตัวเลข',
+    date: 'ต้องเป็นวันที่',
+    integer: 'ต้องเป็นจำนวนเต็ม',
+    float: 'ต้องเป็นจำนวนทศนิยม',
+    email: 'ต้องเป็นอีเมล',
+    url: 'ต้องเป็นลิงก์'
+  }
 }
