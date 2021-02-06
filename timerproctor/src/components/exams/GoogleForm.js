@@ -11,6 +11,7 @@ const StyledForm = styled(Form)`
     border-radius: 5px;
   }
   .ant-form-item-with-help { margin-bottom: 24px; }
+  .ant-col-0 { display: none !important; }
 `
 
 const verticalChoices = {
@@ -57,7 +58,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                   field.rules[idx].validator = (validators[name]) ? validators[name](values) : () => Promise.resolve()
                 }
                 
-                let ItemComponent, SubComponent
+                let ItemComponent = null, SubComponent = null
                 switch (type) {
                   case 'shortAnswer':
                     ItemComponent = isNumber ? <InputNumber placeholder={placeholderText} style={{ width: '100%' }} /> : <Input placeholder={placeholderText} />
@@ -99,7 +100,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                     />
                     break
                   default:
-                    ItemComponent = <></>
+                    break
                 }
 
                 return (
@@ -112,6 +113,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                     </Space>}
                     extra={field.type === 'youtube' ? field.desc : ''}
                     rules={field.rules}
+                    wrapperCol={!ItemComponent ? { span: 0 } : undefined}
                   >
                     { ItemComponent }
                   </Form.Item>
