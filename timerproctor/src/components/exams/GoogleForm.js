@@ -40,7 +40,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                 let isNumber = false
                 field.rules = field.rules || []
                 for (const idx in field.rules) {
-                  if (field.rules[idx]?.type === 'number') isNumber = true
+                  if (['number', 'integer'].includes(field.rules[idx]?.type)) isNumber = true
                   if (!field.rules[idx].validator) continue
 
                   const { name, values } = field.rules[idx].validator

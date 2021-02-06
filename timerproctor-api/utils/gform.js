@@ -121,6 +121,8 @@ const toFieldData = field => {
           if (mode === 'between') {
             rule.min = values[0]
             rule.max = values[1]
+          } else if (mode === 'integer') {
+            rule.type = 'integer'
           } else if (['gt', 'gte', 'lt', 'lte'].includes(mode)) {
             const ruleMode = ['gt', 'gte'].includes(mode) ? 'min' : 'max'
             rule[ruleMode] = parseInt(values[0], 10) + (mode.endsWith('e') ? 0 : 1)
