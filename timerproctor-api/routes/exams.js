@@ -13,8 +13,7 @@ import Attempt from '../models/attempt'
 import { adminAuthen, authenticate } from '../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../middlewares/exam'
 import { jsonResponse, getExamNsp } from '../utils/helpers'
-import { toForm } from '../utils/gform'
-import testform from './testform'
+import { getDataFromHTML, toForm } from '../utils/gform'
 
 dot.keepArray = true
 
@@ -131,7 +130,18 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
 })
 
 router.get('/:id/form', populateExam, async (req, res, next) => {
-  return res.json(jsonResponse('ok', toForm(testform)))
+  const { linked = {} } = req.exam
+  const { provider, publicURL } = linked
+  if (provider !== 'gforms' || !publicURL)
+    return res.json(jsonResponse('failed', 'Access Denied.'))
+
+  const response = await axios.get(publicURL)
+  if (response.status !== 200) throw new Error(`HTTP Status: ${response.status}`)
+
+  const html = response.data
+  const data = getDataFromHTML(html)
+
+  return res.json(jsonResponse('ok', toForm(data)))
 })
 
 router.post('/:id/form/submit', populateExam, async (req, res, next) => {
