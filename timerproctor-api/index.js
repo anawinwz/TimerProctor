@@ -4,7 +4,7 @@ import io from './index_socketio'
 import app from './app'
 import routes from './routes'
 
-require('dotenv').config()
+require('dotenv-flow').config()
 
 const PORT = process.env.PORT || 5000
 

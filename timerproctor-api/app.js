@@ -2,7 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
-require('dotenv').config()
+require('dotenv-flow').config()
 
 const MONGODB_URI = process.env.MONGODB_URI
 if (!MONGODB_URI) {
