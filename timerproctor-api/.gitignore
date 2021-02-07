@@ -26,6 +26,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# specific deployment setup
+Dockerfile
+
 # uploads
 idphotos/
 
