@@ -51,8 +51,13 @@ class ExamStore {
   
   @action
   updateStatus(status) {
-    if (this.timeWindow?.mode === 'realtime') 
-      this.info.timeWindow.realtime.status = status
+    if (this.timeWindow?.mode === 'realtime') {
+      this.info.timeWindow.realtime = {
+        ...this.info.timeWindow.realtime,
+        status
+      }
+      if (status === 'started') this.info.timeWindow.realtime.startedAt = Date.now()
+    }
   }
 
   @action
