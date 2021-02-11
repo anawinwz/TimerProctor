@@ -62,12 +62,12 @@ router.post('/create', async (req, res, next) => {
       exam = await newExam.save()
       return res.json(jsonResponse('ok', 'สร้างการสอบที่เชื่อมกับฟอร์มนี้เรียบร้อยแล้ว!\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor'))
     } else {
+      if (String(exam.owner) === String(ownerUser._id))
+        return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
+
       exam.populate('owner', (err, exam) => {
         if (err)
           return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบเพื่อรับเชิญเป็นกรรมการฯ`))
-
-        if (exam.owner.email === ownerEmail)
-          return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
 
         return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบ (${exam.owner.email}) เพื่อรับเชิญเป็นกรรมการฯ`))
       })     
@@ -283,6 +283,25 @@ router.get('/:id/testers/count', adminAuthen, populateExam, onlyExamOwner, async
 })
 
 router.get('/:id/testers/:testerId', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+  try {
+    const exam = req.exam
+    const attempt = await Attempt.findOne({
+      _id: req.params.testerId,
+      exam: exam._id
+    })
+    .populate('user')
+    .populate('lastSnapshot')
+
+    if (!attempt) return res.json(jsonResponse('error', 'ไม่พบผู้เข้าสอบดังกล่าว'))
+
+    const tester = convertAttemptToTester(attempt)
+    return res.json(jsonResponse('ok', tester))
+  } catch (err) {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
+router.get('/:id/testers/:testerId/events', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
     const attempt = await Attempt.findOne({
