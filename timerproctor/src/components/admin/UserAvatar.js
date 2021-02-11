@@ -12,7 +12,7 @@ const UserAvatar = (props) => {
   if (user?.avatar) return <NoSelectAvatar {...otherProps} src={user.avatar} />
   return (
     <NoSelectAvatar {...otherProps} style={{ backgroundColor: 'green' }}>
-      { user.name }
+      { user?.name }
     </NoSelectAvatar>
   )
 }
