@@ -13,6 +13,6 @@ export const populateExam = async (req, res, next) => {
 }
 
 export const onlyExamOwner = async (req, res, next) => {
-  if (req.user._id !== req.exam.owner) return next()
+  if (String(req.exam.owner) === String(req.user._id)) return next()
   return res.json(jsonResponse('failed', 'Access Denied.'))
 }
