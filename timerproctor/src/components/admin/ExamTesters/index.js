@@ -21,7 +21,7 @@ const ExamTesters = ({ status }) => {
   const [pageSize, setPageSize] = useState(6)
 
   const isLoading = examAdmin?.loading || false
-  const testers = examAdmin.testers.toJS()
+  const testers = Object.values(examAdmin.testers)
 
   const changePage = useCallback(page => {
     setPage(page)
