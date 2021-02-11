@@ -3,9 +3,12 @@ import 'moment/locale/th'
 moment.locale('th')
 
 const formats = {
+  timeS: 'LTS',
   time: 'LT',
   shortNoTime: 'D MMM YYYY',
+  shortS: 'D MMM YYYY LTS',
   short: 'D MMM YYYY LT',
+  fullS: 'D MMMM YYYY LTS',
   full: 'D MMMM YYYY LT'
 }
 
