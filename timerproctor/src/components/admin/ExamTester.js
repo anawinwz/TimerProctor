@@ -55,7 +55,7 @@ const ExamTester = ({ tester }) => {
               <StopOutlined /> เชิญออก
             </ButtonCol>
             <ButtonCol span={6}>
-              <Link to={`/admin/testers/${tester._id}`}><InfoCircleOutlined /> ข้อมูล</Link>
+              <Link to={`testers/${tester._id}`}><InfoCircleOutlined /> ข้อมูล</Link>
             </ButtonCol>
           </Row>
         </div>

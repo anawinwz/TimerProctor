@@ -12,7 +12,7 @@ const ListView = ({ pageSize = 8, testers = [] }) => {
           <List.Item>
             <List.Item.Meta
               avatar={<Avatar src={tester.lastSnapshot?.url || tester.avatar} size="large" />}
-              title={<a href={`/testers/${tester._id}`}>{ tester.name }</a>}
+              title={<a href={`testers/${tester._id}`}>{ tester.name }</a>}
               description={<>{ testerStatuses[tester.status] }</>}
             />
           </List.Item>
