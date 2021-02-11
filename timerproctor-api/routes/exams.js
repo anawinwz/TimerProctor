@@ -154,10 +154,8 @@ router.get('/:id/form', populateExam, async (req, res, next) => {
     form = toForm(data)
     
     await Exam.findOneAndUpdate({ _id: req.exam._id }, {
-      $set: {
-        'linked.cached.updatedAt': Date.now(),
-        'linked.cached.data': form
-      }
+      'linked.cached.updatedAt': Date.now(),
+      'linked.cached.data': form
     }).exec()
   } else {
     form = cached.data
