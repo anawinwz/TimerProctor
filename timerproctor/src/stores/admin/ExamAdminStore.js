@@ -71,6 +71,22 @@ class ExamAdminStore {
   }
 
   @action
+  async getTester(testerId, scope = '') {
+    try {
+      this.loading = true
+      const examId = this.examStore?.id
+      const res = await fetchAPIwithToken(`/exams/${examId}/testers/${testerId}${scope ? `/${scope}` : ''}`)
+      if (res.status === 'ok') {
+        this.updateTester(testerId, res.payload)
+      } else {
+        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลผู้เข้าสอบ')
+      }
+    } finally {
+      this.loading = false
+    }
+  }
+
+  @action
   async getCounts(isInit = false) {
     try {
       this.loading = true
