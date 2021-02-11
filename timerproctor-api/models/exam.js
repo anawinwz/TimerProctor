@@ -10,7 +10,11 @@ const schema = new Schema(
     linked: {
       provider: { type: String, enum: ['gforms'] },
       id: String,
-      publicURL: String 
+      publicURL: String,
+      cached: {
+        updatedAt: Date,
+        data: Object
+      } 
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: Date,

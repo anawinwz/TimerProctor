@@ -68,7 +68,7 @@ router.post('/create', async (req, res, next) => {
 
         if (exam.owner.email === ownerEmail)
           return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
-          
+
         return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบ (${exam.owner.email}) เพื่อรับเชิญเป็นกรรมการฯ`))
       })     
     }
@@ -140,17 +140,30 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
 
 router.get('/:id/form', populateExam, async (req, res, next) => {
   const { linked = {} } = req.exam
-  const { provider, publicURL } = linked
+  const { provider, publicURL, cached } = linked
   if (provider !== 'gforms' || !publicURL)
     return res.json(jsonResponse('failed', 'Access Denied.'))
 
-  const response = await axios.get(publicURL)
-  if (response.status !== 200) throw new Error(`HTTP Status: ${response.status}`)
+  let form
+  if (!cached || Date.now() - cached.updatedAt > 30 * 60) {
+    const response = await axios.get(publicURL)
+    if (response.status !== 200) throw new Error(`HTTP Status: ${response.status}`)
 
-  const html = response.data
-  const data = getDataFromHTML(html)
+    const html = response.data
+    const data = getDataFromHTML(html)
+    form = toForm(data)
+    
+    await Exam.findOneAndUpdate({ _id: req.exam._id }, {
+      $set: {
+        'linked.cached.updatedAt': Date.now(),
+        'linked.cached.data': form
+      }
+    })
+  } else {
+    form = cached.data
+  }
 
-  return res.json(jsonResponse('ok', toForm(data)))
+  return res.json(jsonResponse('ok', form))
 })
 
 router.post('/:id/form/submit', populateExam, async (req, res, next) => {
