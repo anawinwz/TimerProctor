@@ -170,7 +170,10 @@ router.post('/:id/form/submit', populateExam, async (req, res, next) => {
   const { body, exam } = req
 
   const { linked } = exam
-  const { publicURL } = linked
+  const { publicURL, cached } = linked
+
+  if (!cached || !cached.data) return res.json(jsonResponse('failed'))
+  const { data: { sections } } = cached
 
   const submitURL = publicURL.replace('/viewform', '/formResponse')
 
@@ -189,10 +192,9 @@ router.post('/:id/form/submit', populateExam, async (req, res, next) => {
       }
     }
   }
-  submitParams.append('pageHistory', [...Array(3).keys()])
+  submitParams.append('pageHistory', [...Array(sections.length).keys()])
 
   console.log(submitParams)
-  // res.json(jsonResponse('failed'))
 
   axios.post(submitURL, submitParams, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
