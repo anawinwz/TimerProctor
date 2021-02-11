@@ -22,13 +22,13 @@ const ExamOverview = () => {
 
   useEffect(async () => {
     await examStore?.getInfo()
-    examAdmin?.getCounts()
+    examAdmin?.getCounts(true)
     examAdmin?.getTesters()
   }, [])
 
   const statuses = { all: 'ทั้งหมด', ...testerStatuses }
   
-  if (loading) return <ExamOverviewLoading />
+  if (loading || examAdmin?.loading) return <ExamOverviewLoading />
   return (
     <ContentBox>
       <ExamTitle exam={exam} />

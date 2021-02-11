@@ -1,17 +1,19 @@
 import { action, observable } from 'mobx'
 import { fetchAPIwithToken } from '~/utils/api'
 
+const initialCounts = {
+  all: 0,
+  loggedin: 0,
+  authenticating: 0,
+  authenticated: 0,
+  started: 0,
+  completed: 0
+}
+
 class ExamAdminStore {
   @observable loading = false
   @observable socketToken = ''
-  @observable counts = {
-    all: 0,
-    loggedin: 0,
-    authenticating: 0,
-    authenticated: 0,
-    started: 0,
-    completed: 0
-  }
+  @observable counts = initialCounts
   @observable testers = []
 
   constructor(rootStore) {
@@ -69,13 +71,17 @@ class ExamAdminStore {
   }
 
   @action
-  async getCounts() {
+  async getCounts(isInit = false) {
     try {
+      this.loading = true
       const examId = this.examStore?.id
       const res = await fetchAPIwithToken(`/exams/${examId}/testers/count`)
       const { status, payload } = res
-      if (status === 'ok') this.counts = Object.assign({}, this.counts, res.payload.counts)
-    } catch {}
+      if (status === 'ok') this.counts = Object.assign({}, isInit ? initialCounts : this.counts, res.payload.counts)
+    } catch {
+    } finally {
+      this.loading = false
+    }
   }
 
   @action
