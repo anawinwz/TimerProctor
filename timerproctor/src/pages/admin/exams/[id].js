@@ -7,6 +7,7 @@ import { showModal } from '~/utils/modal'
 
 import ExamSettingsPage from './[id]/settings'
 import ExamOverviewPage from './[id]/overview'
+import ExamTesterPage from './[id]/testers/[testerId]'
 
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
@@ -62,6 +63,7 @@ const AdminExamPage = ({ match }) => {
     <Switch>
       <Route exact path={match.url + '/settings'} component={ExamSettingsPage} />
       <Route exact path={match.url + '/overview'} component={ExamOverviewPage} />
+      <Route exact path={match.url + '/testers/:testerId'} component={ExamTesterPage} />
     </Switch>
   )
 }
