@@ -62,7 +62,7 @@ router.post('/create', async (req, res, next) => {
       exam = await newExam.save()
       return res.json(jsonResponse('ok', 'สร้างการสอบที่เชื่อมกับฟอร์มนี้เรียบร้อยแล้ว!\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor'))
     } else {
-      if (exam.owner === ownerUser._id)
+      if (exam.owner == ownerUser._id)
         return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
     
       exam.populate('owner', (err, exam) => {
