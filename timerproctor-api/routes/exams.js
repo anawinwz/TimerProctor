@@ -45,7 +45,8 @@ router.post('/create', async (req, res, next) => {
     }
 
     let exam = await Exam.findOne({
-      linked: { provider, id }
+      'linked.provider': provider,
+      'linked.id': id
     })
     if (!exam) {
       const newExam = new Exam({
