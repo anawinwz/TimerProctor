@@ -5,6 +5,7 @@ const breadcrumbNameMap = {
   '/exams': 'การสอบของฉัน',
   '/exams/:id/settings': 'ตั้งค่าการสอบ',
   '/exams/:id/overview': 'ภาพรวมการสอบ',
+  '/exams/:id/testers/:id' : 'รายงานผู้เข้าสอบ',
   '/proctorings': 'การคุมสอบของฉัน',
 }
 
@@ -14,9 +15,9 @@ const AdminBreadcrumb = withRouter(props => {
   const pathSnippets = location.pathname.replace('/admin','').split('/').filter(i => i)
   const extraBreadcrumbItems = pathSnippets
     .map((_, index) => `/${pathSnippets.slice(0, index + 1).join('/')}`)
-    .filter(url => url !== '/dashboard' && !url.match(/^\/exams\/[a-z0-9]+\/?$/))
+    .filter(url => url !== '/dashboard' && !url.match(/^\/exams\/[a-f\d]{24}\/?$/) && !url.match(/^\/exams\/[a-f\d]{24}\/testers$/))
     .map(url => {
-      const mapUrl = url.replace(/^\/exams\/[a-z0-9]+\//, '/exams/:id/')
+      const mapUrl = url.replace(/\/[a-f\d]{24}/g, '/:id')
       return (
         <Breadcrumb.Item key={url}>
           <Link to={`/admin${url}`}>{ breadcrumbNameMap[mapUrl] }</Link>
