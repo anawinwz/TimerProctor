@@ -14,7 +14,7 @@ class ExamAdminStore {
   @observable loading = false
   @observable socketToken = ''
   @observable counts = initialCounts
-  @observable testers = []
+  @observable testers = {}
 
   constructor(rootStore) {
     this.rootStore = rootStore
@@ -49,20 +49,20 @@ class ExamAdminStore {
 
   @action
   addTester(tester = {}) {
-    if (this.updateTester(tester?._id, tester)) return true
+    const { _id } = tester
+    if (this.updateTester(_id, tester)) return true
 
-    this.testers.push(tester)
+    this.testers[_id] = tester
     this.counts.all += 1
     this.counts[tester.status] += 1
   }
 
   @action
   updateTester(_id, changes = {}) {
-    const idx = this.testers.findIndex(tester => tester?._id == _id)
-    if (idx === -1) return false
+    if (!_id || !this.testers[_id]) return false
 
-    const oldStatus = this.testers[idx]?.status
-    this.testers[idx] = Object.assign({}, this.testers[idx], changes)
+    const oldStatus = this.testers[_id].status
+    this.testers[_id] = Object.assign({}, this.testers[_id], changes)
     if (oldStatus && changes?.status) {
       this.counts[oldStatus] -= 1
       this.counts[changes.status] += 1
