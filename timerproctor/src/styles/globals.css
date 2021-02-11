@@ -19,3 +19,7 @@ body {
 .hidden {
   display: none;
 }
+
+tr.ant-table-row.risk td, tr.ant-table-row.risk td:hover {
+  background: #FFF0CA !important;
+}

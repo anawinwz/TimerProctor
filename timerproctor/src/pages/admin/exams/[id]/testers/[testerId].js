@@ -6,11 +6,13 @@ import { StopOutlined } from '@ant-design/icons'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
-import ContentBox from '~/components/admin/ContentBox'
 import { testerStatuses } from '~/utils/const'
+import { dateStr } from '~/utils/date'
+
+import ContentBox from '~/components/admin/ContentBox'
 import UserTag from '~/components/admin/UserTag'
-import { shortDateStr } from '~/utils/date'
 import CaptionedProgress from '~/components/admin/CaptionedProgress'
+import TesterEventsTable from '~/components/admin/TesterEventsTable'
 
 const Title = styled(Typography.Title)`
   margin-top: 0 !important;
@@ -34,10 +36,12 @@ const ExamTesterReport = ({ match }) => {
   const testerId = match.params?.testerId
 
   useEffect(async () => {
+    examAdmin?.getTester(testerId, 'events')
   }, [])
 
   
-  const tester = examAdmin.testers[testerId]  
+  const tester = examAdmin.testers[testerId]
+  if (!tester) return <></>
   return (
     <ContentBox>
       <Title level={3}>{ tester.name }</Title>
@@ -46,15 +50,15 @@ const ExamTesterReport = ({ match }) => {
         <Col span={14}>
           <Row>
             <Col span={6} className="text-center">
-              <Progress type="circle" percent={100} format={percent => `${percent}%`} />
-              <SmallText className="text-center">เวลาที่อยู่หน้ากล้อง</SmallText>
+              <Progress type="circle" percent={93} format={percent => `${percent}%`} />
+              <SmallText className="text-center"></SmallText>
             </Col>
             <Col span={18} style={{ paddingLeft: '10px' }}>
               <Subtitle type="secondary">สถานะ</Subtitle>
               <Title level={4}>{ testerStatuses[tester.status] }</Title>
               
-              <CaptionedProgress percent={0}>ไม่พบใบหน้า</CaptionedProgress>
-              <CaptionedProgress percent={0}>สลับแท็บ/หน้าต่าง</CaptionedProgress>
+              <CaptionedProgress percent={0} strokeColor="#FFBE18">ไม่พบใบหน้า</CaptionedProgress>
+              <CaptionedProgress percent={7} strokeColor="#FFBE18">สลับแท็บ/หน้าต่าง</CaptionedProgress>
             </Col>
           </Row>
         </Col>
@@ -63,17 +67,17 @@ const ExamTesterReport = ({ match }) => {
             <Col span={12}>
               <Subtitle type="secondary">ภาพที่ใช้ยืนยันตัวบุคคล</Subtitle>
               <Image src={tester.idCheck.photoURL} width="90%" />
-              <SmallText type="secondary">{ shortDateStr(tester.idCheck.timestamp) }</SmallText>
+              <SmallText type="secondary">{ dateStr(tester.idCheck.timestamp, 'shortS') }</SmallText>
             </Col>
             <Col span={12}>
               <Subtitle type="secondary">ผู้อนุมัติการเข้าสอบ</Subtitle>
               <div><UserTag /></div>
-              <SmallText type="secondary">{ shortDateStr(tester.idCheck.checkedAt) }</SmallText>
+              <SmallText type="secondary">{ dateStr(tester.idCheck.checkedAt, 'shortS') }</SmallText>
             </Col>
           </Row>
         </Col>
       </TesterDescription>
-      <Table />
+      <TesterEventsTable events={tester.events} />
     </ContentBox>
   )
 }

@@ -26,3 +26,5 @@ export const rangeStr = (a, b, type = 'short') => {
   if (moment(a).isSame(b, 'day')) return `${startDate} - ${dateStr(b, 'time')}`
   return `${startDate} - ${dateStr(b, type)}`
 }
+
+export const dateSorter = (a, b) => moment(a).unix() - moment(b).unix()
