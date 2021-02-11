@@ -247,7 +247,7 @@ router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req,
       .reduce((acc, tester) => {
         const { _id } = tester
         return { ...acc, [_id]: tester }
-      })
+      }, {})
 
     return res.json(jsonResponse('ok', { testers }))
   } catch (err) {
