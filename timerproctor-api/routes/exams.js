@@ -10,8 +10,10 @@ import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../config'
 import Exam from '../models/exam'
 import User from '../models/user'
 import Attempt from '../models/attempt'
+import AttemptEvent from '../models/attemptEvent'
 import { adminAuthen, authenticate } from '../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../middlewares/exam'
+import { populateAttempt } from '../middlewares/attempt'
 import { jsonResponse, getExamNsp, convertAttemptToTester } from '../utils/helpers'
 import { getDataFromHTML, toForm } from '../utils/gform'
 
@@ -282,41 +284,33 @@ router.get('/:id/testers/count', adminAuthen, populateExam, onlyExamOwner, async
   }
 })
 
-router.get('/:id/testers/:testerId', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.get('/:id/testers/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
   try {
-    const exam = req.exam
-    const attempt = await Attempt.findOne({
-      _id: req.params.testerId,
-      exam: exam._id
-    })
-    .populate('user')
-    .populate('lastSnapshot')
-
-    if (!attempt) return res.json(jsonResponse('error', 'ไม่พบผู้เข้าสอบดังกล่าว'))
-
+    const attempt = await req.attempt.populate('user').populate('lastSnapshot')
     const tester = convertAttemptToTester(attempt)
     return res.json(jsonResponse('ok', tester))
   } catch (err) {
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+    return res.json(jsonResponse('error', 'ไม่สามารถตรวจสอบข้อมูลผู้เข้าสอบได้'))
   }
 })
 
-router.get('/:id/testers/:testerId/events', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.get('/:id/testers/:testerId/events', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
   try {
-    const exam = req.exam
-    const attempt = await Attempt.findOne({
-      _id: req.params.testerId,
-      exam: exam._id
+    const attempt = req.attempt
+    const { type } = req.query
+    
+    const events = await AttemptEvent.find({
+      attempt: attempt._id,
+      ...(type ? { type } : {})
+    }).map(event => {
+      delete event._id
+      delete event.attempt
+      return event
     })
-    .populate('user')
-    .populate('lastSnapshot')
 
-    if (!attempt) return res.json(jsonResponse('error', 'ไม่พบผู้เข้าสอบดังกล่าว'))
-
-    const tester = convertAttemptToTester(attempt)
-    return res.json(jsonResponse('ok', tester))
+    return res.json(jsonResponse('ok', { events: events }))
   } catch (err) {
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+    return res.json(jsonResponse('error', 'ไม่สามารถเรียกรายการเหตุการณ์ของผู้เข้าสอบได้'))
   }
 })
 
