@@ -62,13 +62,13 @@ router.post('/create', async (req, res, next) => {
       exam = await newExam.save()
       return res.json(jsonResponse('ok', 'สร้างการสอบที่เชื่อมกับฟอร์มนี้เรียบร้อยแล้ว!\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor'))
     } else {
-      if (exam.owner == ownerUser._id)
-        return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
-    
       exam.populate('owner', (err, exam) => {
         if (err)
           return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบเพื่อรับเชิญเป็นกรรมการฯ`))
 
+        if (exam.owner.email === ownerEmail)
+          return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
+          
         return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบ (${exam.owner.email}) เพื่อรับเชิญเป็นกรรมการฯ`))
       })     
     }
