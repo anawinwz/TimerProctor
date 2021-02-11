@@ -158,7 +158,7 @@ router.get('/:id/form', populateExam, async (req, res, next) => {
         'linked.cached.updatedAt': Date.now(),
         'linked.cached.data': form
       }
-    })
+    }).exec()
   } else {
     form = cached.data
   }
