@@ -13,6 +13,7 @@ if (!MONGODB_URI) {
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 })
 mongoose.connection.on('error', err => {
   console.error('MongoDB Connection Error', err)
