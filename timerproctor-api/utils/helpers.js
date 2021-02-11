@@ -12,4 +12,21 @@ export const getExamIdFromSocket = socket => {
   return name.match(ioNamespace)[1]
 }
 
-export const getExamNsp = (examId) => io.of(`/exams/${examId}`)
+export const getExamNsp = examId => io.of(`/exams/${examId}`)
+
+export const convertAttemptToTester = attempt => {
+  const { _id, user, lastSnapshot, status, idCheck } = attempt
+  const { info: { displayName, photoURL } } = user
+  return {
+    _id,
+    name: displayName,
+    avatar: photoURL,
+    status,
+    ...(lastSnapshot && {
+      lastSnapshot: {
+        url: lastSnapshot.evidence?.url
+      }
+    }),
+    idCheck: idCheck
+  }
+}

@@ -12,7 +12,7 @@ import User from '../models/user'
 import Attempt from '../models/attempt'
 import { adminAuthen, authenticate } from '../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../middlewares/exam'
-import { jsonResponse, getExamNsp } from '../utils/helpers'
+import { jsonResponse, getExamNsp, convertAttemptToTester } from '../utils/helpers'
 import { getDataFromHTML, toForm } from '../utils/gform'
 
 dot.keepArray = true
@@ -243,22 +243,7 @@ router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req,
     .populate('user')
     .populate('lastSnapshot')
 
-    const testers = attempts.map(attempt => {
-      const { _id, user, lastSnapshot, status, idCheck } = attempt
-      const { info: { displayName, photoURL } } = user
-      return {
-        _id,
-        name: displayName,
-        avatar: photoURL,
-        status,
-        ...(lastSnapshot && {
-          lastSnapshot: {
-            url: lastSnapshot.evidence?.url
-          }
-        }),
-        idCheck: idCheck
-      }
-    })
+    const testers = attempts.map(convertAttemptToTester)
 
     return res.json(jsonResponse('ok', { testers }))
   } catch (err) {
@@ -290,6 +275,25 @@ router.get('/:id/testers/count', adminAuthen, populateExam, onlyExamOwner, async
     return res.json(jsonResponse('ok', { counts } ))
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการนับจำนวนผู้เข้าสอบ'))
+  }
+})
+
+router.get('/:id/testers/:testerId', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+  try {
+    const exam = req.exam
+    const attempt = await Attempt.findOne({
+      _id: req.params.testerId,
+      exam: exam._id
+    })
+    .populate('user')
+    .populate('lastSnapshot')
+
+    if (!attempt) return res.json(jsonResponse('error', 'ไม่พบผู้เข้าสอบดังกล่าว'))
+
+    const tester = convertAttemptToTester(attempt)
+    return res.json(jsonResponse('ok', tester))
+  } catch (err) {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
 })
 
