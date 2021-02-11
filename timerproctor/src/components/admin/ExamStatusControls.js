@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 import { fetchAPIwithToken } from '~/utils/api'
+import { fromNowStr } from '~/utils/date'
 
 const ExamSettingsButton = observer(({ examId = '' }) => (
   <Link to={`/admin/exams/${examId}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
@@ -49,7 +50,7 @@ const ExamStatusControls = () => {
     return (
       <Space direction="horizontal">
         <Button type="danger" icon={<StopFilled />} onClick={stopExam}>สิ้นสุดการสอบ</Button> 
-        <span>ดำเนินไปแล้ว...</span>
+        <span>ดำเนินไปแล้ว { fromNowStr(exam?.timeWindow?.realtime?.startedAt) }</span>
       </Space>
     )
   }

@@ -11,6 +11,8 @@ const formats = {
 
 export const isMoment = (obj) => moment.isMoment(obj)
 
+export const fromNowStr = (date) => date ? moment(date).fromNow(true) : '...'
+
 export const dateStr = (date, type = 'short') => date ? moment(date).format(formats[type]) : '-'
 
 export const shortDateStr = (date) => dateStr(date, 'short')
