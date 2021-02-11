@@ -144,14 +144,13 @@ router.get('/:id/form', populateExam, async (req, res, next) => {
   if (provider !== 'gforms' || !publicURL)
     return res.json(jsonResponse('failed', 'Access Denied.'))
 
-  let form
   if (!cached || Date.now() - cached.updatedAt > 30 * 60) {
     const response = await axios.get(publicURL)
     if (response.status !== 200) throw new Error(`HTTP Status: ${response.status}`)
 
     const html = response.data
     const data = getDataFromHTML(html)
-    form = toForm(data)
+    const form = toForm(data)
     
     await Exam.findOneAndUpdate({ _id: req.exam._id }, {
       'linked.cached': {
@@ -159,11 +158,12 @@ router.get('/:id/form', populateExam, async (req, res, next) => {
         data: form
       }
     }).exec()
-  } else {
-    form = cached.data
-  }
 
-  return res.json(jsonResponse('ok', form))
+    return res.json(jsonResponse('ok', form))
+  } else {
+    const form = cached.data
+    return res.json(jsonResponse('ok', form))
+  }
 })
 
 router.post('/:id/form/submit', populateExam, async (req, res, next) => {
