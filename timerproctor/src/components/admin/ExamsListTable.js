@@ -45,9 +45,10 @@ const columns = [
   },
 ]
 
-const ExamsListTable = ({ pageSize = 5, dataSource = demoExams }) => {
+const ExamsListTable = ({ pageSize = 5, loading = false, dataSource = demoExams }) => {
   return (
     <Table
+      loading={loading}
       size="middle"
       columns={columns}
       rowKey="_id"

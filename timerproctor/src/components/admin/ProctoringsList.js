@@ -9,14 +9,19 @@ import ExamsListTable from './ExamsListTable'
 const { Title } = Typography
 
 const ProctoringsList = () => {
+  const [loading, setLoading] = useState(true)
   const [proctorings, setProctorings] = useState([])
 
   useEffect(async () => {
     try {
       const res = await fetchAPIwithToken('/proctorings')
       const { status, payload, message } = res
-      if (status === 'ok') setProctorings(payload.proctorings)
-      else throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
+      if (status === 'ok') {
+        setProctorings(payload.proctorings)
+        setLoading(false)
+      } else {
+        throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
+      }
     } catch {
       message.error('เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
     }
@@ -25,7 +30,7 @@ const ProctoringsList = () => {
   return (
     <ContentBox>
       <Title level={3}>การคุมสอบของฉัน</Title>
-      <ExamsListTable dataSource={proctorings} />
+      <ExamsListTable loading={loading} dataSource={proctorings} />
     </ContentBox>
   ) 
 }
