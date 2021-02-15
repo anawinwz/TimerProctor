@@ -3,19 +3,19 @@ import jwt from 'jsonwebtoken'
 import dot from 'dot-object'
 import axios from 'axios'
 
-import dayjs from '../utils/dayjs'
+import dayjs from '../../utils/dayjs'
 
-import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../config'
+import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../../config'
 
-import Exam from '../models/exam'
-import User from '../models/user'
-import Attempt from '../models/attempt'
-import AttemptEvent from '../models/attemptEvent'
-import { adminAuthen, authenticate } from '../middlewares/authentication'
-import { onlyExamOwner, populateExam } from '../middlewares/exam'
-import { populateAttempt } from '../middlewares/attempt'
-import { jsonResponse, getExamNsp, convertAttemptToTester } from '../utils/helpers'
-import { getDataFromHTML, toForm } from '../utils/gform'
+import Exam from '../../models/exam'
+import User from '../../models/user'
+import Attempt from '../../models/attempt'
+import AttemptEvent from '../../models/attemptEvent'
+import { adminAuthen, authenticate } from '../../middlewares/authentication'
+import { onlyExamOwner, populateExam } from '../../middlewares/exam'
+import { populateAttempt } from '../../middlewares/attempt'
+import { jsonResponse, getExamNsp, convertAttemptToTester } from '../../utils/helpers'
+import { getDataFromHTML, toForm } from '../../utils/gform'
 
 dot.keepArray = true
 
