@@ -19,9 +19,9 @@ const schema = new Schema(
     createdAt: { type: Date, default: Date.now },
     updatedAt: Date,
     timeWindow: {
-      mode: { type: String, enum: ['realtime', 'schedule'] },
+      mode: { type: String, enum: ['realtime', 'schedule'], default: 'realtime' },
       realtime: {
-        status: { type: String, enum: ['pending', 'started', 'stopped']},
+        status: { type: String, enum: ['pending', 'started', 'stopped'], default: 'pending' },
         startedAt: Date,
         stoppedAt: Date
       },
