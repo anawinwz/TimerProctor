@@ -36,7 +36,10 @@ const schema = new Schema(
     },
     authentication: {
       login: {
-        methods: [{ type: String, enum: ['google', 'sso', 'email'], default: 'google' }],
+        methods: {
+          type: [{ type: String, enum: ['google', 'sso', 'email'] }],
+          default: ['google']
+        },
         email: {
           allowedDomains: [{ type: String }]
         },
