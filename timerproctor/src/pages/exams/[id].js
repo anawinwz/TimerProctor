@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Switch } from 'react-router-dom'
+import { useTitle } from 'react-use'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
@@ -10,7 +11,7 @@ import NotFound from '~/components/exams/NotFound'
 
 import LayoutRoute from '~/components/LayoutRoute'
 import DefaultLayout from '~/layouts/default'
-import ExamLayout, { ExamNormalLayout } from '~/layouts/exams'
+import ExamLayout from '~/layouts/exams'
 
 import { showModal } from '~/utils/modal'
 
@@ -28,6 +29,8 @@ const ExamPage = ({ match }) => {
   useEffect(() => {
     exam.getInfo({ id: match.params?.id })
   }, [match.params?.id])
+
+  useTitle(exam?.name || 'TimerProctor')
 
   useEffect(() => {
     if (attempt.socketToken) {
