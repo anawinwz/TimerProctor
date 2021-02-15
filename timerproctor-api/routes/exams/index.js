@@ -3,18 +3,18 @@ import jwt from 'jsonwebtoken'
 import dot from 'dot-object'
 import axios from 'axios'
 
-import dayjs from '../../utils/dayjs'
-
 import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../../config'
+
+import { adminAuthen, authenticate } from '../../middlewares/authentication'
+import { onlyExamOwner, populateExam } from '../../middlewares/exam'
+import testers from './testers'
 
 import Exam from '../../models/exam'
 import User from '../../models/user'
 import Attempt from '../../models/attempt'
-import AttemptEvent from '../../models/attemptEvent'
-import { adminAuthen, authenticate } from '../../middlewares/authentication'
-import { onlyExamOwner, populateExam } from '../../middlewares/exam'
-import { populateAttempt } from '../../middlewares/attempt'
-import { jsonResponse, getExamNsp, convertAttemptToTester } from '../../utils/helpers'
+
+import dayjs from '../../utils/dayjs'
+import { jsonResponse, getExamNsp } from '../../utils/helpers'
 import { getDataFromHTML, toForm } from '../../utils/gform'
 
 dot.keepArray = true
@@ -228,91 +228,7 @@ router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, nex
   }
 })
 
-router.get('/:id/testers', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
-  const { status } = req.query
-  if (status && !['all', 'loggedin', 'authenticating', 'authenticated', 'started', 'completed'].includes(status))
-    return res.json(jsonResponse('error', 'Invalid request.'))
-
-  try {
-    const exam = req.exam
-    const attempts = await Attempt.find({
-      exam: exam._id, 
-      ...(status && status !== 'all' ? 
-        { status: status } : 
-        { status: { $ne: 'terminated' } }
-      )
-    })
-    .populate('user')
-    .populate('lastSnapshot')
-
-    const testers = attempts.map(convertAttemptToTester)
-      .reduce((acc, tester) => {
-        const { _id } = tester
-        return { ...acc, [_id]: tester }
-      }, {})
-
-    return res.json(jsonResponse('ok', { testers }))
-  } catch (err) {
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
-  }
-})
-
-router.get('/:id/testers/count', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
-  try {
-    const exam = req.exam
-    const results = await Attempt.aggregate([
-      { $match: { exam: exam._id } },
-      {
-        $group: {
-          _id: '$status',
-          count: { $sum: 1 }
-        }
-      }
-    ])
-
-    let counts = {}
-    let total = 0
-    for (const group of results) {
-      counts[group._id] = group.count
-      total += group.count
-    }
-    counts.all = total
-
-    return res.json(jsonResponse('ok', { counts } ))
-  } catch {
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการนับจำนวนผู้เข้าสอบ'))
-  }
-})
-
-router.get('/:id/testers/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
-  try {
-    const attempt = await req.attempt.populate('user').populate('lastSnapshot')
-    const tester = convertAttemptToTester(attempt)
-    return res.json(jsonResponse('ok', tester))
-  } catch (err) {
-    return res.json(jsonResponse('error', 'ไม่สามารถตรวจสอบข้อมูลผู้เข้าสอบได้'))
-  }
-})
-
-router.get('/:id/testers/:testerId/events', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
-  try {
-    const attempt = req.attempt
-    const { type } = req.query
-    
-    const events = await AttemptEvent.find({
-      attempt: attempt._id,
-      ...(type ? { type } : {})
-    }).map(event => {
-      delete event._id
-      delete event.attempt
-      return event
-    })
-
-    return res.json(jsonResponse('ok', { events: events }))
-  } catch (err) {
-    return res.json(jsonResponse('error', 'ไม่สามารถเรียกรายการเหตุการณ์ของผู้เข้าสอบได้'))
-  }
-})
+router.use('/:id/testers', testers)
 
 router.get('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
