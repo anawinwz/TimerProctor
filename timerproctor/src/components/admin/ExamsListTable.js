@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom'
 
 import StatusTag from './StatusTag'
 
-import demoExam from '~/assets/demoExam.json'
 import { rangeStr, shortDateStr } from '~/utils/date'
-const demoExams = [ demoExam, { ...demoExam, status: 'unset' } ]
 
 const columns = [
   {
@@ -45,7 +43,7 @@ const columns = [
   },
 ]
 
-const ExamsListTable = ({ pageSize = 5, loading = false, dataSource = demoExams }) => {
+const ExamsListTable = ({ pageSize = 5, loading = false, dataSource = [] }) => {
   return (
     <Table
       loading={loading}
