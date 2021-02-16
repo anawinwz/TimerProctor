@@ -84,7 +84,7 @@ router.get('/:id', populateExam, async (req, res, next) => {
   return res.json(exam)
 })
 
-router.get('/:id/form', form)
+router.use('/:id/form', form)
 router.use('/:id/testers', testers)
 
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
