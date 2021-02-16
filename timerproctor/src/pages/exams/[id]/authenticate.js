@@ -1,16 +1,13 @@
-import { useEffect } from 'react'
+import { Redirect } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
 import AuthenCard from '~/components/exams/AuthenCard'
 
-const AuthenPage = ({ history }) => {
+const AuthenPage = () => {
   const { ExamStore: exam, AuthStore: { isLoggedIn } } = useStore()
-
-  useEffect(() => {
-    if (!isLoggedIn) history.replace(`/exams/${exam.id}`)
-  }, [])
   
+  if (!isLoggedIn) return <Redirect to={`/exams/${exam.id}`} />
   return (
     <AuthenCard />
   )
