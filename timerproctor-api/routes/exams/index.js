@@ -15,6 +15,7 @@ import Attempt from '../../models/attempt'
 
 import dayjs from '../../utils/dayjs'
 import { jsonResponse, getExamNsp } from '../../utils/helpers'
+import { getCompletedAttemptsCount, getLastAttempt } from '../../utils/attempt'
 
 dot.keepArray = true
 
@@ -89,7 +90,7 @@ router.use('/:id/testers', testers)
 
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
   try {
-    const { _id: examId, authentication, timeWindow } = req.exam
+    const { _id: examId, authentication, timeWindow, attempts = 1 } = req.exam
     const { _id: userId, email, info } = req.user
 
     const { mode, schedule } = timeWindow
@@ -105,8 +106,12 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
     if (allowedDomains.length > 0 && !allowedDomains.includes(userDomain)) 
       return res.json(jsonResponse('failed', `คุณไม่สามารถใช้อีเมล @${userDomain} เข้าสอบได้`))
 
-    let lastAttempt = await Attempt.findOne({ exam: examId, user: userId, status: { $ne: 'completed' } })
+    let lastAttempt = await getLastAttempt(examId, userId, { notCompleted: true })
     if (!lastAttempt) {
+      const currentAttempts = await getCompletedAttemptsCount(examId, userId)
+      if (currentAttempts === attempts)
+        return res.json('failed', `คุณทำการสอบครบตามจำนวนสูงสุดที่ทำได้แล้ว (${attempts} ครั้ง/คน)`)
+
       const newAttempt = new Attempt({
         exam: examId,
         user: userId
