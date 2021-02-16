@@ -24,7 +24,7 @@ export const getLastAttempt = async (examId, userId, options = {}) => {
     exam: examId,
     user: userId,
     ...(notCompleted ? { status: { $ne: 'completed' } } : {})
-  }, { sort: { $natural: -1 } })
+  }).sort({ $natural: -1 })
 
   if (lastAttempt) return lastAttempt
   else if (createIfNotFound) {
