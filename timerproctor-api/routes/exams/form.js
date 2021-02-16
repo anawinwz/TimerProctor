@@ -81,7 +81,7 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
   axios.post(submitURL, submitParams, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   })
-  .then(result => {
+  .then(async result => {
     const { status } = result
     if (status == 200) {
       lastAttempt.status = 'completed'
