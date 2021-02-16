@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import axios from 'axios'
 
-import { populateExam } from '../../middlewares/exam'
+import { authenticate } from '../../middlewares/authentication'
+import { populateExam, onlyDuringExam } from '../../middlewares/exam'
 
 import Exam from '../../models/exam'
 
@@ -10,7 +11,7 @@ import { getDataFromHTML, toForm } from '../../utils/gform'
 
 const router = Router({ mergeParams: true })
 
-router.get('/', populateExam, async (req, res, next) => {
+router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res, next) => {
   const { linked = {} } = req.exam
   const { provider, publicURL, cached } = linked
   if (provider !== 'gforms' || !publicURL)
@@ -38,7 +39,7 @@ router.get('/', populateExam, async (req, res, next) => {
   }
 })
 
-router.post('/submit', populateExam, async (req, res, next) => {
+router.post('/submit', authenticate, populateExam, async (req, res, next) => {
   const { body, exam } = req
 
   const { linked } = exam
