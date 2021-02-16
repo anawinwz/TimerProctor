@@ -18,7 +18,7 @@ export const getCompletedAttemptsCount = async (examId, userId) => {
 export const getLastAttempt = async (examId, userId, options = {}) => {
   if (!examId || !userId) return null
 
-  const { notCompleted = false, createIfNotFound = true } = options
+  const { notCompleted = false, createIfNotFound = false } = options
 
   let lastAttempt = await Attempt.findOne({
     exam: examId,
