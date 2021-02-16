@@ -18,6 +18,7 @@ const schema = new Schema(
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: Date,
+    attempts: { type: Number, default: 1 },
     timeWindow: {
       mode: { type: String, enum: ['realtime', 'schedule'], default: 'realtime' },
       realtime: {
