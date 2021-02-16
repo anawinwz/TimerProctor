@@ -8,6 +8,7 @@ import Exam from '../../models/exam'
 
 import { jsonResponse } from '../../utils/helpers'
 import { getDataFromHTML, toForm } from '../../utils/gform'
+import { getLastAttempt } from '../../utils/attempt'
 
 const router = Router({ mergeParams: true })
 
@@ -40,12 +41,20 @@ router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res, nex
 })
 
 router.post('/submit', authenticate, populateExam, async (req, res, next) => {
-  const { body, exam } = req
+  const { body, exam, user } = req
 
-  const { linked } = exam
+  const { _id: userId } = user
+  const { _id: examId, linked } = exam
+  const lastAttempt = getLastAttempt(examId, userId)
+
+  if (!lastAttempt || lastAttempt.status !== 'started')
+    return res.json(jsonResponse('failed', 'คุณไม่ได้รับอนุญาตให้ส่งคำตอบ'))
+
   const { publicURL, cached } = linked
 
-  if (!cached || !cached.data) return res.json(jsonResponse('failed'))
+  if (!cached || !cached.data) 
+    return res.json(jsonResponse('failed', 'ไม่พบรายการคำถามของการสอบ หรือคุณส่งคำตอบโดยไม่ได้รับอนุญาต'))
+
   const { data: { sections } } = cached
 
   const submitURL = publicURL.replace('/viewform', '/formResponse')
@@ -75,6 +84,11 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
   .then(result => {
     const { status } = result
     if (status == 200) {
+      lastAttempt.status = 'completed'
+      await lastAttempt.save()
+
+      getExamNsp(examId).to('proctor').emit('newTesterStatus', { id: lastAttempt._id, status: 'completed' })
+
       res.json(jsonResponse('ok'))
     } else {
       console.log('GForms Error(then):', status)
