@@ -109,7 +109,7 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
     let lastAttempt = await getLastAttempt(examId, userId, { notCompleted: true })
     if (!lastAttempt) {
       const currentAttempts = await getCompletedAttemptsCount(examId, userId)
-      if (currentAttempts === attempts)
+      if (currentAttempts >= attempts)
         return res.json('failed', `คุณทำการสอบครบตามจำนวนสูงสุดที่ทำได้แล้ว (${attempts} ครั้ง/คน)`)
 
       const newAttempt = new Attempt({
