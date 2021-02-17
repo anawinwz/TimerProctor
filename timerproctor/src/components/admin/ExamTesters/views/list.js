@@ -1,5 +1,6 @@
 import { Col, List, Avatar } from 'antd'
 import { observer } from 'mobx-react-lite'
+import { Link } from 'react-router-dom'
 import { testerStatuses } from '~/utils/const'
 
 const ListView = ({ pageSize = 8, testers = [] }) => {
@@ -12,7 +13,7 @@ const ListView = ({ pageSize = 8, testers = [] }) => {
           <List.Item>
             <List.Item.Meta
               avatar={<Avatar src={tester.lastSnapshot?.url || tester.avatar} size="large" />}
-              title={<a href={`testers/${tester._id}`}>{ tester.name }</a>}
+              title={<Link to={`testers/${tester._id}`}>{ tester.name }</Link>}
               description={<>{ testerStatuses[tester.status] }</>}
             />
           </List.Item>
