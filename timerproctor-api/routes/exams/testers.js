@@ -69,7 +69,11 @@ router.get('/count', adminAuthen, populateExam, onlyExamOwner, async (req, res, 
 
 router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
   try {
-    const attempt = await req.attempt.populate('user').populate('lastSnapshot').execPopulate()
+    const attempt = await req.attempt
+      .populate('user')
+      .populate('lastSnapshot')
+      .populate('idCheck.checker')
+      .execPopulate()
 
     const tester = convertAttemptToTester(attempt)
     return res.json(jsonResponse('ok', tester))
