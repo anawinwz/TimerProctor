@@ -30,9 +30,11 @@ class ExamStore {
       this.name = this.info.name
       this.lastFetch = Date.now()
       this.error = null
+      return this.info
     } catch (err) {
       this.info = {}
       this.error = err
+      return this.info
     } finally {
       this.loading = false
     }

@@ -52,7 +52,7 @@ class ExamAdminStore {
     const { _id } = tester
     if (this.updateTester(_id, tester)) return true
 
-    this.testers[_id] = tester
+    Object.assign(this.testers, {}, { [_id]: tester })
     this.counts.all += 1
     this.counts[tester.status] += 1
   }
@@ -74,10 +74,14 @@ class ExamAdminStore {
   async getTester(testerId, scope = '') {
     try {
       this.loading = true
-      const examId = this.examStore?.id
+
+      await this.examStore.getInfo()
+      const examId = this.examStore.id
+
       const res = await fetchAPIwithToken(`/exams/${examId}/testers/${testerId}${scope ? `/${scope}` : ''}`)
       if (res.status === 'ok') {
-        this.updateTester(testerId, res.payload)
+        if (scope) this.updateTester(testerId, res.payload)
+        else this.addTester(res.payload)
       } else {
         throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลผู้เข้าสอบ')
       }

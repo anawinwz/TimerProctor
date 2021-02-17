@@ -36,10 +36,10 @@ const ExamTesterReport = ({ match }) => {
   const testerId = match.params?.testerId
 
   useEffect(async () => {
+    examAdmin?.getTester(testerId)
     examAdmin?.getTester(testerId, 'events')
   }, [])
 
-  
   const tester = examAdmin.testers[testerId]
   if (!tester) return <></>
   return (
