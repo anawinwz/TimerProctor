@@ -38,9 +38,15 @@ export const adminAuthen = async (req, res, next) => {
   }
 } 
 
-export const roleBasedAuthen = async (req, res, next) => {
+export const roleBasedAuthen = ({ guest = false }) => async (req, res, next) => {
   const token = req.headers['x-access-token']
-    
+  if (guest && !token) {
+    req.user = null
+    req.fromAdmin = false
+    req.isGuest = true
+    return next()
+  }
+
   let fromAdmin = false
   let userId = ''
 
@@ -52,7 +58,7 @@ export const roleBasedAuthen = async (req, res, next) => {
       const { _id } = jwt.verify(token, JWT_ADMIN_AUTHEN_SECRET)
       userId = _id
       fromAdmin = true
-    } catch {
+    } catch (err) {
       return res.json(jsonResponse('failed', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ'))
     }
   }
@@ -63,4 +69,5 @@ export const roleBasedAuthen = async (req, res, next) => {
   req.user = user
   req.fromAdmin = fromAdmin
   return next()
-} 
+}
+

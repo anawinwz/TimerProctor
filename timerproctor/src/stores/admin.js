@@ -16,7 +16,7 @@ export class AdminRootStore {
     this.AuthStore = new AuthStore(this, true)
     hydrate('admin_auth', this.AuthStore).then(() => this.AppStore.hydrateFinish())
     
-    this.ExamStore = new ExamStore(this)
+    this.ExamStore = new ExamStore(this, true)
     this.ExamAdminStore = new ExamAdminStore(this)
     this.SocketStore = new SocketStore(this)
   }

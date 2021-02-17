@@ -80,7 +80,7 @@ router.post('/create', async (req, res, next) => {
   
 })
 
-router.get('/:id', roleBasedAuthen, populateExam, async (req, res, next) => {
+router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, res, next) => {
   const exam = req.exam
   
   let ret = exam.toJSON()

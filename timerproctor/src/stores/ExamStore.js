@@ -1,5 +1,5 @@
 import { action, computed, observable } from 'mobx'
-import { fetchAPI } from '~/utils/api'
+import { fetchAPI, fetchAPIwithToken } from '~/utils/api'
 
 class ExamStore {
   @observable loading = false
@@ -11,8 +11,9 @@ class ExamStore {
   @observable info = {}
   @observable annoucements = []
 
-  constructor(rootStore) {
+  constructor(rootStore, fromAdmin = false) {
     this.rootStore = rootStore
+    this.fromAdmin = fromAdmin
   }
 
   @action
@@ -26,7 +27,7 @@ class ExamStore {
 
     try {
       this.loading = true
-      this.info = await fetchAPI(`/exams/${this.id}`)
+      this.info = this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`) : await fetchAPI(`/exams/${this.id}`)
       this.name = this.info.name
       this.lastFetch = Date.now()
       this.error = null
