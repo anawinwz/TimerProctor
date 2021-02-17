@@ -27,13 +27,13 @@ class ExamStore {
 
     try {
       this.loading = true
-      this.info = this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`) : await fetchAPI(`/exams/${this.id}`)
+      Object.assign(this.info, {}, this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`) : await fetchAPI(`/exams/${this.id}`))
       this.name = this.info.name
       this.lastFetch = Date.now()
       this.error = null
       return this.info
     } catch (err) {
-      this.info = {}
+      Object.assign(this.info, {})
       this.error = err
       return this.info
     } finally {
