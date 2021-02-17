@@ -16,18 +16,13 @@ class ExamStore {
   }
 
   @action
-  setId(id) {
-    this.id = id
-  }
-
-  @action
   async getInfo(options = {}) {
     const { id, reload = false } = options
     if (!reload && this.info?.name && (!id || this.id === id) && Date.now() - this.lastFetch < 15000) {
       return this.info
     }
 
-    if (id) this.setId(id)
+    if (id) this.id = id
 
     try {
       this.loading = true
