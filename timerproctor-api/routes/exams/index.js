@@ -86,7 +86,7 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   let ret = exam.toJSON()
   if (ret.linked?.cached?.data) delete ret.linked.cached.data
 
-  if (!req.fromAdmin) {
+  if (!req.fromAdmin || String(req.user._id) !== String(exam.owner)) {
     if (ret.attempts) delete ret.attempts
     if (ret.createdAt) delete ret.createdAt
     if (ret.linked) delete ret.linked
