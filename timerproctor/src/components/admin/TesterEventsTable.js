@@ -58,6 +58,7 @@ const TesterEventsTable = ({ events }) => {
       rowClassName={riskEventMarker}
       columns={columns}
       dataSource={events}
+      rowKey="_id"
     />
   )
 }

@@ -75,7 +75,7 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttem
       .populate('idCheck.checker')
       .execPopulate()
 
-    const tester = convertAttemptToTester(attempt)
+    const tester = convertAttemptToTester(attempt.toJSON())
     return res.json(jsonResponse('ok', tester))
   } catch (err) {
     return res.json(jsonResponse('error', 'ไม่สามารถตรวจสอบข้อมูลผู้เข้าสอบได้'))
@@ -90,7 +90,7 @@ router.get('/:testerId/events', adminAuthen, populateExam, onlyExamOwner, popula
     const events = await AttemptEvent.find({
       attempt: attempt._id,
       ...(type ? { type } : {})
-    }).map(event => {
+    }, { attempt: 0 }).map(event => {
       delete event._id
       delete event.attempt
       return event

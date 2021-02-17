@@ -37,3 +37,30 @@ export const adminAuthen = async (req, res, next) => {
     return res.json(jsonResponse('failed', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ'))
   }
 } 
+
+export const roleBasedAuthen = async (req, res, next) => {
+  const token = req.headers['x-access-token']
+    
+  let fromAdmin = false
+  let userId = ''
+
+  try {
+    const { _id } = jwt.verify(token, JWT_AUTHEN_SECRET)
+    userId = _id
+  } catch {
+    try {
+      const { _id } = jwt.verify(token, JWT_ADMIN_AUTHEN_SECRET)
+      userId = _id
+      fromAdmin = true
+    } catch {
+      return res.json(jsonResponse('failed', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ'))
+    }
+  }
+  
+  const user = await User.findById(userId)
+  if (!user) return res.json(jsonResponse('failed', 'ไม่พบข้อมูลผู้ใช้'))
+
+  req.user = user
+  req.fromAdmin = fromAdmin
+  return next()
+} 

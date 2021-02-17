@@ -4,7 +4,7 @@ import dot from 'dot-object'
 
 import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../../config'
 
-import { adminAuthen, authenticate } from '../../middlewares/authentication'
+import { adminAuthen, authenticate, roleBasedAuthen } from '../../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../../middlewares/exam'
 import testers from './testers'
 import form from './form'
@@ -80,9 +80,24 @@ router.post('/create', async (req, res, next) => {
   
 })
 
-router.get('/:id', populateExam, async (req, res, next) => {
+router.get('/:id', roleBasedAuthen, populateExam, async (req, res, next) => {
   const exam = req.exam
-  return res.json(exam)
+  
+  let ret = exam.toJSON()
+  if (ret.linked?.cached.data) delete ret.linked.cached.data
+
+  if (!req.fromAdmin) {
+    if (ret.attempts) delete ret.attempts
+    if (ret.createdAt) delete ret.createdAt
+    if (ret.linked) delete ret.linked
+    if (ret.owner) delete ret.owner
+    if (ret.updatedAt) delete ret.updatedAt
+    if (ret.authentication.login?.email) {
+      delete ret.authentication.login.email.allowedDomains
+    }
+  }
+  
+  return res.json(exam.toJSON())
 })
 
 router.use('/:id/form', form)
