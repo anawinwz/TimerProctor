@@ -97,7 +97,7 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
     }
   }
   
-  return res.json(exam.toJSON())
+  return res.json(ret)
 })
 
 router.use('/:id/form', form)
