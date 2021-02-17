@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Typography, Button, Row, Col, Progress, Table, Image } from 'antd'
 import { StopOutlined } from '@ant-design/icons'
 
@@ -41,6 +41,13 @@ const ExamTesterReport = ({ match }) => {
   }, [])
 
   const tester = examAdmin.testers[testerId]
+
+  const checker = useMemo(() => ({
+    name: tester?.idCheck?.checker?.info?.displayName,
+    email: tester?.idCheck?.checker?.info?.email,
+    avatar: tester?.idCheck?.checker?.info?.photoURL
+  }), [tester])
+
   if (!tester) return <></>
   return (
     <ContentBox>
@@ -71,7 +78,7 @@ const ExamTesterReport = ({ match }) => {
             </Col>
             <Col span={12}>
               <Subtitle type="secondary">ผู้อนุมัติการเข้าสอบ</Subtitle>
-              <div><UserTag /></div>
+              <div><UserTag user={checker} /></div>
               <SmallText type="secondary">{ dateStr(tester.idCheck.checkedAt, 'shortS') }</SmallText>
             </Col>
           </Row>
