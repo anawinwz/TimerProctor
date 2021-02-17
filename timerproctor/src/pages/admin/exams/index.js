@@ -1,8 +1,8 @@
 import ExamsList from '~/components/admin/ExamsList'
-import useSuffixTitle from '~/hooks/useSuffixTitle'
+import useAppTitle from '~/hooks/useAppTitle'
 
 const AdminExams = () => {
-  useSuffixTitle('การสอบของฉัน')
+  useAppTitle('การสอบของฉัน', { admin: true })
   return (
     <>
       <ExamsList pageSize={10} />

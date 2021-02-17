@@ -3,11 +3,11 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import IntroLogin from '~/components/admin/IntroLogin'
-import useSuffixTitle from '~/hooks/useSuffixTitle'
+import useAppTitle from '~/hooks/useAppTitle'
 
 const AdminLogin = () => {
   const { AuthStore: { isLoggedIn } } = useStore()
-  useSuffixTitle('เข้าสู่ระบบจัดการการสอบ')
+  useAppTitle('เข้าสู่ระบบ', { admin: true })
 
   if (isLoggedIn) return <Redirect to="/admin/dashboard" />
   return (

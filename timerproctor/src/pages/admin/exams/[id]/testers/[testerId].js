@@ -6,6 +6,8 @@ import { StopOutlined } from '@ant-design/icons'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
+import useAppTitle from '~/hooks/useAppTitle'
+
 import { testerStatuses } from '~/utils/const'
 import { dateStr } from '~/utils/date'
 
@@ -31,7 +33,7 @@ const SmallText = styled(Typography.Text)`
 `
 
 const ExamTesterReport = ({ match }) => {
-  const { ExamAdminStore: examAdmin } = useStore()
+  const { ExamAdminStore: examAdmin, ExamStore: { info: exam } } = useStore()
 
   const testerId = match.params?.testerId
 
@@ -41,6 +43,7 @@ const ExamTesterReport = ({ match }) => {
   }, [])
 
   const tester = examAdmin.testers[testerId]
+  useAppTitle(tester ? `${tester?.name} - ${exam?.name}` : 'รายงานผู้เข้าสอบ')
 
   const checker = useMemo(() => ({
     name: tester?.idCheck?.checker?.info?.displayName,

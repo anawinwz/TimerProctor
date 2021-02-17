@@ -4,6 +4,8 @@ import { Skeleton } from 'antd'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
+import useAppTitle from '~/hooks/useAppTitle'
+
 import ContentBox from '~/components/admin/ContentBox'
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
@@ -13,6 +15,8 @@ const ExamSettings = () => {
   const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
   const { loading, info: exam } = examStore
   
+  useAppTitle('ตั้งค่าการสอบ', { admin: true })
+
   useEffect(() => {
     examStore?.getInfo()
   }, [])

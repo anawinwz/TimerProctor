@@ -4,6 +4,8 @@ import { Tabs } from 'antd'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
+import useAppTitle from '~/hooks/useAppTitle'
+
 import ExamOverviewLoading from '~/components/admin/loading/ExamOverview'
 
 import ContentBox from '~/components/admin/ContentBox'
@@ -19,6 +21,8 @@ const { TabPane } = Tabs
 const ExamOverview = () => {
   const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
   const { loading, info: exam } = examStore
+
+  useAppTitle(loading ? 'กำลังโหลด...' : exam?.name, { admin: true })
 
   useEffect(async () => {
     await examStore?.getInfo()

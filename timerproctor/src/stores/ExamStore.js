@@ -24,6 +24,7 @@ class ExamStore {
     }
 
     if (id) this.id = id
+    if (!this.id) return {}
 
     try {
       this.loading = true

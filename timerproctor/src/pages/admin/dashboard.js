@@ -1,9 +1,9 @@
 import ExamsList from '~/components/admin/ExamsList'
 import ProctoringsList from '~/components/admin/ProctoringsList'
-import useSuffixTitle from '~/hooks/useSuffixTitle'
+import useAppTitle from '~/hooks/useAppTitle'
 
 const AdminDashboard = () => {
-  useSuffixTitle('หน้าหลักระบบจัดการการสอบ')
+  useAppTitle('หน้าหลัก', { admin: true })
   return (
     <>
       <ExamsList />
