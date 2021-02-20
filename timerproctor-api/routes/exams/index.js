@@ -219,6 +219,29 @@ router.get('/:id/stop', adminAuthen, populateExam, onlyExamOwner, async (req, re
   }
 })
 
+router.post('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+  try {
+    const exam = req.exam
+    const { allow } = req.body
+
+    if (typeof allow !== 'boolean') 
+      return res.json(jsonResponse('failed', 'Access Denied.'))
+
+    if (exam.timeWindow.mode !== 'realtime')
+      return res.json(jsonResponse('failed', `ไม่สามารถตั้งค่า${allow ? '' : 'ไม่'}อนุญาตการเข้าห้องสอบนี้ได้`))
+  
+    exam.timeWindow.realtime.allowLogin = allow
+    await exam.save()
+
+    getExamNsp(exam._id).to('proctor').emit('examAllowLogin', allow)
+
+    return res.json(jsonResponse('ok', `ตั้ง${allow ? '' : 'ไม่'}อนุญาตการเข้าห้องสอบแล้ว`))
+  } catch (err) {
+    console.log(err)
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+  }
+})
+
 router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
