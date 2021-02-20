@@ -12,7 +12,7 @@ const ExamSettingsButton = observer(({ examId = '' }) => (
   <Link to={`/admin/exams/${examId}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
 ))
 
-const ExamAuthenticateToggle = observer(({ loading = false, status, allow = false, onChange = () => {} }) => (
+const ExamAllowLoginToggle = observer(({ loading = false, allow = false, onChange = () => {} }) => (
   <span>
     <Switch
       checked={allow}
@@ -60,7 +60,7 @@ const ExamStatusControls = () => {
     })
   }, [exam?.id])
 
-  const setAllowAuthentication = useCallback(async allow => {
+  const setAllowLogin = useCallback(async allow => {
     setLoading(true)
     setAllow(allow)
     setLoading(false)
@@ -81,11 +81,10 @@ const ExamStatusControls = () => {
         </Space>
         )
       }
-      <ExamAuthenticateToggle
+      <ExamAllowLoginToggle
         loading={loading}
-        status={status}
         allow={allow}
-        onChange={setAllowAuthentication}
+        onChange={setAllowLogin}
       />
     </Space>
   )
