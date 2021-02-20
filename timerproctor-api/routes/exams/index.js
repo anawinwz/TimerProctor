@@ -84,17 +84,17 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   const exam = req.exam
   
   let ret = exam.toJSON()
-  if (ret.linked?.cached?.data) delete ret.linked.cached.data
+  delete ret.linked?.cached?.data
 
   if (!req.fromAdmin || String(req.user._id) !== String(exam.owner)) {
-    if (ret.attempts) delete ret.attempts
-    if (ret.createdAt) delete ret.createdAt
-    if (ret.linked) delete ret.linked
-    if (ret.owner) delete ret.owner
-    if (ret.updatedAt) delete ret.updatedAt
-    if (ret.authentication.login?.email) {
-      delete ret.authentication.login.email.allowedDomains
-    }
+    delete ret.owner
+    delete ret.linked
+    delete ret.attempts
+    delete ret.createdAt
+    delete ret.updatedAt
+    
+    delete ret.timeWindow?.realtime?.allowLogin
+    delete ret.authentication?.login?.email?.allowedDomains
   }
   
   return res.json(ret)

@@ -23,7 +23,7 @@ const schema = new Schema(
       mode: { type: String, enum: ['realtime', 'schedule'], default: 'realtime' },
       realtime: {
         status: { type: String, enum: ['pending', 'started', 'stopped'], default: 'pending' },
-        allowAuthen: { type: Boolean, default: true },
+        allowLogin: { type: Boolean, default: true },
         startedAt: Date,
         stoppedAt: Date
       },
