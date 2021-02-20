@@ -108,12 +108,15 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
     const { _id: examId, authentication, timeWindow, maxAttempts = 1 } = req.exam
     const { _id: userId, email, info } = req.user
 
-    const { mode, schedule } = timeWindow
+    const { mode, realtime, schedule } = timeWindow
     if (mode === 'schedule') {
       const startDate = schedule?.startDate
       const endDate = schedule?.endDate
       if (startDate && endDate && !dayjs().isBetween(startDate, endDate, '[]'))
         return res.json(jsonResponse('failed', 'ขณะนี้ยังไม่ถึงเวลาเข้าสอบ'))
+    } else if (mode === 'realtime') {
+      if (!realtime.allowLogin)
+        return res.json(jsonResponse('failed', realtime.status === 'started' ? 'ขณะนี้ไม่อนุญาตให้เข้าห้องสอบเพิ่มเติมแล้ว' : 'ขณะนี้ยังไม่อนุญาตให้เข้าห้องสอบ'))
     }
     
     const allowedDomains = authentication?.login?.email?.allowedDomains || []
