@@ -89,7 +89,7 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   if (!req.fromAdmin || String(req.user._id) !== String(exam.owner)) {
     delete ret.owner
     delete ret.linked
-    delete ret.attempts
+    delete ret.maxAttempts
     delete ret.createdAt
     delete ret.updatedAt
     
@@ -105,7 +105,7 @@ router.use('/:id/testers', testers)
 
 router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) => {
   try {
-    const { _id: examId, authentication, timeWindow, attempts = 1 } = req.exam
+    const { _id: examId, authentication, timeWindow, maxAttempts = 1 } = req.exam
     const { _id: userId, email, info } = req.user
 
     const { mode, schedule } = timeWindow
@@ -124,8 +124,8 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
     let lastAttempt = await getLastAttempt(examId, userId, { notCompleted: true })
     if (!lastAttempt) {
       const currentAttempts = await getCompletedAttemptsCount(examId, userId)
-      if (currentAttempts >= attempts)
-        return res.json(jsonResponse('failed', `คุณทำการสอบครบตามจำนวนสูงสุดที่ทำได้แล้ว (${attempts} ครั้ง/คน)`))
+      if (currentAttempts >= maxAttempts)
+        return res.json(jsonResponse('failed', `คุณทำการสอบครบตามจำนวนสูงสุดที่ทำได้แล้ว (${maxAttempts} ครั้ง/คน)`))
 
       const newAttempt = new Attempt({
         exam: examId,
