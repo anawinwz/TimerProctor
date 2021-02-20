@@ -41,7 +41,7 @@ class ExamAdminStore {
         this.lastExamId = examId
         this.testers = {}
       }
-      
+
       const res = await fetchAPIwithToken(`/exams/${examId}/testers`)
       if (res.status === 'ok') {
         this.testers = res.payload.testers
@@ -103,7 +103,7 @@ class ExamAdminStore {
       const examId = this.examStore?.id
       const res = await fetchAPIwithToken(`/exams/${examId}/testers/count`)
       const { status, payload } = res
-      if (status === 'ok') this.counts = Object.assign({}, isInit ? initialCounts : this.counts, res.payload.counts)
+      if (status === 'ok') this.counts = Object.assign({}, isInit ? initialCounts : this.counts, payload.counts)
     } catch {
     } finally {
       this.loading = false
