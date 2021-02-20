@@ -87,7 +87,7 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
       lastAttempt.status = 'completed'
       await lastAttempt.save()
 
-      getExamNsp(examId).to('proctor').emit('newTesterStatus', { id: lastAttempt._id, status: 'completed' })
+      getExamNsp(examId).to('proctor').emit('testerStatus', { id: lastAttempt._id, status: 'completed' })
 
       res.json(jsonResponse('ok'))
     } else {
