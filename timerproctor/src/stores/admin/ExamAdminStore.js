@@ -13,6 +13,7 @@ const initialCounts = {
 class ExamAdminStore {
   @observable loading = false
   @observable socketToken = ''
+  @observable lastExamId = ''
   @observable counts = initialCounts
   @observable testers = {}
 
@@ -36,6 +37,11 @@ class ExamAdminStore {
     try {
       this.loading = true
       const examId = this.examStore?.id
+      if (examId !== this.lastExamId) {
+        this.lastExamId = examId
+        this.testers = {}
+      }
+      
       const res = await fetchAPIwithToken(`/exams/${examId}/testers`)
       if (res.status === 'ok') {
         this.testers = res.payload.testers
