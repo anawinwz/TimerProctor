@@ -12,21 +12,44 @@ const ExamSettingsButton = observer(({ examId = '' }) => (
   <Link to={`/admin/exams/${examId}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
 ))
 
-const ExamAllowLoginToggle = observer(({ loading = false, allow = false, onChange = () => {} }) => (
-  <span>
-    <Switch
-      checked={allow}
-      onChange={onChange}
-      loading={loading}
-    />{' '}
-    อนุญาตให้เข้าห้องสอบได้
-  </span>
-))
+const ExamAllowLoginToggle = observer(() => {
+  const { ExamStore: exam } = useStore()
+
+  const [loading, setLoading] = useState(false)
+  const updateAllowLogin = useCallback(async allow => {
+    try {
+      setLoading(true)
+      const res = await fetchAPIwithToken(`/exams/${exam?.id}/allowLogin`, { allow })
+      const { status, message: msg } = res
+      if (status === 'ok') {
+        message.success(msg)
+        exam.timeWindow.realtime.allowLogin = allow
+        setLoading(false)
+      } else {
+        setLoading(false)
+        throw new Error(msg || 'เกิดข้อผิดพลาดในการตั้งค่าสถานะการสอบ')
+      }
+    } catch (err) {
+      setLoading(false)
+      message.error(err.message || 'เกิดข้อผิดพลาดในการตั้งค่าสถานะการสอบ')
+    }
+  }, [exam?.id])
+
+  const allowLogin = exam?.timeWindow?.realtime?.allowLogin || false
+  return (
+    <span>
+      <Switch
+        checked={allowLogin}
+        onChange={updateAllowLogin}
+        loading={loading}
+      />{' '}
+      อนุญาตให้เข้าห้องสอบได้
+    </span>
+  )
+})
 
 const ExamStatusControls = () => {
   const { ExamStore: exam } = useStore()
-  const [loading, setLoading] = useState(false)
-  const [allow, setAllow] = useState(false)
 
   const status = exam?.status
   const timeWindowMode = exam?.timeWindow?.mode
@@ -39,7 +62,7 @@ const ExamStatusControls = () => {
       if (status === 'ok') {
         message.success(msg)
         exam?.updateStatus(mode === 'start' ? 'started' : 'stopped')
-        setAllow(mode === 'start' ? true : false)
+        exam.timeWindow.realtime.allowLogin = mode === 'start' ? true : false
       } else {
         throw new Error(msg || 'เกิดข้อผิดพลาดในการตั้งค่าสถานะการสอบ')
       }
@@ -60,12 +83,6 @@ const ExamStatusControls = () => {
     })
   }, [exam?.id])
 
-  const setAllowLogin = useCallback(async allow => {
-    setLoading(true)
-    setAllow(allow)
-    setLoading(false)
-  }, [])
-
   if (timeWindowMode === 'schedule') return <ExamSettingsButton examId={exam.id} />
   return (
     <Space direction="vertical">
@@ -81,11 +98,7 @@ const ExamStatusControls = () => {
         </Space>
         )
       }
-      <ExamAllowLoginToggle
-        loading={loading}
-        allow={allow}
-        onChange={setAllowLogin}
-      />
+      <ExamAllowLoginToggle />
     </Space>
   )
 }
