@@ -30,11 +30,11 @@ const AttemptPage = () => {
 
   const onCompleted = useCallback(async values => {
     const res = await fetchAPIwithToken(`/exams/${exam.id}/form/submit`, values)
-    const { status } = res
+    const { status, message } = res
     if (status === 'ok') {
       setCompleted(true)
     } else {
-      showModal('error', 'ไม่สามารถส่งคำตอบได้', 'กรุณาลองใหม่อีกครั้ง')
+      showModal('error', 'ไม่สามารถส่งคำตอบได้', message || 'กรุณาลองใหม่อีกครั้ง')
     }
   }, [])
 
