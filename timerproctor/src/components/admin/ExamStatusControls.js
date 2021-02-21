@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Modal, Button, Space, message } from 'antd'
-import { CaretRightFilled, StopFilled, SettingOutlined } from '@ant-design/icons'
+import { CaretRightFilled, StopOutlined, SettingOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
 import { observer } from 'mobx-react-lite'
@@ -55,7 +55,7 @@ const ExamStatusControls = () => {
     <Space direction="vertical">
       { status === 'started' ? (
         <Space direction="horizontal">
-          <Button type="danger" icon={<StopFilled />} onClick={stopExam}>สิ้นสุดการสอบ</Button> 
+          <Button type="danger" icon={<StopOutlined />} onClick={stopExam}>สิ้นสุดการสอบ</Button> 
           <span>ดำเนินไปแล้ว { fromNowStr(exam?.timeWindow?.realtime?.startedAt) }</span>
         </Space>
         ) : (
