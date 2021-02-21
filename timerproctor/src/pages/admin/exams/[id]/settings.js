@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react'
-import { Skeleton } from 'antd'
+import { message, Skeleton } from 'antd'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -21,9 +21,13 @@ const ExamSettings = () => {
     examStore?.getInfo()
   }, [])
 
-  const onEditName = useCallback(name => {
-    if (typeof name === 'string' && name.trim())
-      examAdmin?.editName(name.trim())
+  const onEditName = useCallback(async name => {
+    try {
+      if (typeof name === 'string' && name.trim())
+        await examAdmin?.editName(name.trim())
+    } catch (err) {
+      message.error(err.message || 'เกิดข้อผิดพลาดในการเปลี่ยนแปลงชื่อ')
+    }
   }, [examAdmin])
   
   if (loading) return <ContentBox><Skeleton /></ContentBox>
