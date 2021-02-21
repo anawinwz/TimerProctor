@@ -6,7 +6,7 @@ import { populateExam, onlyDuringExam } from '../../middlewares/exam'
 
 import Exam from '../../models/exam'
 
-import { jsonResponse } from '../../utils/helpers'
+import { jsonResponse, getExamNsp } from '../../utils/helpers'
 import { getDataFromHTML, toForm } from '../../utils/gform'
 import { getLastAttempt } from '../../utils/attempt'
 
@@ -96,7 +96,7 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
     }
   })
   .catch(err => {
-    console.log('GForms Error(catch):', err.status)
+    console.log('GForms Error(catch):', err)
     res.json(jsonResponse('failed'))
   })
 })
