@@ -123,7 +123,7 @@ router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam
     })
   }
 })
-router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, (req, res, next) => {
+router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   const exam = req.exam
   const { content } = req.body
   if (exam.timeWindow.mode !== 'realtime')
@@ -232,7 +232,7 @@ router.post('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, 
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
   
     exam.announcements = []
-    
+
     exam.timeWindow.realtime.status = 'started'
     exam.timeWindow.realtime.allowLogin = true
     exam.timeWindow.realtime.startedAt = new Date()
