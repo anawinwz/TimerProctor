@@ -88,6 +88,8 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
 
   const isThisExamPersonnel = String(req.user._id) === String(exam.owner)
   if (!req.fromAdmin || !isThisExamPersonnel) {
+    delete ret.announcements
+
     delete ret.owner
     delete ret.linked
     delete ret.maxAttempts
@@ -99,6 +101,50 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   }
   
   return res.json(ret)
+})
+router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam, (req, res, next) => {
+  const exam = req.exam
+  const { announcements } = exam
+  if (exam.timeWindow.mode !== 'realtime')
+    return res.json(jsonResponse('failed', 'ไม่สามารถเรียกดูประกาศของการสอบประเภทนี้ได้'))
+  
+  const isThisExamPersonnel = String(req.user._id) === String(exam.owner)
+
+  if (!req.fromAdmin || !isThisExamPersonnel) {
+    let ret = []
+    if (announcements.length > 0)
+      ret.push(announcements[announcements.length - 1].content)
+  
+    res.json(jsonResponse('ok', { announcements: ret }))
+  } else {
+    exam.populate('announcements.creator', (err, exam) => {
+      if (err) res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในการโหลดข้อมูลประกาศ'))
+      res.json(jsonResponse('ok', { announcements: exam.announcements }))
+    })
+  }
+})
+router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, (req, res, next) => {
+  const exam = req.exam
+  const { content } = req.body
+  if (exam.timeWindow.mode !== 'realtime')
+    return res.json(jsonResponse('failed', 'ไม่สามารถเพิ่มประกาศให้การสอบประเภทนี้ได้'))
+  
+  if (!content)
+    return res.json(jsonResponse('failed', 'รูปแบบเนื้อหาประกาศไม่ถูกต้อง'))
+
+  try {
+    exam.announcements.push({
+      content: content,
+      creator: req.user._id
+    })
+    await exam.save()
+
+    getExamNsp(exam._id).to('testtaker').emit('examAnnouncement', content)
+
+    return res.json(jsonResponse('ok', 'ประกาศถึงผู้เข้าสอบเรียบร้อยแล้ว'))
+  } catch (err) {
+    return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในการประกาศถึงผู้เข้าสอบ'))
+  }
 })
 
 router.use('/:id/form', form)
@@ -185,6 +231,8 @@ router.post('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, 
     if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'started')
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
   
+    exam.announcements = []
+    
     exam.timeWindow.realtime.status = 'started'
     exam.timeWindow.realtime.allowLogin = true
     exam.timeWindow.realtime.startedAt = new Date()
@@ -252,6 +300,10 @@ router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req,
 
     let updates = req.body
 
+    const timeWindowMode = updates?.timeWindow?.mode
+    if (timeWindowMode && timeWindowMode !== 'schedule') 
+      updates.announcements = []
+    
     updates.updatedAt = Date.now()
     await Exam.updateOne({ _id: exam._id }, dot.dot(updates))
 

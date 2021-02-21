@@ -9,7 +9,7 @@ class ExamStore {
   @observable id = ''
   @observable name = ''
   @observable info = {}
-  @observable annoucements = []
+  @observable announcements = []
 
   constructor(rootStore, fromAdmin = false) {
     this.rootStore = rootStore
@@ -60,8 +60,8 @@ class ExamStore {
   }
 
   @action
-  updateAnnoucement(text) {
-    this.annoucements.push(text)
+  updateAnnouncement(text) {
+    this.announcements.push(text)
   }
 
   @computed

@@ -49,7 +49,7 @@ const ExamPage = ({ match }) => {
               idCheck.setResult(null, '')
             }
           })
-          .on('examAnnoucement', text => exam.updateAnnoucement(text))
+          .on('examAnnouncement', text => exam.updateAnnouncement(text))
           .on('connect', () => socketStore.socket.emit('authenticate', { token: attempt.socketToken }))
           .connect()
       } catch {
