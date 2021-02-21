@@ -52,6 +52,14 @@ const schema = new Schema(
         }
       },
       idCheckMode: { type: String, enum: ['none', 'prompt', 'post'], default: 'prompt' }
+    },
+    annoucements: {
+      type: [{ 
+        content: String,
+        creator: { type: Schema.Types.ObjectId, ref: 'User' },
+        createdAt: Date
+      }],
+      default: []
     }
   }
 )
