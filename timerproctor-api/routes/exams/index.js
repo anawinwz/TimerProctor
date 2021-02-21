@@ -86,7 +86,7 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   let ret = exam.toJSON()
   delete ret.linked?.cached?.data
 
-  const isThisExamPersonnel = String(req.user._id) === String(exam.owner)
+  const isThisExamPersonnel = String(req.user?._id) === String(exam.owner)
   if (!req.fromAdmin || !isThisExamPersonnel) {
     delete ret.announcements
 
@@ -108,7 +108,7 @@ router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam
   if (exam.timeWindow.mode !== 'realtime')
     return res.json(jsonResponse('failed', 'ไม่สามารถเรียกดูประกาศของการสอบประเภทนี้ได้'))
   
-  const isThisExamPersonnel = String(req.user._id) === String(exam.owner)
+  const isThisExamPersonnel = String(req.user?._id) === String(exam.owner)
 
   if (!req.fromAdmin || !isThisExamPersonnel) {
     let ret = []
