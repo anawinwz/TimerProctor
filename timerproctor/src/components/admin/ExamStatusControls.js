@@ -10,6 +10,7 @@ import { fetchAPIwithToken } from '~/utils/api'
 import { fromNowStr } from '~/utils/date'
 
 import ExamAllowLoginToggle from '~/components/admin/ExamAllowLoginToggle'
+import ExamAnnouncementsModal from './ExamAnnouncementsModal'
 
 const ExamSettingsButton = observer(({ examId = '' }) => (
   <Link to={`/admin/exams/${examId}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
@@ -61,6 +62,7 @@ const ExamStatusControls = () => {
         ) : (
         <Space direction="horizontal">
           <Button type="primary" icon={<CaretRightFilled />} onClick={startExam}>เริ่มการสอบ</Button>
+          <ExamAnnouncementsModal />
           <ExamSettingsButton examId={exam.id} />
         </Space>
         )
