@@ -310,7 +310,8 @@ router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req,
     return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return res.json(jsonResponse('failed', err.errors[0].message))
+      const errors = err.errors
+      return res.json(jsonResponse('failed', errors[Object.keys(errors)[0]].message))
     } else {
       console.log(err)
       return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบอัปเดตข้อมูลการสอบ'))
