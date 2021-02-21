@@ -56,7 +56,7 @@ const ExamAnnouncementsModal = () => {
             </>}
             rules={[{ required: true, message: 'กรุณากรอกเนื้อหาที่ต้องการส่งก่อน' }]}
           >
-            <Input.TextArea placeholder="เนื้อหาประกาศ" />
+            <Input.TextArea placeholder="เนื้อหาประกาศ" showCount maxLength={255} />
           </Form.Item>
           <Form.Item>
             <Button
