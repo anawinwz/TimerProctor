@@ -60,6 +60,16 @@ class ExamStore {
   }
 
   @action
+  async getAnnouncements() {
+    try {
+      const { announcements } = await fetchAPIwithToken(`/exams/${this.id}/announcements`)
+      this.announcements = announcements
+    } catch {
+      this.announcements = []
+    }
+  }
+
+  @action
   updateAnnouncement(text) {
     this.announcements.push(text)
   }
