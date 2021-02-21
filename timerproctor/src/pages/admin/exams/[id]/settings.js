@@ -7,13 +7,13 @@ import { useStore } from '~/stores/admin'
 import useAppTitle from '~/hooks/useAppTitle'
 
 import ContentBox from '~/components/admin/ContentBox'
+import ErrorContentBox from '~/components/admin/ErrorContentBox'
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
 
-
 const ExamSettings = () => {
   const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
-  const { loading, info: exam } = examStore
+  const { loading, error, info: exam } = examStore
   
   useAppTitle('ตั้งค่าการสอบ', { admin: true })
 
@@ -25,15 +25,12 @@ const ExamSettings = () => {
     examAdmin?.editName(name)
   }, [examAdmin])
   
+  if (loading) return <ContentBox><Skeleton /></ContentBox>
+  else if (error) return <ErrorContentBox />
   return (
     <ContentBox>
-      { loading ? 
-        <Skeleton /> :
-        <>
-          <ExamTitle exam={exam} editable={true} onEdit={onEditName} />
-          <ExamSettingsForm /> 
-        </>
-      }
+      <ExamTitle exam={exam} editable={true} onEdit={onEditName} />
+      <ExamSettingsForm /> 
     </ContentBox>
   )
 }

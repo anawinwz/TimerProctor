@@ -9,6 +9,8 @@ import useAppTitle from '~/hooks/useAppTitle'
 import ExamOverviewLoading from '~/components/admin/loading/ExamOverview'
 
 import ContentBox from '~/components/admin/ContentBox'
+import ErrorContentBox from '~/components/admin/ErrorContentBox'
+
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamStatusControls from '~/components/admin/ExamStatusControls'
 import ExamDescription from '~/components/admin/ExamDescription'
@@ -20,7 +22,7 @@ const { TabPane } = Tabs
 
 const ExamOverview = () => {
   const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
-  const { loading, info: exam } = examStore
+  const { loading, error, info: exam } = examStore
 
   useAppTitle(loading ? 'กำลังโหลด...' : exam?.name, { admin: true })
 
@@ -33,6 +35,7 @@ const ExamOverview = () => {
   const statuses = { all: 'ทั้งหมด', ...testerStatuses }
   
   if (loading || examAdmin?.loading) return <ExamOverviewLoading />
+  else if (error) return <ErrorContentBox />
   return (
     <ContentBox>
       <ExamTitle exam={exam} />
