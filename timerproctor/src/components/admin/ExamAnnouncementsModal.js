@@ -1,17 +1,35 @@
 import { useState, useCallback } from 'react'
-import { Modal, Button, Input } from 'antd'
-import { NotificationOutlined } from '@ant-design/icons'
+import { Modal, Button, Input, Form, message } from 'antd'
+import { NotificationOutlined, SendOutlined } from '@ant-design/icons'
+
+import { observer } from 'mobx-react-lite'
+import { useStore } from '~/stores/admin'
+
+import { fetchAPIwithToken } from '~/utils/api'
 
 const ExamAnnouncementsModal = () => {
+  const { ExamStore: exam } = useStore()
+
   const [visible, setVisible] = useState(false)
-  const [content, setContent] = useState('')
-  
-  const showModal = useCallback(() => setVisible(true), [])
-  const hideModal = useCallback(() => {
-    setContent('')
-    setVisible(false)
-  }, [])
-  const onChange = useCallback(e => setContent(e.target.value), [])
+  const showThisModal = useCallback(() => setVisible(true), [])
+  const hideThisModal = useCallback(() => setVisible(false), [])
+
+  const [ form ] = Form.useForm()
+  const sendAnnouncement = async ({ content }) => {
+    try {
+      const res = await fetchAPIwithToken(`/exams/${exam.id}/announcements`, { content: content })
+      const { status, message: msg } = res
+      if (status === 'ok') {
+        message.success(msg)
+        form.resetFields()
+      } else {
+        throw new Error(msg || 'เกิดข้อผิดพลาดในการประกาศถึงผู้เข้าสอบ')
+      }
+    } catch (err) {
+      message.error(err.message || 'เกิดข้อผิดพลาดในการประกาศถึงผู้เข้าสอบ')
+    }
+  }
+
 
   return (
     <>
@@ -19,18 +37,36 @@ const ExamAnnouncementsModal = () => {
         visible={visible}
         title="ประกาศถึงผู้เข้าสอบ"
         footer={null}
-        onCancel={hideModal}
+        onCancel={hideThisModal}
         destroyOnClose={true}
       >
-        <Input.TextArea
-          value={content}
-          placeholder="เนื้อหาประกาศ"
-          onChange={onChange}
-        />
+        <Form
+          form={form}
+          preserve={false}
+          onFinish={sendAnnouncement}
+        >
+          <Form.Item
+            name="content"
+            extra="ผู้เข้าสอบจะมองเห็นเฉพาะประกาศครั้งล่าสุดเท่านั้น"
+            rules={[{ required: true, message: 'กรุณากรอกเนื้อหาที่ต้องการส่งก่อน' }]}
+          >
+            <Input.TextArea placeholder="เนื้อหาประกาศ" />
+          </Form.Item>
+          <Form.Item>
+            <Button
+              icon={<SendOutlined />}
+              type="primary"
+              htmlType="submit"
+              block
+            >
+              ส่ง
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
-      <Button icon={<NotificationOutlined />} onClick={showModal}>ประกาศ</Button>
+      <Button icon={<NotificationOutlined />} onClick={showThisModal}>ประกาศ</Button>
     </>
   )
 }
 
-export default ExamAnnouncementsModal
+export default observer(ExamAnnouncementsModal)
