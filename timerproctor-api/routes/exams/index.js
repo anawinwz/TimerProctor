@@ -208,7 +208,7 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
       }
     }))
   } catch {
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบการขอเข้าห้องสอบ'))
   }
 })
 
@@ -244,7 +244,7 @@ router.post('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, 
     return res.json(jsonResponse('ok', 'สั่งเริ่มการสอบแล้ว'))
   } catch (err) {
     console.log(err)
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าสถานะการสอบ'))
   }
 })
 
@@ -267,7 +267,7 @@ router.post('/:id/stop', adminAuthen, populateExam, onlyExamOwner, async (req, r
     return res.json(jsonResponse('ok', 'สั่งยุติการสอบแล้ว'))
   } catch (err) {
     console.log(err)
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าสถานะการสอบ'))
   }
 })
 
@@ -290,7 +290,7 @@ router.post('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (
     return res.json(jsonResponse('ok', `ตั้ง${allow ? '' : 'ไม่'}อนุญาตการเข้าห้องสอบแล้ว`))
   } catch (err) {
     console.log(err)
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าอนุญาตการเข้าห้องสอบ'))
   }
 })
 
@@ -309,8 +309,13 @@ router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req,
 
     return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
   } catch (err) {
-    console.log(err)
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
+    if (err.name === 'ValidationError') {
+      return res.json(jsonResponse('failed', err.errors[0].message))
+    } else {
+      console.log(err)
+      return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบอัปเดตข้อมูลการสอบ'))
+    }
+    
   }
 })
 

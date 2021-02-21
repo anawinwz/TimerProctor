@@ -4,9 +4,16 @@ const { Schema } = mongoose
 
 const schema = new Schema(
   {
-    name: String,
+    name: {
+      type: String,
+      required: true
+    },
     desc: String,
-    owner: { type: Schema.Types.ObjectId, ref: 'User' },
+    owner: { 
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
     linked: {
       provider: { type: String, enum: ['gforms'] },
       id: String,
@@ -18,9 +25,18 @@ const schema = new Schema(
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: Date,
-    maxAttempts: { type: Number, default: 1 },
+    maxAttempts: {
+      type: Number,
+      default: 1,
+      min: [1, 'ต้องอนุญาตให้ผู้เข้าสอบทำได้ 1 ครั้งเป็นอย่างน้อย'],
+      max: [20, 'สามารถอนุญาตให้ทำได้สูงสุด 20 ครั้ง/คน']
+    },
     timeWindow: {
-      mode: { type: String, enum: ['realtime', 'schedule'], default: 'realtime' },
+      mode: {
+        type: String,
+        enum: ['realtime', 'schedule'],
+        default: 'realtime'
+      },
       realtime: {
         status: { type: String, enum: ['pending', 'started', 'stopped'], default: 'pending' },
         allowLogin: { type: Boolean, default: true },
@@ -28,13 +44,24 @@ const schema = new Schema(
         stoppedAt: Date
       },
       schedule: {
-        startDate: Date,
-        endDate: Date
+        startDate: {
+          type: Date,
+          required: () => this.timeWindow.mode === 'schedule'
+        },
+        endDate: {
+          type: Date,
+          required: () => this.timeWindow.mode === 'schedule'
+        }
       }
     },
     timer: {
       isShow: { type: Boolean, default: true },
-      duration: { type: Number, default: 0 },
+      duration: { 
+        type: Number,
+        default: 1,
+        min: [1, 'ต้องให้เวลาในการทำข้อสอบ 1 นาทีเป็นอย่างน้อย'],
+        max: [4320, 'เวลาในการทำข้อสอบต้องไม่เกิน 72 ชั่วโมง']
+      }
     },
     authentication: {
       login: {
@@ -55,8 +82,17 @@ const schema = new Schema(
     },
     announcements: {
       type: [{ 
-        content: String,
-        creator: { type: Schema.Types.ObjectId, ref: 'User' },
+        content: {
+          type: String,
+          required: true,
+          minLength: [1, 'เนื้อหาประกาศต้องมีอย่างน้อย 1 ตัวอักษร'],
+          maxLength: [255, 'เนื้อหาประกาศต้องยาวไม่เกิน 255 ตัวอักษร']
+        },
+        creator: {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+          required: true
+        },
         createdAt: { type: Date, default: Date.now },
         seen: { type: Number, default: 0 }
       }],
