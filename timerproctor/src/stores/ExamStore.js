@@ -62,8 +62,8 @@ class ExamStore {
   @action
   async getAnnouncements() {
     try {
-      const { announcements } = await fetchAPIwithToken(`/exams/${this.id}/announcements`)
-      this.announcements = announcements
+      const { status, payload } = await fetchAPIwithToken(`/exams/${this.id}/announcements`)
+      this.announcements = (status === 'ok') ? payload.announcements : []
     } catch {
       this.announcements = []
     }
