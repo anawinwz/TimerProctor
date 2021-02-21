@@ -14,7 +14,7 @@ import User from '../../models/user'
 import Attempt from '../../models/attempt'
 
 import dayjs from '../../utils/dayjs'
-import { jsonResponse, getExamNsp } from '../../utils/helpers'
+import { jsonResponse, getExamNsp, getFirstValidationErrMessage } from '../../utils/helpers'
 import { getCompletedAttemptsCount, getLastAttempt } from '../../utils/attempt'
 
 dot.keepArray = true
@@ -143,6 +143,10 @@ router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, asyn
 
     return res.json(jsonResponse('ok', 'ประกาศถึงผู้เข้าสอบเรียบร้อยแล้ว'))
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      return res.json(jsonResponse('failed', getFirstValidationErrMessage(err.errors)))
+    }
+    
     return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในการประกาศถึงผู้เข้าสอบ'))
   }
 })
@@ -310,8 +314,7 @@ router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req,
     return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
   } catch (err) {
     if (err.name === 'ValidationError') {
-      const errors = err.errors
-      return res.json(jsonResponse('failed', errors[Object.keys(errors)[0]].message))
+      return res.json(jsonResponse('failed', getFirstValidationErrMessage(err.errors)))
     } else {
       console.log(err)
       return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบอัปเดตข้อมูลการสอบ'))

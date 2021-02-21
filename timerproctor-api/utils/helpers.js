@@ -30,3 +30,5 @@ export const convertAttemptToTester = attempt => {
     idCheck: idCheck
   }
 }
+
+export const getFirstValidationErrMessage = errors => errors[Object.keys(errors)[0]].message
