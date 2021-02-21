@@ -22,7 +22,8 @@ const ExamSettings = () => {
   }, [])
 
   const onEditName = useCallback(name => {
-    examAdmin?.editName(name)
+    if (typeof name === 'string' && name.trim())
+      examAdmin?.editName(name.trim())
   }, [examAdmin])
   
   if (loading) return <ContentBox><Skeleton /></ContentBox>

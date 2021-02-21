@@ -10,12 +10,13 @@ const Subtitle = styled(Text)`
   margin-bottom: 1em;
 `
 
-const ExamTitle = ({ exam, editable, onEdit }) => {
+const ExamTitle = ({ exam, editable = false, onEdit = () => {} }) => {
   const { name, linked } = exam
   const publicURL = linked?.publicURL
   const editConfig = !editable ? false : {
     tooltip: 'แก้ไขชื่อการสอบ',
     autoSize: { maxRows: 1 },
+    maxLength: 255,
     onChange: onEdit
   } 
 
