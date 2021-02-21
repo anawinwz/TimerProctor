@@ -24,7 +24,7 @@ const ExamStatusControls = () => {
   const controlExam = useCallback(async (id, mode) => {
     if (!id) return false
     try {
-      const res = await fetchAPIwithToken(`/exams/${id}/${mode}`)
+      const res = await fetchAPIwithToken(`/exams/${id}/${mode}`, {})
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)

@@ -177,7 +177,7 @@ router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, nex
   }
 })
 
-router.get('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.post('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
 
@@ -199,7 +199,7 @@ router.get('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, r
   }
 })
 
-router.get('/:id/stop', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.post('/:id/stop', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
 
