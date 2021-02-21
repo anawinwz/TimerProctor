@@ -57,7 +57,8 @@ const schema = new Schema(
       type: [{ 
         content: String,
         creator: { type: Schema.Types.ObjectId, ref: 'User' },
-        createdAt: Date
+        createdAt: { type: Date, default: Date.now },
+        seen: { type: Number, default: 0 }
       }],
       default: []
     }
