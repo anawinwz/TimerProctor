@@ -46,11 +46,11 @@ const schema = new Schema(
       schedule: {
         startDate: {
           type: Date,
-          required: () => this.timeWindow.mode === 'schedule'
+          required: function () { return this.timeWindow.mode === 'schedule' }
         },
         endDate: {
           type: Date,
-          required: () => this.timeWindow.mode === 'schedule'
+          required: function () { return this.timeWindow.mode === 'schedule' }
         }
       }
     },
