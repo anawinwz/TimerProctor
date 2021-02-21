@@ -1,4 +1,5 @@
 import { Table } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
 import StatusTag from './StatusTag'
@@ -46,7 +47,7 @@ const columns = [
 const ExamsListTable = ({ pageSize = 5, loading = false, dataSource = [] }) => {
   return (
     <Table
-      loading={loading}
+      loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
       size="middle"
       columns={columns}
       rowKey="_id"
