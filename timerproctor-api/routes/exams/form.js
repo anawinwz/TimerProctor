@@ -45,7 +45,7 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
 
   const { _id: userId } = user
   const { _id: examId, linked } = exam
-  const lastAttempt = getLastAttempt(examId, userId)
+  const lastAttempt = await getLastAttempt(examId, userId)
 
   if (!lastAttempt || lastAttempt.status !== 'started')
     return res.json(jsonResponse('failed', 'คุณไม่ได้รับอนุญาตให้ส่งคำตอบ'))
