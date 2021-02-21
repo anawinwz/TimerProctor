@@ -67,7 +67,11 @@ const schema = new Schema(
       login: {
         methods: {
           type: [{ type: String, enum: ['google', 'sso', 'email'] }],
-          default: ['google']
+          default: ['google'],
+          validate: {
+            validator: v => v.length > 0,
+            message: 'คุณต้องเลือกอย่างน้อย 1 ประเภทการล็อกอิน'
+          }
         },
         email: {
           allowedDomains: [{ type: String }]
