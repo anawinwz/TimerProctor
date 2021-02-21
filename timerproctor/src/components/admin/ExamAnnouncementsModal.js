@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { Modal, Button, Input, Form, message } from 'antd'
-import { NotificationOutlined, SendOutlined } from '@ant-design/icons'
+import { NotificationOutlined, SendOutlined, CaretRightFilled } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -47,7 +47,13 @@ const ExamAnnouncementsModal = () => {
         >
           <Form.Item
             name="content"
-            extra="ผู้เข้าสอบจะมองเห็นเฉพาะประกาศครั้งล่าสุดเท่านั้น"
+            extra={<>
+              หมายเหตุ:
+              <ul>
+                <li>ผู้เข้าสอบจะมองเห็นเฉพาะประกาศครั้งล่าสุดเท่านั้น</li>
+                <li>ประกาศเดิมจะถูกล้างออก เมื่อสั่ง [<CaretRightFilled /> เริ่มการสอบ] ครั้งต่อไป</li>
+              </ul>
+            </>}
             rules={[{ required: true, message: 'กรุณากรอกเนื้อหาที่ต้องการส่งก่อน' }]}
           >
             <Input.TextArea placeholder="เนื้อหาประกาศ" />
