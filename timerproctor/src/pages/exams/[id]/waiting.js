@@ -8,7 +8,7 @@ import WaitingCard from '~/components/exams/WaitingCard'
 
 const WaitingPage = () => {
   const { ExamStore: exam } = useStore()
-  useEffect(() => exam.getAnnoucements(), [])
+  useEffect(() => exam.getAnnouncements(), [])
 
   if (exam.status === 'started') return <Redirect to={`/exams/${exam.id}/attempt`} />
   return (
