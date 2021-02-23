@@ -24,7 +24,8 @@ export const convertAttemptToTester = attempt => {
     status,
     ...(lastSnapshot && {
       lastSnapshot: {
-        url: lastSnapshot.evidence?.url
+        url: lastSnapshot.evidence?.url,
+        timestamp: lastSnapshot.timestamp
       }
     }),
     idCheck: idCheck
