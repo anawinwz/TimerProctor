@@ -37,3 +37,21 @@ export const getLastAttempt = async (examId, userId, options = {}) => {
   }
   else return null
 }
+
+export const convertAttemptToTester = attempt => {
+  const { _id, user, lastSnapshot, status, idCheck } = attempt
+  const { info: { displayName, photoURL } } = user
+  return {
+    _id,
+    name: displayName,
+    avatar: photoURL,
+    status,
+    ...(lastSnapshot && {
+      lastSnapshot: {
+        url: lastSnapshot.evidence?.url,
+        timestamp: lastSnapshot.timestamp
+      }
+    }),
+    idCheck: idCheck
+  }
+}

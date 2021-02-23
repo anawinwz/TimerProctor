@@ -14,22 +14,4 @@ export const getExamIdFromSocket = socket => {
 
 export const getExamNsp = examId => io.of(`/exams/${examId}`)
 
-export const convertAttemptToTester = attempt => {
-  const { _id, user, lastSnapshot, status, idCheck } = attempt
-  const { info: { displayName, photoURL } } = user
-  return {
-    _id,
-    name: displayName,
-    avatar: photoURL,
-    status,
-    ...(lastSnapshot && {
-      lastSnapshot: {
-        url: lastSnapshot.evidence?.url,
-        timestamp: lastSnapshot.timestamp
-      }
-    }),
-    idCheck: idCheck
-  }
-}
-
 export const getFirstValidationErrMessage = errors => errors[Object.keys(errors)[0]].message

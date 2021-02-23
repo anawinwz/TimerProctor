@@ -7,7 +7,8 @@ import { populateAttempt } from '../../middlewares/attempt'
 import Attempt from '../../models/attempt'
 import AttemptEvent from '../../models/attemptEvent'
 
-import { jsonResponse, convertAttemptToTester } from '../../utils/helpers'
+import { jsonResponse } from '../../utils/helpers'
+import { convertAttemptToTester } from '../../utils/attempt'
 
 const router = Router({ mergeParams: true })
 
