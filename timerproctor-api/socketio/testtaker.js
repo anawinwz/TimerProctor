@@ -58,7 +58,8 @@ export default (socket, user = {}) => {
 
       getExamNsp(examId).to('proctor').emit('newSnapshot', {
         id: socketInfo.id,
-        url: image
+        url: image,
+        timestamp: timestamp
       })
       callback({ err: false })
       
