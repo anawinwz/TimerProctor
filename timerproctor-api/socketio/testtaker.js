@@ -65,6 +65,7 @@ export default (socket, user = {}) => {
       
       try {
         let attempt = await Attempt.findById(socketInfo.id)
+        attempt.snapshots = [...attempt.snapshots, newEvent._id]
         attempt.lastSnapshot = newEvent._id
         await attempt.save()
       } catch {}
