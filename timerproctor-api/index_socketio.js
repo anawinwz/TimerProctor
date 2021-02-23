@@ -29,6 +29,8 @@ ioExam.on('connection', authorize({
   timeout: 15000,
   decodedPropertyName: 'attempt',
   additional_auth: async (decoded, onSuccess, onError, socket) => {
+    console.log('[socket.io] try to execute additional_auth')
+    
     const examId = getExamIdFromSocket(socket)
     const exam = await Exam.findById(examId)
     if (!exam) {
@@ -54,7 +56,8 @@ ioExam.on('connection', authorize({
       if (oldSocket) oldSocket.disconnect(true)
     }
 
-    await Attempt.findByIdAndUpdate(id, { socketId: socket.id })
+    if (role === 'testtaker')
+      await Attempt.findByIdAndUpdate(id, { socketId: socket.id })
     
     onSuccess()
 
