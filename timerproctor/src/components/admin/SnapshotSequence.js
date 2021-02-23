@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { Image, Checkbox } from 'antd'
+import { dateStr } from '~/utils/date'
 
 const Sequence = styled('div')`
   width: 100%;
@@ -49,7 +50,7 @@ const SnapshotSequence = ({ snapshots = [] }) => {
           {snapshots.map(({ timestamp, url }) =>
             <Snapshot>
               <Image src={url} width="100%" />
-              <SnapshotTimestamp>{timestamp}</SnapshotTimestamp>
+              <SnapshotTimestamp>{ dateStr(timestamp, 'timeS') }</SnapshotTimestamp>
             </Snapshot>
           )}
         </div>
