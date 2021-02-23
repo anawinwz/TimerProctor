@@ -15,7 +15,7 @@ import Attempt from '../../models/attempt'
 
 import dayjs from '../../utils/dayjs'
 import { jsonResponse, getExamNsp, getFirstValidationErrMessage } from '../../utils/helpers'
-import { getCompletedAttemptsCount, getLastAttempt } from '../../utils/attempt'
+import { convertEventToSnapshot, getCompletedAttemptsCount, getLastAttempt } from '../../utils/attempt'
 
 dot.keepArray = true
 
@@ -191,13 +191,14 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
     if (lastAttempt.status === 'terminated')
       return res.json(jsonResponse('failed', 'คุณถูกเชิญออกจากห้องสอบแล้ว ไม่สามารถกลับเข้ามาได้อีก'))
 
+    lastAttempt = await lastAttempt.populate('lastSnapshot')
     const { displayName, photoURL } = info
     getExamNsp(examId).to('proctor').emit('newTester', {
       _id: lastAttempt._id,
       name: displayName,
       avatar: photoURL,
       status: lastAttempt.status,
-      lastSnapshot: lastAttempt?.snapshot,
+      lastSnapshot: convertEventToSnapshot(lastAttempt?.lastSnapshot),
       idCheck: lastAttempt.idCheck
     })
 
