@@ -38,10 +38,10 @@ export const getLastAttempt = async (examId, userId, options = {}) => {
   else return null
 }
 
-export const convertEventToSnapshot = event => ({
+export const convertEventToSnapshot = event => (event ? {
   url: event.evidence?.url,
   timestamp: event.timestamp
-})
+} : null)
 
 export const convertAttemptToTester = attempt => {
   const { _id, user, lastSnapshot, status, idCheck } = attempt
