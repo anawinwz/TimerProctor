@@ -8,7 +8,7 @@ import Attempt from '../../models/attempt'
 import AttemptEvent from '../../models/attemptEvent'
 
 import { jsonResponse } from '../../utils/helpers'
-import { convertAttemptToTester } from '../../utils/attempt'
+import { convertAttemptToTester, convertEventToSnapshot } from '../../utils/attempt'
 
 const router = Router({ mergeParams: true })
 
@@ -80,6 +80,17 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttem
     return res.json(jsonResponse('ok', tester))
   } catch (err) {
     return res.json(jsonResponse('error', 'ไม่สามารถตรวจสอบข้อมูลผู้เข้าสอบได้'))
+  }
+})
+
+router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
+  try {
+    const { snapshots } = await req.attempt.populate('snapshots')
+    return res.json(jsonResponse('ok', {
+      snapshots: snapshots.map(event => convertEventToSnapshot(event))
+    }))
+  } catch {
+    return res.json(jsonResponse('error', 'ไม่สามารถเรียกรายการภาพสุ่มบันทึกระหว่างสอบได้'))
   }
 })
 
