@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useEffect, useMemo } from 'react'
-import { Typography, Button, Row, Col, Progress, Table, Image } from 'antd'
+import { Typography, Button, Row, Col, Progress, Image } from 'antd'
 import { StopOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
@@ -14,6 +14,7 @@ import { dateStr } from '~/utils/date'
 import ContentBox from '~/components/admin/ContentBox'
 import UserTag from '~/components/admin/UserTag'
 import CaptionedProgress from '~/components/admin/CaptionedProgress'
+import SnapshotSequence from '~/components/admin/SnapshotSequence'
 import TesterEventsTable from '~/components/admin/TesterEventsTable'
 
 const Title = styled(Typography.Title)`
@@ -87,6 +88,8 @@ const ExamTesterReport = ({ match }) => {
           </Row>
         </Col>
       </TesterDescription>
+      <Subtitle type="secondary">ภาพสุ่มบันทึกระหว่างการสอบ</Subtitle>
+      <SnapshotSequence snapshots={[]} />
       <TesterEventsTable events={tester.events} />
     </ContentBox>
   )
