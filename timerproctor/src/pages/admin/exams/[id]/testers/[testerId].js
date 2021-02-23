@@ -40,6 +40,7 @@ const ExamTesterReport = ({ match }) => {
 
   useEffect(async () => {
     examAdmin?.getTester(testerId)
+    examAdmin?.getTester(testerId, 'snapshots')
     examAdmin?.getTester(testerId, 'events')
   }, [])
 
@@ -89,7 +90,7 @@ const ExamTesterReport = ({ match }) => {
         </Col>
       </TesterDescription>
       <Subtitle type="secondary">ภาพสุ่มบันทึกระหว่างการสอบ</Subtitle>
-      <SnapshotSequence snapshots={[]} />
+      <SnapshotSequence snapshots={tester.snapshots} />
       <TesterEventsTable events={tester.events} />
     </ContentBox>
   )

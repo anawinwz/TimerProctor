@@ -44,10 +44,12 @@ const AdminExamPage = ({ match }) => {
             })
           })
           .on('newSnapshot', payload => {
-            const { id, url } = payload
+            const { id, url, timestamp } = payload
+            const snapshot = { url: url, timestamp: timestamp }
             examAdmin.updateTester(id, {
-              lastSnapshot: { url: url }
+              lastSnapshot: snapshot
             })
+            examAdmin.addSnapshotToTester(id, snapshot)
           })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
           .connect()

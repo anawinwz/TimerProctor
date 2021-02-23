@@ -77,6 +77,18 @@ class ExamAdminStore {
   }
 
   @action
+  addSnapshotToTester(_id, snapshot = {}) {
+    if (!_id || !this.testers[_id]) return false
+    
+    const oldSnapshots = this.testers[_id].snapshots
+    if (typeof oldSnapshots === 'undefined' || !Array.isArray(oldSnapshots))
+      return false
+
+    this.testers[_id].snapshots.push(snapshot)
+    return true
+  }
+
+  @action
   async getTester(testerId, scope = '') {
     try {
       this.loading = true
