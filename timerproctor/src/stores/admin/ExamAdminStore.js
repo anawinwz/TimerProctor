@@ -96,7 +96,7 @@ class ExamAdminStore {
     if (typeof oldEvents === 'undefined' || !Array.isArray(oldEvents))
       return false
 
-    this.testers[_id].events.push(event)
+    this.testers[_id].events = [...this.testers[_id].events, event]
     return true
   }
 
