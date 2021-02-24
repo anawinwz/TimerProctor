@@ -61,6 +61,14 @@ export default (socket, user = {}) => {
         url: image,
         timestamp: timestamp
       })
+
+      let toSend = newEvent.toJSON()
+      delete toSend._id
+      delete toSend.attempt
+      getExamNsp(examId).to('proctor').emit('newEvent', {
+        id: socketInfo.id,
+        event: toSend
+      })
       callback({ err: false })
       
       try {
@@ -125,7 +133,13 @@ export default (socket, user = {}) => {
     newEvent.save((err, newEvent) => {
       if (err) return callback({ err: true })
 
-      getExamNsp(examId).to('proctor').emit('newEvent', newEvent)
+      let toSend = newEvent.toJSON()
+      delete toSend._id
+      delete toSend.attempt
+      getExamNsp(examId).to('proctor').emit('newEvent', {
+        id: socketInfo.id,
+        event: toSend
+      })
       callback({ err: false })
     })
   })
