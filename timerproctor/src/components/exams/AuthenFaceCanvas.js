@@ -19,6 +19,7 @@ const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
   const camInput = useRef()
 
   useEffect(() => {
+    let stream
     (async () => {
       try {
         await loadModel()
@@ -27,13 +28,18 @@ const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
       }
 
       try {
-        const stream = await getStream()
+        stream = await getStream()
         const videoEl = camInput.current
         videoEl.srcObject = stream
       } catch (err) {
         return setCamState(['FAILED', err.message])
       }
     })()
+    return () => {
+      try {
+        stream.getTracks().forEach(track => track.stop())
+      } catch {}
+    }
   }, [])
 
   const onPlay = useCallback(() => {

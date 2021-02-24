@@ -19,9 +19,10 @@ const FaceTracker = ({ signal = () => {} }) => {
   const camInput = useRef()
 
   useEffect(() => {
+    let stream
     (async () => {
       try {
-        const stream = await getStream()
+        stream = await getStream()
         const videoEl = camInput.current
         videoEl.srcObject = stream
       } catch (err) {
@@ -29,6 +30,11 @@ const FaceTracker = ({ signal = () => {} }) => {
         showModal('error', 'ไม่พบกล้องของคุณ')
       }
     })()
+    return () => {
+      try {
+        stream.getTracks().forEach(track => track.stop())
+      } catch {}
+    }
   }, [])
 
   const takeSnapshot = useCallback(() => {
