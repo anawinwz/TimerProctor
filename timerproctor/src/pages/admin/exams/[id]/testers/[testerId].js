@@ -39,7 +39,7 @@ const ExamTesterReport = ({ match }) => {
   const testerId = match.params?.testerId
 
   useEffect(async () => {
-    examAdmin?.getTester(testerId)
+    await examAdmin?.getTester(testerId)
     examAdmin?.getTester(testerId, 'snapshots')
     examAdmin?.getTester(testerId, 'events')
   }, [])
