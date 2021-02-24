@@ -5,7 +5,7 @@ import { dateStr } from '~/utils/date'
 
 const Sequence = styled('div')`
   width: 100%;
-  min-height: 120px;
+  min-height: 60px;
   background: whitesmoke;
   overflow-y: hidden;
   overflow-x: auto;
@@ -24,7 +24,9 @@ const SnapshotTimestamp = styled('span')`
   left: 0px;
   bottom: 0px;
   width: 80%;
+  width: fit-content;
   background: rgba(0, 0, 0,0.5);
+  padding: 2px;
   color: white;
   font-size: 90%;
 `
