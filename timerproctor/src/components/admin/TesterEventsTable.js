@@ -8,8 +8,11 @@ const riskEventMarker = event => {
   switch (type) {
     case 'window':
       if (info.windowEvent === 'unfocus') return 'risk'
+      break
     case 'snapshot':
       if (info.facesCount == 0) return 'risk'
+      break
+    case 'face': return 'risk'
     default: return ''
   }
 }
@@ -45,6 +48,8 @@ const columns = [
             default: return `ไม่ทราบรายละเอียด`
           }
         case 'snapshot': return `ภาพมี ${info.facesCount} ใบหน้า`
+        case 'face':
+          return info.facesCount == 0 ? 'ไม่พบใบหน้า' : `พบหลายบุคคลบนภาพ (${info.facesCount} ใบหน้า)`
         default: return `ไม่ทราบรายละเอียด`
       }
     }
