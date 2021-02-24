@@ -51,6 +51,10 @@ const AdminExamPage = ({ match }) => {
             })
             examAdmin.addSnapshotToTester(id, snapshot)
           })
+          .on('newEvent', payload => {
+            const { id, event } = payload
+            examAdmin.addEventToTester(id, event)
+          })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
           .connect()
       } catch {

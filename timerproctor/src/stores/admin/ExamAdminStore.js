@@ -89,6 +89,18 @@ class ExamAdminStore {
   }
 
   @action
+  addEventToTester(_id, event = {}) {
+    if (!_id || !this.testers[_id]) return false
+    
+    const oldEvents = this.testers[_id].events
+    if (typeof oldEvents === 'undefined' || !Array.isArray(oldEvents))
+      return false
+
+    this.testers[_id].events.push(event)
+    return true
+  }
+
+  @action
   async getTester(testerId, scope = '') {
     try {
       this.loading = true
