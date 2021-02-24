@@ -85,7 +85,7 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttem
 
 router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
   try {
-    const { snapshots } = await req.attempt.populate('snapshots')
+    const { snapshots } = await req.attempt.populate('snapshots').execPopulate()
     return res.json(jsonResponse('ok', {
       snapshots: snapshots.map(event => convertEventToSnapshot(event))
     }))
