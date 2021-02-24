@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { Image, Checkbox } from 'antd'
+import useLockBodyWheel from '~/hooks/useLockBodyWheel'
 import { dateStr } from '~/utils/date'
 
 const Sequence = styled('div')`
@@ -33,6 +34,7 @@ const SnapshotTimestamp = styled('span')`
 
 const SnapshotSequence = ({ snapshots = [] }) => {
   const [live, setLive] = useState(true)
+  const [locked, setLock] = useLockBodyWheel()
 
   const sequence = useRef()
   useEffect(() => {
@@ -44,10 +46,21 @@ const SnapshotSequence = ({ snapshots = [] }) => {
 
   const onLiveChanged = useCallback(e => setLive(e.target.checked))
 
+  const onMouseEnter = useCallback(() => setLock(true), [])
+  const onMouseLeave = useCallback(() => setLock(false), [])
+  const onWheel = useCallback(e => {
+    e.preventDefault()
+    const elm = sequence.current
+    elm.scrollTo({
+      top: 0,
+      left: elm.scrollLeft + e.deltaY
+    })
+  }, [])
+
   return (
     <>
       <Checkbox onChange={onLiveChanged} checked={live}>เลื่อนไปหาภาพใหม่เสมอ</Checkbox>
-      <Sequence ref={sequence}>
+      <Sequence ref={sequence} onWheel={onWheel} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <div>
           {snapshots.map(({ timestamp, url }) =>
             <Snapshot>
