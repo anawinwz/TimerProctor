@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { Image, Checkbox } from 'antd'
+import { observer } from 'mobx-react-lite'
 import useLockBodyWheel from '~/hooks/useLockBodyWheel'
 import { dateStr } from '~/utils/date'
 
@@ -56,14 +57,15 @@ const SnapshotSequence = ({ snapshots = [] }) => {
       left: elm.scrollLeft + e.deltaY
     })
   }, [])
+  useEffect(() => sequence.current.addEventListener('wheel', onWheel, { passive: false }), [])
 
   return (
     <>
       <Checkbox onChange={onLiveChanged} checked={live}>เลื่อนไปหาภาพใหม่เสมอ</Checkbox>
-      <Sequence ref={sequence} onWheel={onWheel} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <Sequence ref={sequence} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <div>
           {snapshots.map(({ timestamp, url }) =>
-            <Snapshot>
+            <Snapshot key={`snap_${timestamp}`}>
               <Image src={url} width="100%" />
               <SnapshotTimestamp>{ dateStr(timestamp, 'timeS') }</SnapshotTimestamp>
             </Snapshot>
@@ -74,4 +76,4 @@ const SnapshotSequence = ({ snapshots = [] }) => {
   )
 }
 
-export default SnapshotSequence
+export default observer(SnapshotSequence)

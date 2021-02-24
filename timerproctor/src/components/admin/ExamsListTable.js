@@ -1,6 +1,7 @@
 import { Table } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 import StatusTag from './StatusTag'
 
@@ -60,4 +61,4 @@ const ExamsListTable = ({ pageSize = 5, loading = false, dataSource = [] }) => {
   )
 }
 
-export default ExamsListTable
+export default observer(ExamsListTable)
