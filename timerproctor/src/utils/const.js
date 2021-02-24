@@ -23,4 +23,10 @@ export const testerStatuses = {
   completed: 'ส่งคำตอบแล้ว',
 }
 
+export const testerEventsType = {
+  face: 'ตรวจจับใบหน้า',
+  window: 'ตรวจจับการสลับแท็บ',
+  snapshot: 'สุ่มบันทึกภาพ'
+}
+
 export const photoRejectReasons = ['รูปไม่ชัดเจน', 'ประเภทบัตรไม่ถูกต้อง', 'บุคคลในภาพและในบัตรไม่ตรง']

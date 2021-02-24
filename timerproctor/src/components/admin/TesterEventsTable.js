@@ -1,6 +1,7 @@
 import { Table } from 'antd'
 import { observer } from 'mobx-react-lite'
 
+import { testerEventsType } from '~/utils/const'
 import { dateStr, dateSorter } from '~/utils/date'
 
 const riskEventMarker = event => {
@@ -17,6 +18,9 @@ const riskEventMarker = event => {
   }
 }
 
+const typeFilters = Object.entries(testerEventsType)
+  .map(([value, text]) => ({ text, value }))
+
 const columns = [
   {
     title: 'วัน-เวลาเหตุการณ์',
@@ -31,7 +35,9 @@ const columns = [
     title: 'ประเภทเหตุการณ์',
     dataIndex: 'type',
     key: 'type',
-    filters: []
+    render: text => testerEventsType?.[text] || text,
+    filters: typeFilters,
+    onFilter: (value, record) => record.type === value
   },
   {
     title: 'รายละเอียด',
