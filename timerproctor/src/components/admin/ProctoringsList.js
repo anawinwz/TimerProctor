@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { message, Typography } from 'antd'
 
 import { fetchAPIwithAdminToken } from '~/utils/api'
@@ -9,6 +10,8 @@ import ExamsListTable from './ExamsListTable'
 const { Title } = Typography
 
 const ProctoringsList = () => {
+  const history = useHistory()
+
   const [loading, setLoading] = useState(true)
   const [proctorings, setProctorings] = useState([])
 
@@ -22,8 +25,12 @@ const ProctoringsList = () => {
       } else {
         throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
       }
-    } catch {
-      message.error('เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
+    } catch (err) {
+      if (err.needRelogin) {
+        window.sessionStorage.setItem('nextURL', history.location.pathname)
+        history.replace(`/admin/login`)
+      }
+      message.error(err.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
     }
   }, [])
 

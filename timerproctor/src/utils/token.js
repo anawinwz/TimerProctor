@@ -27,7 +27,9 @@ class TokenManager {
         this.refreshToken = refreshToken
         return Promise.resolve(true)
       } else {
-        return Promise.reject(new Error(message || 'เกิดข้อผิดพลาดในการต่ออายุการเข้าสู่ระบบ'))
+        const error = new Error(message || 'เกิดข้อผิดพลาดในการต่ออายุการเข้าสู่ระบบ')
+        error.needRelogin = true
+        return Promise.reject(error)
       }
     } catch {
       return Promise.reject(new Error('เกิดข้อผิดพลาดในการต่ออายุการเข้าสู่ระบบ'))
