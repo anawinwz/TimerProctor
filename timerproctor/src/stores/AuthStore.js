@@ -22,7 +22,7 @@ class AuthStore {
 
   @computed
   get isLoggedIn() {
-    return !!this.userId && !!this.token.accessToken
+    return this.userId.length > 0 && this.token.accessToken.length > 0
   }
 
   @action
