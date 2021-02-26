@@ -60,11 +60,11 @@ router.post('/renew', async (req, res, next) => {
     const { refreshToken, admin = false } = req.body
 
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)
-    const accessToken = createAccessToken(_id, admin)
-    const refreshToken = createRefreshToken(_id, admin)
+    const newAccessToken = createAccessToken(_id, admin)
+    const newRefreshToken = createRefreshToken(_id, admin)
     res.json(jsonResponse('ok', {
-      accessToken,
-      refreshToken
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken
     }))
   } catch (err) {
     if (err.name === 'TokenExpiredError')
