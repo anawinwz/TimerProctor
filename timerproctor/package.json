@@ -11,6 +11,7 @@
     "@ant-design/icons": "^4.2.2",
     "@babel/plugin-proposal-decorators": "^7.12.1",
     "antd": "^4.6.6",
+    "axios": "^0.21.1",
     "customize-cra": "^1.0.0",
     "face-api.js": "^0.22.2",
     "firebase": "^8.2.1",
