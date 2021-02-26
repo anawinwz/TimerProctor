@@ -59,13 +59,13 @@ const ExamTesterReport = ({ match }) => {
       <Title level={3}>{ tester.name }</Title>
       <Button type="danger" icon={<StopOutlined />}>เชิญออก</Button>
       <TesterDescription align="middle">
-        <Col span={14}>
+        <Col xs={24} md={14}>
           <Row>
-            <Col span={6} className="text-center">
+            <Col xs={24} md={6} className="text-center">
               <Progress type="circle" percent={93} format={percent => `${percent}%`} />
               <SmallText className="text-center"></SmallText>
             </Col>
-            <Col span={18} style={{ paddingLeft: '10px' }}>
+            <Col xs={24} md={18} style={{ paddingLeft: '10px' }}>
               <Subtitle type="secondary">สถานะ</Subtitle>
               <Title level={4}>{ testerStatuses[tester.status] }</Title>
               
@@ -74,10 +74,10 @@ const ExamTesterReport = ({ match }) => {
             </Col>
           </Row>
         </Col>
-        <Col span={10}>
+        <Col xs={24} md={10}>
           <Row>
             <Col span={12}>
-              <Subtitle type="secondary">ภาพที่ใช้ยืนยันตัวบุคคล</Subtitle>
+              <Subtitle type="secondary">ภาพที่ใช้ยืนยันตน</Subtitle>
               <Image src={tester.idCheck.photoURL} width="90%" />
               <SmallText type="secondary">{ dateStr(tester.idCheck.timestamp, 'shortS') }</SmallText>
             </Col>
