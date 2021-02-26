@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { Modal, Button, Space, message } from 'antd'
 import { CaretRightFilled, StopOutlined, SettingOutlined } from '@ant-design/icons'
+import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
 import { observer } from 'mobx-react-lite'
@@ -11,6 +12,13 @@ import { fromNowStr } from '~/utils/date'
 
 import ExamAllowLoginToggle from '~/components/admin/ExamAllowLoginToggle'
 import ExamAnnouncementsModal from './ExamAnnouncementsModal'
+
+const Wrapper = styled('div')`
+  &>*, &>a>* {
+    margin-top: 5px;
+    margin-right: 5px; 
+  }
+`
 
 const ExamSettingsButton = observer(({ examId = '' }) => (
   <Link to={`/admin/exams/${examId}/settings`}><Button icon={<SettingOutlined />}>ตั้งค่า</Button></Link>
@@ -55,16 +63,16 @@ const ExamStatusControls = () => {
   return (
     <Space direction="vertical">
       { status === 'started' ? (
-        <Space direction="horizontal">
+        <Wrapper>
           <Button type="danger" icon={<StopOutlined />} onClick={stopExam}>สิ้นสุดการสอบ</Button> 
           <span>ดำเนินไปแล้ว { fromNowStr(exam?.timeWindow?.realtime?.startedAt) }</span>
-        </Space>
+        </Wrapper>
         ) : (
-        <Space direction="horizontal">
+        <Wrapper>
           <Button type="primary" icon={<CaretRightFilled />} onClick={startExam}>เริ่มการสอบ</Button>
           <ExamAnnouncementsModal />
           <ExamSettingsButton examId={exam.id} />
-        </Space>
+        </Wrapper>
         )
       }
       <ExamAllowLoginToggle />
