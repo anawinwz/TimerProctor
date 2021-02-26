@@ -3,9 +3,10 @@ import { fetchAPI } from './api'
 const localStorage = window.localStorage
 
 class TokenManager {
-  constructor(key = '') {
+  constructor(key = '', isAdmin = false) {
     this.key = `${key ? `${key}_` : ''}accessToken`
     this.refreshKey = `${key ? `${key}_` : ''}refreshToken`
+    this.isAdmin = isAdmin
   }
 
   get accessToken() { return localStorage.getItem(this.key) || '' }
@@ -18,7 +19,7 @@ class TokenManager {
   
   async renewToken() {
     try {
-      const res = await fetchAPI('/users/renew', { refreshToken: getRefreshToken() })
+      const res = await fetchAPI('/users/renew', { refreshToken: getRefreshToken(), admin: this.isAdmin })
       const { status, message, payload } = res
       if (status === 'ok') {
         const { accessToken, refreshToken } = payload
@@ -35,4 +36,4 @@ class TokenManager {
 }
 
 export const userToken = new TokenManager()
-export const adminToken = new TokenManager('admin')
+export const adminToken = new TokenManager('admin', true)

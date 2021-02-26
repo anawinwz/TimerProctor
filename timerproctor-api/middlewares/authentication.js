@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { JWT_AUTHEN_SECRET, JWT_ADMIN_AUTHEN_SECRET } from '../config'
+import { JWT_AUTH_SECRET, JWT_ADMINAUTH_SECRET } from '../config'
 
 import User from '../models/user'
 import { jsonResponse } from '../utils/helpers'
@@ -7,7 +7,7 @@ import { jsonResponse } from '../utils/helpers'
 export const authenticate = async (req, res, next) => {
   try {
     const token = req.headers['x-access-token']
-    const { _id } = jwt.verify(token, JWT_AUTHEN_SECRET)
+    const { _id } = jwt.verify(token, JWT_AUTH_SECRET)
     if (!_id) return res.json(jsonResponse('failed', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้อง'))
     
     const user = await User.findById(_id)
@@ -27,7 +27,7 @@ export const authenticate = async (req, res, next) => {
 export const adminAuthen = async (req, res, next) => {
   try {
     const token = req.headers['x-access-token']
-    const { _id } = jwt.verify(token, JWT_ADMIN_AUTHEN_SECRET)
+    const { _id } = jwt.verify(token, JWT_ADMINAUTH_SECRET)
     if (!_id) return res.json(jsonResponse('failed', 'ข้อมูลการเข้าสู่ระบบไม่ถูกต้อง'))
     
     const user = await User.findById(_id)
@@ -57,14 +57,14 @@ export const roleBasedAuthen = ({ guest = false }) => async (req, res, next) => 
   let userId = ''
 
   try {
-    const { _id } = jwt.verify(token, JWT_AUTHEN_SECRET)
+    const { _id } = jwt.verify(token, JWT_AUTH_SECRET)
     userId = _id
   } catch (err) {
     if (err.name === 'TokenExpiredError')
       return res.json(jsonResponse('tokenExpired', 'ข้อมูลการเข้าสู่ระบบหมดอายุ'))
 
     try {
-      const { _id } = jwt.verify(token, JWT_ADMIN_AUTHEN_SECRET)
+      const { _id } = jwt.verify(token, JWT_ADMINAUTH_SECRET)
       userId = _id
       fromAdmin = true
     } catch (err) {

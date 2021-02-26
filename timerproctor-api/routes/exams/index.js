@@ -2,7 +2,7 @@ import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import dot from 'dot-object'
 
-import { JWT_GAPPS_SECRET, JWT_SOCKET_EXPIRESIN, JWT_SOCKET_SECRET } from '../../config'
+import { JWT_GAPPS_SECRET } from '../../config'
 
 import { adminAuthen, authenticate, roleBasedAuthen } from '../../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../../middlewares/exam'
@@ -16,6 +16,7 @@ import Attempt from '../../models/attempt'
 import dayjs from '../../utils/dayjs'
 import { jsonResponse, getExamNsp, getFirstValidationErrMessage } from '../../utils/helpers'
 import { convertEventToSnapshot, getCompletedAttemptsCount, getLastAttempt } from '../../utils/attempt'
+import { createSocketToken } from '../../utils/token'
 
 dot.keepArray = true
 
@@ -203,11 +204,7 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
     })
 
     const { status, idCheck } = lastAttempt
-    const socketToken = jwt.sign(
-      { id: lastAttempt._id, userId, role: 'testtaker' },
-      JWT_SOCKET_SECRET,
-      { expiresIn: JWT_SOCKET_EXPIRESIN }
-    )
+    const socketToken = createSocketToken(lastAttempt._id, userId, 'testtaker')
     
     return res.json(jsonResponse('ok', {
       socketToken,
@@ -225,11 +222,7 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
 router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, next) => {
   try {
     const { _id: userId } = req.user
-    const socketToken = jwt.sign(
-      { id: userId, userId, role: 'proctor' },
-      JWT_SOCKET_SECRET,
-      { expiresIn: JWT_SOCKET_EXPIRESIN }
-    )
+    const socketToken = createSocketToken(userId, userId, 'proctor')
 
     return res.json(jsonResponse('ok', {
       socketToken
