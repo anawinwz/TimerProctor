@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 
-import { JWT_ADMIN_AUTHEN_SECRET, JWT_AUTHEN_SECRET } from '../config'
+import { JWT_ADMIN_AUTHEN_SECRET, JWT_AUTHEN_SECRET, JWT_AUTHEN_EXPIRESIN } from '../config'
 import User from '../models/user'
 import { decodeToken, getUserData } from '../utils/firebase'
 import { jsonResponse } from '../utils/helpers'
@@ -39,13 +39,17 @@ router.post('/login', async (req, res, next) => {
       user = await user.save()
     }
 
-    const token = jwt.sign({ _id: user._id }, admin ? JWT_ADMIN_AUTHEN_SECRET : JWT_AUTHEN_SECRET)
+    const token = jwt.sign(
+      { _id: user._id },
+      admin ? JWT_ADMIN_AUTHEN_SECRET : JWT_AUTHEN_SECRET,
+      { expiresIn: JWT_AUTHEN_EXPIRESIN }
+    )
+
     return res.json(jsonResponse('ok', {
       token,
       email,
       info: { displayName, photoURL }
     }))
-
   } catch (err) {
     console.log(err)
     res.json(jsonResponse('error', 'การเข้าสู่ระบบล้มเหลว โปรดลองใหม่ภายหลัง'))

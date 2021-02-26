@@ -1,4 +1,8 @@
 export const JWT_AUTHEN_SECRET = process.env.JWT_AUTHEN_SECRET || 'AUTHEN_SECRET'
 export const JWT_ADMIN_AUTHEN_SECRET = process.env.JWT_ADMIN_AUTHEN_SECRET || 'ADMIN_AUTHEN_SECRET'
+export const JWT_AUTHEN_EXPIRESIN = '1h'
+
 export const JWT_SOCKET_SECRET = process.env.JWT_SOCKET_SECRET || 'SOCKET_SECRET'
+export const JWT_SOCKET_EXPIRESIN = '5m'
+
 export const JWT_GAPPS_SECRET = process.env.JWT_GAPPS_SECRET || 'GAPPS_SECRET'

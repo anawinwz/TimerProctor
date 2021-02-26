@@ -2,7 +2,7 @@ import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import dot from 'dot-object'
 
-import { JWT_GAPPS_SECRET, JWT_SOCKET_SECRET } from '../../config'
+import { JWT_GAPPS_SECRET, JWT_SOCKET_EXPIRESIN, JWT_SOCKET_SECRET } from '../../config'
 
 import { adminAuthen, authenticate, roleBasedAuthen } from '../../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../../middlewares/exam'
@@ -202,8 +202,13 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
       idCheck: lastAttempt.idCheck
     })
 
-    const socketToken = jwt.sign({ id: lastAttempt._id, userId, role: 'testtaker' }, JWT_SOCKET_SECRET)
     const { status, idCheck } = lastAttempt
+    const socketToken = jwt.sign(
+      { id: lastAttempt._id, userId, role: 'testtaker' },
+      JWT_SOCKET_SECRET,
+      { expiresIn: JWT_SOCKET_EXPIRESIN }
+    )
+    
     return res.json(jsonResponse('ok', {
       socketToken,
       status,
@@ -220,7 +225,12 @@ router.post('/:id/attempt', authenticate, populateExam, async (req, res, next) =
 router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, next) => {
   try {
     const { _id: userId } = req.user
-    const socketToken = jwt.sign({ id: userId, userId, role: 'proctor' }, JWT_SOCKET_SECRET)
+    const socketToken = jwt.sign(
+      { id: userId, userId, role: 'proctor' },
+      JWT_SOCKET_SECRET,
+      { expiresIn: JWT_SOCKET_EXPIRESIN }
+    )
+
     return res.json(jsonResponse('ok', {
       socketToken
     }))
