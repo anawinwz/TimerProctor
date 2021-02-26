@@ -1,4 +1,4 @@
-import { Redirect } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
@@ -11,8 +11,12 @@ const headerMargin = {
 }
 
 const AdminLayout = ({ children }) => {
-  const { AuthStore: { isLoggedIn } } = useStore()
-  if (!isLoggedIn) return <Redirect to="/admin/login" />
+  const { location } = useHistory()
+  const { AuthStore: { isLoggedIn, token } } = useStore()
+  if (!isLoggedIn || !token.accessToken) {
+    window.sessionStorage.setItem('nextURL', location.pathname)
+    return <Redirect to="/admin/login" />
+  }
   return (
     <>
       <Header fixed={true} />
