@@ -17,6 +17,7 @@ const Sequence = styled('div')`
 const Snapshot = styled('div')`
   position: relative;
   width: 20%;
+  min-width: 80px;
   display: inline-block;
 `
 
