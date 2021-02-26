@@ -2,7 +2,7 @@ import { action, computed, observable } from 'mobx'
 import { persist } from 'mobx-persist'
 import firebase from 'firebase/app'
 import { auth } from '~/utils/firebase'
-import { removeToken, saveToken } from '~/utils/token'
+import { userToken, adminToken } from '~/utils/token'
 import { fetchAPI } from '~/utils/api'
 
 class AuthStore {
@@ -64,8 +64,14 @@ class AuthStore {
     
     const { status, payload, message } = response
     if (status && status === 'ok') {
-      const { token, email, info } = payload
-      saveToken(token)
+      const { accessToken, refreshToken, email, info } = payload
+      if (this.fromAdmin) {
+        adminToken.accessToken = accessToken
+        adminToken.refreshToken = refreshToken
+      } else {
+        userToken.accessToken = accessToken
+        userToken.refreshToken = refreshToken
+      }
 
       const { displayName, photoURL } = info
       this.setUser({ userId: user.uid, email, displayName, photoURL })
@@ -90,7 +96,13 @@ class AuthStore {
       await auth.signOut()
     } finally {
       this.setUser({ userId: '', email: '', displayName: '', photoURL: '' })
-      removeToken()
+      if (this.fromAdmin) {
+        adminToken.removeAccessToken()
+        adminToken.removeRefreshToken()
+      } else {
+        userToken.removeAccessToken()
+        userToken.removeRefreshToken()
+      }
     }
   }
 }
