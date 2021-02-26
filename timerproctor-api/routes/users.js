@@ -56,7 +56,7 @@ router.post('/login', async (req, res, next) => {
 })
 
 router.post('/renew', async (req, res, next) => {
-  const { refreshToken, admin = false } = req.post
+  const { refreshToken, admin = false } = req.body
   
   try {
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)

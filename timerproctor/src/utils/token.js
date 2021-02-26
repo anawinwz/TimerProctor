@@ -19,7 +19,7 @@ class TokenManager {
   
   async renewToken() {
     try {
-      const res = await fetchAPI('/users/renew', { refreshToken: getRefreshToken(), admin: this.isAdmin })
+      const res = await fetchAPI('/users/renew', { refreshToken: this.refreshToken, admin: this.isAdmin })
       const { status, message, payload } = res
       if (status === 'ok') {
         const { accessToken, refreshToken } = payload
