@@ -42,8 +42,9 @@ export const fetchAPIwithToken = async (endpoint, body = null, token = userToken
     
     const { data } = res
     if (data.status === 'tokenExpired') {
-      await token.renewToken()
-      return fetchAPIwithToken(endpoint, body, token)
+      return token.renewToken().then(() => {
+        fetchAPIwithToken(endpoint, body, token)
+      })
     }
     return data
   } catch (err) {

@@ -6,10 +6,10 @@ import IntroLogin from '~/components/admin/IntroLogin'
 import useAppTitle from '~/hooks/useAppTitle'
 
 const AdminLogin = () => {
-  const { AuthStore: { isLoggedIn } } = useStore()
+  const { AuthStore: { isLoggedIn, token } } = useStore()
   useAppTitle('เข้าสู่ระบบ', { admin: true })
 
-  if (isLoggedIn) {
+  if (isLoggedIn && token.accessToken) {
     const nextURL = window.sessionStorage.getItem('nextURL')
     if (nextURL) window.sessionStorage.removeItem('nextURL')
     return <Redirect to={nextURL || '/admin/dashboard'} />

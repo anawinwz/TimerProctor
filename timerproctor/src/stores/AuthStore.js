@@ -22,7 +22,7 @@ class AuthStore {
 
   @computed
   get isLoggedIn() {
-    return this.userId.length > 0 && this.token.accessToken.length > 0
+    return this.userId.length > 0
   }
 
   @action
@@ -66,11 +66,11 @@ class AuthStore {
     const { status, payload, message } = response
     if (status && status === 'ok') {
       const { accessToken, refreshToken, email, info } = payload
-      this.token.accessToken = accessToken
-      this.token.refreshToken = refreshToken
-
       const { displayName, photoURL } = info
       this.setUser({ userId: user.uid, email, displayName, photoURL })
+
+      this.token.accessToken = accessToken
+      this.token.refreshToken = refreshToken
       
       return true
     } else {
