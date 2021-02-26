@@ -1,5 +1,6 @@
 import { action, computed, observable } from 'mobx'
 import { fetchAPI, fetchAPIwithToken } from '~/utils/api'
+import { userToken, adminToken } from '~/utils/token'
 
 class ExamStore {
   @observable loading = false
@@ -14,6 +15,7 @@ class ExamStore {
   constructor(rootStore, fromAdmin = false) {
     this.rootStore = rootStore
     this.fromAdmin = fromAdmin
+    this.token = this.fromAdmin ? adminToken : userToken
   }
 
   @action
@@ -28,7 +30,9 @@ class ExamStore {
 
     try {
       this.loading = true
-      Object.assign(this.info, {}, this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`) : await fetchAPI(`/exams/${this.id}`))
+
+      const res = this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`, null, this.token) : await fetchAPI(`/exams/${this.id}`)
+      Object.assign(this.info, {}, res)
       this.name = this.info.name
       this.lastFetch = Date.now()
       this.error = null
@@ -62,7 +66,7 @@ class ExamStore {
   @action
   async getAnnouncements() {
     try {
-      const { status, payload } = await fetchAPIwithToken(`/exams/${this.id}/announcements`)
+      const { status, payload } = await fetchAPIwithToken(`/exams/${this.id}`, null, this.token)
       this.announcements = (status === 'ok') ? payload.announcements : []
     } catch {
       this.announcements = []

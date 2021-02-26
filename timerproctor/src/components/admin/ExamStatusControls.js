@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
-import { fetchAPIwithToken } from '~/utils/api'
+import { fetchAPIwithAdminToken } from '~/utils/api'
 import { fromNowStr } from '~/utils/date'
 
 import ExamAllowLoginToggle from '~/components/admin/ExamAllowLoginToggle'
@@ -25,7 +25,7 @@ const ExamStatusControls = () => {
   const controlExam = useCallback(async (id, mode) => {
     if (!id) return false
     try {
-      const res = await fetchAPIwithToken(`/exams/${id}/${mode}`, {})
+      const res = await fetchAPIwithAdminToken(`/exams/${id}/${mode}`, {})
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { message, Typography } from 'antd'
 
-import { fetchAPIwithToken } from '~/utils/api'
+import { fetchAPIwithAdminToken } from '~/utils/api'
 
 import ContentBox from './ContentBox'
 import ExamsListTable from './ExamsListTable'
@@ -14,7 +14,7 @@ const ProctoringsList = () => {
 
   useEffect(async () => {
     try {
-      const res = await fetchAPIwithToken('/proctorings')
+      const res = await fetchAPIwithAdminToken('/proctorings')
       const { status, payload, message } = res
       if (status === 'ok') {
         setProctorings(payload.proctorings)

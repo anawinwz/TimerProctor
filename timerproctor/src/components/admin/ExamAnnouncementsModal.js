@@ -5,7 +5,7 @@ import { NotificationOutlined, SendOutlined, CaretRightFilled } from '@ant-desig
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
-import { fetchAPIwithToken } from '~/utils/api'
+import { fetchAPIwithAdminToken } from '~/utils/api'
 
 const ExamAnnouncementsModal = () => {
   const { ExamStore: exam } = useStore()
@@ -17,7 +17,7 @@ const ExamAnnouncementsModal = () => {
   const [ form ] = Form.useForm()
   const sendAnnouncement = async ({ content }) => {
     try {
-      const res = await fetchAPIwithToken(`/exams/${exam.id}/announcements`, { content: content })
+      const res = await fetchAPIwithAdminToken(`/exams/${exam.id}/announcements`, { content: content })
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)

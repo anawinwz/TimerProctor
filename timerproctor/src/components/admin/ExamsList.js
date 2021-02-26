@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { message, Typography } from 'antd'
 
-import { fetchAPIwithToken } from '~/utils/api'
+import { fetchAPIwithAdminToken } from '~/utils/api'
 
 import ContentBox from './ContentBox'
 import AddExamButton from './AddExamButton'
@@ -15,7 +15,7 @@ const ExamsList = ({ pageSize = 5 }) => {
 
   useEffect(async () => {
     try {
-      const res = await fetchAPIwithToken('/exams')
+      const res = await fetchAPIwithAdminToken('/exams')
       const { status, payload, message } = res
       if (status === 'ok') {
         setExams(payload.exams)

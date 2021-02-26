@@ -5,7 +5,7 @@ import { CloseOutlined, CheckOutlined, InfoCircleFilled } from '@ant-design/icon
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
-import { fetchAPIwithToken } from '~/utils/api'
+import { fetchAPIwithAdminToken } from '~/utils/api'
 
 const ExamAllowLoginToggle = () => {
   const { ExamStore: exam } = useStore()
@@ -14,7 +14,7 @@ const ExamAllowLoginToggle = () => {
   const updateAllowLogin = useCallback(async allow => {
     try {
       setLoading(true)
-      const res = await fetchAPIwithToken(`/exams/${exam?.id}/allowLogin`, { allow })
+      const res = await fetchAPIwithAdminToken(`/exams/${exam?.id}/allowLogin`, { allow })
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)

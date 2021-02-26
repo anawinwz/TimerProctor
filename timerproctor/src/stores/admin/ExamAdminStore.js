@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx'
-import { fetchAPIwithToken } from '~/utils/api'
+import { fetchAPIwithAdminToken } from '~/utils/api'
 
 const initialCounts = {
   all: 0,
@@ -26,7 +26,7 @@ class ExamAdminStore {
   async startProctor() {
     try {
       const examId = this.examStore?.id
-      const res = await fetchAPIwithToken(`/exams/${examId}/startProctor`, {})
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/startProctor`, {})
       const { status, payload } = res
       if (status === 'ok') this.socketToken = payload.socketToken
     } catch {}
@@ -42,7 +42,7 @@ class ExamAdminStore {
         this.testers = {}
       }
 
-      const res = await fetchAPIwithToken(`/exams/${examId}/testers`)
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers`)
       if (res.status === 'ok') {
         this.testers = res.payload.testers
       } else {
@@ -108,7 +108,7 @@ class ExamAdminStore {
       await this.examStore.getInfo()
       const examId = this.examStore.id
 
-      const res = await fetchAPIwithToken(`/exams/${examId}/testers/${testerId}${scope ? `/${scope}` : ''}`)
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/${testerId}${scope ? `/${scope}` : ''}`)
       if (res.status === 'ok') {
         if (scope) this.updateTester(testerId, res.payload)
         else this.addTester(res.payload)
@@ -125,7 +125,7 @@ class ExamAdminStore {
     try {
       this.loading = true
       const examId = this.examStore?.id
-      const res = await fetchAPIwithToken(`/exams/${examId}/testers/count`)
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/count`)
       const { status, payload } = res
       if (status === 'ok') this.counts = Object.assign({}, isInit ? initialCounts : this.counts, payload.counts)
     } catch {
@@ -137,7 +137,7 @@ class ExamAdminStore {
   @action
   async editName(name) {
     const examId = this.examStore?.id 
-    const res = await fetchAPIwithToken(`/exams/${examId}/update`, { name })
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}/update`, { name })
     const { status, message } = res
     if (status === 'ok')  {
       this.examStore?.updateInfo({ name })
