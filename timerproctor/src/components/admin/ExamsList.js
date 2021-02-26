@@ -29,7 +29,7 @@ const ExamsList = ({ pageSize = 5 }) => {
     } catch (err) {
       if (err.needRelogin) {
         window.sessionStorage.setItem('nextURL', history.location.pathname)
-        history.replace(`/admin/login`)
+        return history.replace(`/admin/login`)
       }
       message.error(err.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบของฉัน')
     }

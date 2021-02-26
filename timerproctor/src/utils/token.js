@@ -29,6 +29,10 @@ class TokenManager {
       } else {
         const error = new Error(message || 'เกิดข้อผิดพลาดในการต่ออายุการเข้าสู่ระบบ')
         error.needRelogin = true
+
+        this.removeAccessToken()
+        this.removeRefreshToken()
+        
         return Promise.reject(error)
       }
     } catch {

@@ -17,11 +17,12 @@ class AuthStore {
   constructor(rootStore, fromAdmin = false) {
     this.rootStore = rootStore
     this.fromAdmin = fromAdmin
+    this.token = this.fromAdmin ? adminToken : userToken
   }
 
   @computed
   get isLoggedIn() {
-    return !!this.userId
+    return !!this.userId && !!this.token.accessToken
   }
 
   @action
@@ -65,13 +66,8 @@ class AuthStore {
     const { status, payload, message } = response
     if (status && status === 'ok') {
       const { accessToken, refreshToken, email, info } = payload
-      if (this.fromAdmin) {
-        adminToken.accessToken = accessToken
-        adminToken.refreshToken = refreshToken
-      } else {
-        userToken.accessToken = accessToken
-        userToken.refreshToken = refreshToken
-      }
+      this.token.accessToken = accessToken
+      this.token.refreshToken = refreshToken
 
       const { displayName, photoURL } = info
       this.setUser({ userId: user.uid, email, displayName, photoURL })
@@ -96,13 +92,9 @@ class AuthStore {
       await auth.signOut()
     } finally {
       this.setUser({ userId: '', email: '', displayName: '', photoURL: '' })
-      if (this.fromAdmin) {
-        adminToken.removeAccessToken()
-        adminToken.removeRefreshToken()
-      } else {
-        userToken.removeAccessToken()
-        userToken.removeRefreshToken()
-      }
+      
+      this.token.removeAccessToken()
+      this.token.removeRefreshToken()
     }
   }
 }
