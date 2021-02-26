@@ -42,9 +42,19 @@ export const fetchAPIwithToken = async (endpoint, body = null, token = userToken
     
     const { data } = res
     if (data.status === 'tokenExpired') {
-      return token.renewToken().then(() => {
-        fetchAPIwithToken(endpoint, body, token)
-      })
+      try {
+        await token.renewToken()
+        return fetchAPIwithToken(endpoint, body, token)
+      } catch (err) {
+        console.log(err, err.needRelogin)
+        if (err.needRelogin && token.isAdmin) {
+          window.sessionStorage.setItem('nextURL', window.location.pathname)
+          window.location = '/admin/login'
+          return false
+        } else {
+          throw err
+        }
+      }
     }
     return data
   } catch (err) {

@@ -27,7 +27,7 @@ class TokenManager {
         this.refreshToken = refreshToken
         return Promise.resolve(true)
       } else {
-        let error = new Error(message || 'เกิดข้อผิดพลาดในการต่ออายุการเข้าสู่ระบบ')
+        const error = new Error(message || 'เกิดข้อผิดพลาดในการต่ออายุการเข้าสู่ระบบ')
         error.needRelogin = true
 
         this.removeAccessToken()

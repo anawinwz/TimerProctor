@@ -15,7 +15,10 @@ const IntroLogin = () => {
   const login = useCallback(async method => {
     try {
       await auth.doAuthen(method)
-      history.replace(`/admin/dashboard`)
+
+      const nextURL = window.sessionStorage.getItem('nextURL')
+      if (nextURL) window.sessionStorage.removeItem('nextURL')
+      history.replace(nextURL || '/admin/dashboard')
     } catch (err) {
       message.error(err.message)
     }

@@ -26,10 +26,6 @@ const ProctoringsList = () => {
         throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
       }
     } catch (err) {
-      if (err.needRelogin) {
-        window.sessionStorage.setItem('nextURL', history.location.pathname)
-        return history.replace(`/admin/login`)
-      }
       message.error(err.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการคุมสอบของฉัน')
     }
   }, [])
