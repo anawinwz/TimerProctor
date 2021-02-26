@@ -68,7 +68,7 @@ router.post('/renew', async (req, res, next) => {
     }))
   } catch (err) {
     if (err.name === 'TokenExpiredError')
-      return res.json(jsonResponse('tokenExpired', 'การเข้าสู่ระบบหมดอายุ กรุณาเข้าสู่ระบบใหม่'))
+      return res.json(jsonResponse('relogin', 'การเข้าสู่ระบบหมดอายุ กรุณาเข้าสู่ระบบใหม่'))
     
     return res.json(jsonResponse('failed'))
   }
