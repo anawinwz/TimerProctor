@@ -42,7 +42,7 @@ const ApproveView = ({ testers = [] }) => {
   }, [socketStore.socket])
 
   const queue = testers.filter(tester => !tester.checkedByMe)
-  if (queue.length === 0) return <Empty />
+  if (queue.length === 0) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   
   const item = queue[0]
   return (

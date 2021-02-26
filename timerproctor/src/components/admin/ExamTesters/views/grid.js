@@ -11,7 +11,7 @@ const colSizeMap = {
 }
 
 const GridView = ({ pageSize = 6, testers = [] }) => {
-  if (testers.length === 0) return <Empty />
+  if (testers.length === 0) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   return testers.map(tester => (
     <Col key={tester._id} { ...colSizeMap[pageSize] }>
       <ExamTester tester={tester} />
