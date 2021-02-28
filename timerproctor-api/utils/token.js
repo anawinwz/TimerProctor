@@ -3,7 +3,8 @@ import {
   JWT_ADMINAUTH_SECRET,
   JWT_ADMINAUTH_REFRESH_SECRET,
   JWT_AUTH_SECRET,
-  JWT_AUTH_REFRESH_SECRET
+  JWT_AUTH_REFRESH_SECRET,
+  JWT_SOCKET_SECRET
 } from '../config'
 
 export const createAccessToken = (userId, isAdmin = false) =>
