@@ -7,17 +7,18 @@ import { populateExam, onlyDuringExam } from '../../middlewares/exam'
 import Exam from '../../models/exam'
 
 import { jsonResponse, getExamNsp } from '../../utils/helpers'
-import { getDataFromHTML, toForm } from '../../utils/gform'
+import { cleanFormForTesters, getDataFromHTML, toForm } from '../../utils/gform'
 import { getLastAttempt } from '../../utils/attempt'
 
 const router = Router({ mergeParams: true })
 
 router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res, next) => {
   const { linked = {} } = req.exam
-  const { provider, publicURL, cached } = linked
+  const { provider, publicURL, cached, settings } = linked
   if (provider !== 'gforms' || !publicURL)
     return res.json(jsonResponse('failed', 'Access Denied.'))
 
+  const hideFields = Object.values(settings?.autofillFields || {})
   if (!cached?.data || Date.now() - cached?.updatedAt > 30 * 60) {
     const response = await axios.get(publicURL)
     if (response.status !== 200) throw new Error(`HTTP Status: ${response.status}`)
@@ -33,10 +34,10 @@ router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res, nex
       }
     }).exec()
 
-    return res.json(jsonResponse('ok', form))
+    return res.json(jsonResponse('ok', cleanFormForTesters(form, { hideFields }) ))
   } else {
     const form = cached.data
-    return res.json(jsonResponse('ok', form))
+    return res.json(jsonResponse('ok', cleanFormForTesters(form, { hideFields }) ))
   }
 })
 
@@ -57,10 +58,29 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
 
   const { data: { sections } } = cached
 
-  const submitURL = publicURL.replace('/viewform', '/formResponse')
+  const autofill = Object.entries(linked?.settings?.autofill || {})
+    .filter(([_, value]) => value === true)
+    .map(([key, _]) => key)
 
+  const autofillFields = linked.settings?.autofillFields || {}
+
+  let bodyEntries = []
+  for (const type of autofill) {
+    const id = autofillFields?.[type]
+    if (id) {
+      const entryKey = `answer_${id}`
+      delete body?.[entryKey]
+
+      let entryValue = ''
+      if (type === 'email') entryValue = user.email
+
+      bodyEntries.push([entryKey, entryValue])
+    }
+  }
+  bodyEntries = [...bodyEntries, ...Object.entries(body)]
+  
   const submitParams = new URLSearchParams()
-  for (const [key, value] of Object.entries(body)) {
+  for (const [key, value] of bodyEntries) {
     if (key.match(/^answer_\d+$/)) {
       const entry = key.replace('answer_', 'entry.')
       if (Array.isArray(value)) {
@@ -77,7 +97,8 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
   submitParams.append('pageHistory', [...Array(sections.length).keys()])
 
   console.log(submitParams)
-
+  
+  const submitURL = publicURL.replace('/viewform', '/formResponse')
   axios.post(submitURL, submitParams, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   })

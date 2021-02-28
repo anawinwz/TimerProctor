@@ -178,7 +178,7 @@ const toSections = fields => {
   }
 }
 
-export const toForm = data => {
+export const toForm = (data = []) => {
   const fields = data[1][1].map(toFieldData)
   return {
     id: data[14],
@@ -187,6 +187,18 @@ export const toForm = data => {
     fields: fields,
     sections: toSections(fields)
   }
+}
+
+export const cleanFormForTesters = (form = {}, options = {}) => {
+  const { hideFields = [] } = options
+  
+  delete form.id
+  if (hideFields.length > 0) {
+    form.fields = form.fields.filter(field => !field.id || !hideFields.includes(field.id))
+    form.sections = toSections(form.fields)
+  }
+
+  return form
 }
 
 export const getDataFromHTML = html => {
