@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react'
-import { message, Skeleton } from 'antd'
+import { message, Skeleton, Tabs } from 'antd'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -35,7 +35,22 @@ const ExamSettings = () => {
   return (
     <ContentBox>
       <ExamTitle exam={exam} editable={true} onEdit={onEditName} />
-      <ExamSettingsForm /> 
+      <Tabs defaultActiveKey="general">
+        <Tabs.TabPane
+          tab="ทั่วไป"
+          key="general"
+        >
+          <ExamSettingsForm /> 
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab="กรรมการคุมสอบ"
+          key="proctors"
+        />
+        <Tabs.TabPane
+          tab="ผู้เข้าสอบ"
+          key="testtakers"
+        />
+      </Tabs>
     </ContentBox>
   )
 }

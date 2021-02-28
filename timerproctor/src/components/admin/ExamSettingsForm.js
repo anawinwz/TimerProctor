@@ -81,7 +81,6 @@ const ExamSettingsForm = () => {
       onValuesChange={onValuesChange}
       onFinish={updateExam}
     >
-      <Divider plain>ทั่วไป</Divider>
       <Form.Item label="วิธีกำหนดเวลาสอบ" name={['timeWindow', 'mode']} initialValue="schedule">
         <Radio.Group
           options={opt_timeWindowModes}
