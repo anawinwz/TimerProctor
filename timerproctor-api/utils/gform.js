@@ -59,6 +59,7 @@ const toFieldData = field => {
   const fieldTypeId = field[3]
   const fieldType = fieldTypes[fieldTypeId] || fieldTypeId
   let fieldData = {
+    fId: field[0],
     type: fieldType,
     title: field[1],
     desc: field[2]
@@ -194,7 +195,7 @@ export const cleanFormForTesters = (form = {}, options = {}) => {
   
   delete form.id
   if (hideFields.length > 0) {
-    form.fields = form.fields.filter(field => !field.id || !hideFields.includes(field.id))
+    form.fields = form.fields.filter(field => !field.fId || !hideFields.includes(field.fId))
     form.sections = toSections(form.fields)
   }
 

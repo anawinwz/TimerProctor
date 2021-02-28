@@ -56,7 +56,7 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
   if (!cached || !cached.data) 
     return res.json(jsonResponse('failed', 'ไม่พบรายการคำถามของการสอบ หรือคุณส่งคำตอบโดยไม่ได้รับอนุญาต'))
 
-  const { data: { sections } } = cached
+  const { data: { fields, sections } } = cached
 
   const autofill = Object.entries(linked?.settings?.autofill || {})
     .filter(([_, value]) => value === true)
@@ -66,16 +66,19 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
 
   let bodyEntries = []
   for (const type of autofill) {
-    const id = autofillFields?.[type]
-    if (id) {
-      const entryKey = `answer_${id}`
-      delete body?.[entryKey]
+    const fId = autofillFields?.[type]
+    if (!fId) continue
 
-      let entryValue = ''
-      if (type === 'email') entryValue = user.email
+    const field = fields.find(field => field.fId === fId)
+    if (!field) continue
 
-      bodyEntries.push([entryKey, entryValue])
-    }
+    const entryKey = `answer_${field.id}`
+    delete body?.[entryKey]
+
+    let entryValue = ''
+    if (type === 'email') entryValue = user.email
+
+    bodyEntries.push([entryKey, entryValue])
   }
   bodyEntries = [...bodyEntries, ...Object.entries(body)]
   
