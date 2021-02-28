@@ -95,14 +95,39 @@ router.post('/updateLinked', async (req, res, next) => {
       'linked.provider': provider,
       'linked.id': id
     })
+
     if (!exam) {
       return res.json(jsonResponse('error', 'ไม่พบการสอบที่เชื่อมโยงกับฟอร์มนี้ กรุณา [สร้างเป็นการสอบของฉัน] ก่อน'))
     } else {
-      console.log('/updateLinked', settings)
+      let updates = {
+        linked: {
+          settings: {}
+        }
+      }
+      const {
+        autofillEmail,
+        autofillEmailField,
+        autofillTesterID,
+        autofillTesterIDField
+      } = settings
 
-      res.json(jsonResponse('ok'))
+      updates.linked.settings.autofillEmail = {
+        enabled: autofillEmail || false,
+        field: autofillEmailField || ''
+      }
+      updates.linked.settings.autofillTesterID = {
+        enabled: autofillTesterID || false,
+        field: autofillTesterIDField || ''
+      }
+
+      
+      await Exam.updateOne({ _id: exam._id }, dot.dot(updates), { runValidators: true })
+      return res.json(jsonResponse('ok'))
     }
-  } catch {
+  } catch (err) {
+    if (err.name === 'ValidationError') 
+      return res.json(jsonResponse('failed', getFirstValidationErrMessage(err.errors)))
+      
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการบันทึกการตั้งค่าฟอร์มการสอบ'))
   }
 })
