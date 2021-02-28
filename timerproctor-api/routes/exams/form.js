@@ -69,7 +69,7 @@ router.post('/submit', authenticate, populateExam, async (req, res, next) => {
     const fId = autofillFields?.[type]
     if (!fId) continue
 
-    const field = fields.find(field => field.fId === fId)
+    const field = fields.find(field => field.fId == fId)
     if (!field) continue
 
     const entryKey = `answer_${field.id}`
