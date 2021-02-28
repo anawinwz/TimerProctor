@@ -195,7 +195,7 @@ export const cleanFormForTesters = (form = {}, options = {}) => {
   
   delete form.id
   if (hideFields.length > 0) {
-    form.fields = form.fields.filter(field => !field.fId || !hideFields.includes(field.fId))
+    form.fields = form.fields.filter(field => !field.fId || !hideFields.includes(String(field.fId)))
     form.sections = toSections(form.fields)
   }
 
