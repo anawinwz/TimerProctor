@@ -18,10 +18,20 @@ const schema = new Schema(
       provider: { type: String, enum: ['gforms'] },
       id: String,
       publicURL: String,
+      settings: {
+        autofillEmail: {
+          enabled: { type: Boolean, enum: false },
+          field: String
+        },
+        autofillTesterID: {
+          enabled: { type: Boolean, enum: false },
+          field: String
+        }
+      },
       cached: {
         updatedAt: Date,
         data: Object
-      } 
+      }
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: Date,
