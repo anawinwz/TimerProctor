@@ -111,13 +111,13 @@ router.post('/updateLinked', async (req, res, next) => {
         autofillTesterIDField
       } = settings
 
-      updates.linked.settings.autofillEmail = {
-        enabled: autofillEmail || false,
-        field: autofillEmailField || ''
+      updates.linked.settings.autofill = {
+        email: autofillEmail || false,
+        testerId: autofillTesterID || false
       }
-      updates.linked.settings.autofillTesterID = {
-        enabled: autofillTesterID || false,
-        field: autofillTesterIDField || ''
+      updates.linked.settings.autofillFields = {
+        email: autofillEmailField || '',
+        testerId: autofillTesterIDField || ''
       }
 
       

@@ -19,13 +19,13 @@ const schema = new Schema(
       id: String,
       publicURL: String,
       settings: {
-        autofillEmail: {
-          enabled: { type: Boolean, enum: false },
-          field: String
+        autofill: {
+          email: { type: Boolean, enum: false },
+          testerId: { type: Boolean, enum: false }
         },
-        autofillTesterID: {
-          enabled: { type: Boolean, enum: false },
-          field: String
+        autofillFields: {
+          email: String,
+          testerId: String
         }
       },
       cached: {
