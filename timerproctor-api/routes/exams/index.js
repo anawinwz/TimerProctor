@@ -81,6 +81,32 @@ router.post('/create', async (req, res, next) => {
   
 })
 
+router.post('/updateLinked', async (req, res, next) => {
+  try {
+    const { token } = req.body
+    const payload = jwt.verify(token, JWT_GAPPS_SECRET)
+    if (!payload) {
+      return jsonResponse('error', 'Access Denied.')
+    }
+
+    const { provider, id, settings } = payload
+
+    const exam = await Exam.findOne({
+      'linked.provider': provider,
+      'linked.id': id
+    })
+    if (!exam) {
+      return res.json(jsonResponse('error', 'ไม่พบการสอบที่เชื่อมโยงกับฟอร์มนี้ กรุณา [สร้างเป็นการสอบของฉัน] ก่อน'))
+    } else {
+      console.log('/updateLinked', settings)
+
+      res.json(jsonResponse('ok'))
+    }
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการบันทึกการตั้งค่าฟอร์มการสอบ'))
+  }
+})
+
 router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, res, next) => {
   const exam = req.exam
   
