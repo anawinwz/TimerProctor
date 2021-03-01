@@ -11,7 +11,7 @@ router.get('/', adminAuthen, async (req, res, next) => {
       .populate('exam', 'name timeWindow createdAt updatedAt')
     const exams = proctorings.map(proctoring => ({
       proctoringStatus: proctoring.status,
-      ...proctoring.exam
+      ...proctoring.exam.toJSON()
     }))
     return res.json(jsonResponse('ok', { proctorings: exams } ))
   } catch {
