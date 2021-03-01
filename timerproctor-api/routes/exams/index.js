@@ -76,7 +76,7 @@ router.post('/create', async (req, res, next) => {
       if (String(exam.owner) === String(ownerUser._id))
         return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
 
-      exam.populate('owner', (err, exam) => {
+      exam.populate('owner', 'email', (err, exam) => {
         if (err)
           return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบเพื่อรับเชิญเป็นกรรมการฯ`))
 
