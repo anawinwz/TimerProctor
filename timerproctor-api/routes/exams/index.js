@@ -17,6 +17,7 @@ import dayjs from '../../utils/dayjs'
 import { jsonResponse, getExamNsp, getFirstValidationErrMessage } from '../../utils/helpers'
 import { convertEventToSnapshot, getCompletedAttemptsCount, getLastAttempt } from '../../utils/attempt'
 import { createSocketToken } from '../../utils/token'
+import { ValidationError } from '../../utils/error'
 
 dot.keepArray = true
 
