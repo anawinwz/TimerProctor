@@ -24,7 +24,15 @@ const router = Router()
 
 router.get('/', adminAuthen, async (req, res, next) => {
   try {
-    const exams = await Exam.find({ owner: req.user._id })
+    const exams = await Exam.find(
+      { owner: req.user._id },
+      {
+        name: 1,
+        timeWindow: 1,
+        createdAt: 1,
+        updatedAt: 1
+      }
+    )
     return res.json(jsonResponse('ok', { exams: exams }))
   } catch (err) {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
