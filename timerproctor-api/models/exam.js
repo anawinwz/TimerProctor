@@ -54,14 +54,8 @@ const schema = new Schema(
         stoppedAt: Date
       },
       schedule: {
-        startDate: {
-          type: Date,
-          required: function () { return this.timeWindow.mode === 'schedule' }
-        },
-        endDate: {
-          type: Date,
-          required: function () { return this.timeWindow.mode === 'schedule' }
-        }
+        startDate: Date,
+        endDate: Date
       }
     },
     timer: {

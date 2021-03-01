@@ -367,9 +367,22 @@ router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req,
 
     let updates = req.body
 
-    const timeWindowMode = updates?.timeWindow?.mode
-    if (timeWindowMode && timeWindowMode !== 'schedule') 
-      updates.announcements = []
+    const { mode: timeWindowMode, schedule } = updates?.timeWindow || {}
+    if (timeWindowMode) {
+      if (timeWindowMode === 'schedule') {
+        const { startDate, endDate } = schedule || {}
+        if (!startDate)
+          throw new ValidationError({ 'timeWindow.schedule.startDate': 'ต้องระบุวัน-เวลาเริ่มการสอบ' })
+        if (!endDate)
+          throw new ValidationError({ 'timeWindow.schedule.endDate': 'ต้องระบุวัน-เวลาสิ้นสุดการสอบ' })
+
+        if (!dayjs(startDate).isBefore(endDate))
+          throw new ValidationError({ 'timeWindow.schedule.startDate': 'วัน-เวลาเริ่มต้องเกิดขึ้นก่อนวัน-เวลาสิ้นสุดการสอบ' })
+      } else {
+        updates.announcements = []
+      }
+    }
+
     
     updates.updatedAt = Date.now()
     await Exam.updateOne({ _id: exam._id }, dot.dot(updates), { runValidators: true })
