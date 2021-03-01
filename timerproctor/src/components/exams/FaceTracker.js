@@ -39,7 +39,7 @@ const FaceTracker = ({ signal = () => {} }) => {
 
   const takeSnapshot = useCallback(() => {
     const video = camInput.current
-    const image = getSnapshot(video, { quality: 0.7 })
+    const image = getSnapshot(video, { maxWidthOrHeight: 360, quality: 0.6 })
     attempt.submitSnapshot(image)
   })
 

@@ -23,11 +23,29 @@ export const getStream = () => new Promise(async(resolve, reject) => {
 })
 
 export const getSnapshot = (videoEl, options = {}) => {
-  const { scale = 1, quality = 0.92 } = options
+  const { maxWidthOrHeight, quality = 0.9 } = options
+
+  const orgWidth = videoEl.videoWidth
+  const orgHeight = videoEl.videoHeight
+  const whRatio = orgWidth/orgHeight
+  let width = orgWidth, height = orgHeight
+  if (maxWidthOrHeight) {
+    if (orgWidth > orgHeight) {
+      width = maxWidthOrHeight
+      height = whRatio * maxWidthOrHeight
+    } else {
+      width = 1/whRatio * maxWidthOrHeight
+      height = maxWidthOrHeight
+    }
+  }
 
   const canvas = document.createElement('canvas')
-  canvas.width = videoEl.videoWidth * scale
-  canvas.height = videoEl.videoHeight * scale
+  canvas.width = width
+  canvas.height = height
   canvas.getContext('2d').drawImage(videoEl, 0, 0, canvas.width, canvas.height)
-  return canvas.toDataURL('image/jpeg', quality)
+
+  const dataURL = canvas.toDataURL('image/jpeg', quality)
+  canvas.width = 0
+  canvas.height = 0
+  return dataURL
 }
