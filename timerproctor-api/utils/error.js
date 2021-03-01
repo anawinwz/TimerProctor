@@ -1,7 +1,9 @@
 export class ValidationError extends Error {
-  constructor(errors = {}) {
+  constructor(fieldName, message = `${fieldName} ไม่ถูกต้อง`) {
     super('There are some data validation errors ocurred.')
     this.name = 'ValidationError'
-    this.errors = errors
+    this.errors = {
+      [fieldName]: { message }
+    }
   }
 }
