@@ -91,10 +91,10 @@ const ExamSettingsForm = () => {
         toggles.schedule &&
         <>
           <Form.Item label="วัน-เวลาเริ่มการสอบ" name={['timeWindow', 'schedule', 'startDate']}>
-            <DatePicker showTime />
+            <DatePicker showTime showSecond={false} />
           </Form.Item>
           <Form.Item label="วัน-เวลาสิ้นสุดการสอบ" name={['timeWindow', 'schedule', 'endDate']}>
-            <DatePicker showTime />
+            <DatePicker showTime showSecond={false} />
           </Form.Item>
         </>
       }
