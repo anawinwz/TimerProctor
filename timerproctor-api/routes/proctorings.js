@@ -7,9 +7,10 @@ const router = Router()
 
 router.get('/', adminAuthen, async (req, res, next) => {
   try {
-    const proctorings = await Proctoring.find({ user: req.user._id }).populate('exam')
+    const proctorings = await Proctoring.find({ user: req.user._id }, { user: 0 })
+      .populate('exam', 'name timeWindow createdAt updatedAt')
     const exams = proctorings.map(proctoring => ({
-      status: proctoring.status,
+      proctoringStatus: proctoring.status,
       ...proctoring.exam
     }))
     return res.json(jsonResponse('ok', { proctorings: exams } ))
