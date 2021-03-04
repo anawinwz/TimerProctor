@@ -14,7 +14,7 @@ const ExamAllowLoginToggle = () => {
   const updateAllowLogin = useCallback(async allow => {
     try {
       setLoading(true)
-      const res = await fetchAPIwithAdminToken(`/exams/${exam?.id}/allowLogin`, { allow })
+      const res = await fetchAPIwithAdminToken(`/exams/${exam?.id}/allowLogin`, { allow }, 'PUT')
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)

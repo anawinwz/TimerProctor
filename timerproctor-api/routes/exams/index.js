@@ -377,7 +377,7 @@ router.post('/:id/stop', adminAuthen, populateExam, onlyExamOwner, async (req, r
   }
 })
 
-router.post('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
     const exam = req.exam
     const { allow } = req.body
