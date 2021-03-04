@@ -38,7 +38,10 @@ router.get('/', adminAuthen, populateExam, async (req, res) => {
     .populate('user', '_id info email')
 
     const proctors = results.reduce((acc, proctor) => {
-      const { _id, user, status } = proctor
+      const { _id, user = {}, status } = proctor
+      if (status !== 'accepted')
+        delete user.info
+      
       return {
         ...acc,
         [_id]: { ...user, status }
