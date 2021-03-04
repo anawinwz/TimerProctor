@@ -33,12 +33,14 @@ const ExamStatusControls = () => {
   const controlExam = useCallback(async (id, mode) => {
     if (!id) return false
     try {
-      const res = await fetchAPIwithAdminToken(`/exams/${id}/${mode}`, {})
+      const res = await fetchAPIwithAdminToken(`/exams/${id}/status`, {
+        status: mode
+      }, 'PUT')
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)
-        exam?.updateStatus(mode === 'start' ? 'started' : 'stopped')
-        exam.timeWindow.realtime.allowLogin = mode === 'start' ? true : false
+        exam?.updateStatus(mode)
+        exam.timeWindow.realtime.allowLogin = mode === 'started' ? true : false
       } else {
         throw new Error(msg || 'เกิดข้อผิดพลาดในการตั้งค่าสถานะการสอบ')
       }
@@ -47,7 +49,7 @@ const ExamStatusControls = () => {
     }
   }, [])
 
-  const startExam = useCallback(() => controlExam(exam?.id, 'start'), [exam?.id])
+  const startExam = useCallback(() => controlExam(exam?.id, 'started'), [exam?.id])
   const stopExam = useCallback(() => {
     Modal.confirm({
       title: `คุณแน่ใจหรือว่าต้องการสิ้นสุดการสอบ?`,
@@ -55,7 +57,7 @@ const ExamStatusControls = () => {
       okText: 'สิ้นสุดการสอบ',
       okType: 'danger',
       cancelText: 'ยกเลิก',
-      onOk: () => controlExam(exam?.id, 'stop')
+      onOk: () => controlExam(exam?.id, 'stopped')
     })
   }, [exam?.id])
 

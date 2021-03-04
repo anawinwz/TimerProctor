@@ -330,47 +330,31 @@ router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, nex
   }
 })
 
-router.post('/:id/start', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
   try {
+    const { status } = req.body
     const exam = req.exam
 
-    if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'started')
+    if (!['started', 'stopped'].includes(status))
+      return res.json(jsonResponse('failed', 'ข้อมูลสถานะไม่ถูกต้อง'))
+
+    if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === status)
       return res.json(jsonResponse('failed', 'ไม่สามารถสั่งเริ่มการสอบนี้ได้'))
   
-    exam.announcements = []
+    const newAllowLogin = status === 'started' ? true : false
 
-    exam.timeWindow.realtime.status = 'started'
-    exam.timeWindow.realtime.allowLogin = true
-    exam.timeWindow.realtime.startedAt = new Date()
+    exam.timeWindow.realtime.status = status
+    exam.timeWindow.realtime.allowLogin = newAllowLogin
+    if (status === 'started') {
+      exam.timeWindow.realtime.startedAt = new Date()
+      exam.announcements = []
+    }
     await exam.save()
 
-    getExamNsp(exam._id).emit('examStatus', 'started')
-    getExamNsp(exam._id).to('proctor').emit('examAllowLogin', true)
+    getExamNsp(exam._id).emit('examStatus', status)
+    getExamNsp(exam._id).to('proctor').emit('examAllowLogin', newAllowLogin)
 
-    return res.json(jsonResponse('ok', 'สั่งเริ่มการสอบแล้ว'))
-  } catch (err) {
-    console.log(err)
-    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าสถานะการสอบ'))
-  }
-})
-
-router.post('/:id/stop', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
-  try {
-    const exam = req.exam
-
-    if (exam.timeWindow.mode !== 'realtime' || exam.timeWindow.realtime.status === 'stopped')
-      return res.json(jsonResponse('failed', 'ไม่สามารถสั่งยุติการสอบนี้ได้'))
-
-    
-    exam.timeWindow.realtime.status = 'stopped'
-    exam.timeWindow.realtime.allowLogin = false
-    exam.timeWindow.realtime.stoppedAt = new Date()
-    await exam.save()
-
-    getExamNsp(exam._id).emit('examStatus', 'stopped')
-    getExamNsp(exam._id).to('proctor').emit('examAllowLogin', false)
-
-    return res.json(jsonResponse('ok', 'สั่งยุติการสอบแล้ว'))
+    return res.json(jsonResponse('ok', `สั่ง${status === 'started' ? 'เริ่ม':'สิ้นสุด'}การสอบแล้ว`))
   } catch (err) {
     console.log(err)
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าสถานะการสอบ'))
