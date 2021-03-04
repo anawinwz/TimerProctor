@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Alert, Button, Space } from 'antd'
-import { CameraOutlined } from '@ant-design/icons'
+import { Alert, Button, Space, Spin } from 'antd'
+import { CameraOutlined, LoadingOutlined } from '@ant-design/icons'
 import { getInputCanvas, loadModel } from '~/utils/faceDetection'
 import { getStream, getSnapshot } from '~/utils/camera'
 import { detectSingleFace } from 'face-api.js'
@@ -86,18 +86,25 @@ const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
     />
   )
   
+  const loading = sendState[0] !== 'IDLE'
   const canSendSnapshot = camState[0] === 'READY'
   return (
     <Space direction="vertical">
-      <Video ref={camInput} onPlay={onPlay} autoPlay muted playsInline preload="none" />
+      <Spin
+        spinning={loading}
+        indicator={<LoadingOutlined />}
+        tip={sendState[1]}
+      >
+        <Video ref={camInput} onPlay={onPlay} autoPlay muted playsInline preload="none" />
+      </Spin>
       <Button
         type="primary"
         icon={<CameraOutlined />}
         onClick={sendSnapshot}
         disabled={!canSendSnapshot}
-        loading={sendState[0] !== 'IDLE'}
+        loading={loading}
       >
-        { sendState[1] || 'ใช้ภาพนี้' }
+        ใช้ภาพนี้
       </Button>
     </Space>
   )
