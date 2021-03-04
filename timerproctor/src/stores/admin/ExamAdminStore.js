@@ -12,8 +12,10 @@ const initialCounts = {
 
 class ExamAdminStore {
   @observable loading = false
-  @observable socketToken = ''
+
   @observable lastExamId = ''
+
+  @observable socketToken = ''
   @observable counts = initialCounts
   @observable testers = {}
 
@@ -27,6 +29,8 @@ class ExamAdminStore {
     const examId = this.examStore?.id
     if (examId !== this.lastExamId) {
       this.lastExamId = examId
+      
+      this.socketToken = ''
       this.counts = initialCounts
       this.testers = {}
     }
