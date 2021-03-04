@@ -46,7 +46,6 @@ router.get('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
 })
-
 router.get('/count', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
     const exam = req.exam
@@ -73,7 +72,6 @@ router.get('/count', adminAuthen, populateExam, onlyExamOwner, async (req, res) 
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการนับจำนวนผู้เข้าสอบ'))
   }
 })
-
 router.post('/', authenticate, populateExam, async (req, res) => {
   try {
     const { _id: examId, authentication, timeWindow, maxAttempts = 1 } = req.exam

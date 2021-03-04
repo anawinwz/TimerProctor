@@ -6,8 +6,10 @@ import { JWT_GAPPS_SECRET } from '../../config'
 
 import { adminAuthen, roleBasedAuthen } from '../../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../../middlewares/exam'
-import testers from './testers'
+
 import form from './form'
+import testers from './testers'
+import proctors from './proctors'
 
 import Exam from '../../models/exam'
 import User from '../../models/user'
@@ -250,6 +252,7 @@ router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, asyn
 
 router.use('/:id/form', form)
 router.use('/:id/testers', testers)
+router.use('/:id/proctors', proctors)
 
 router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res) => {
   try {
