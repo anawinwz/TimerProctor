@@ -7,7 +7,7 @@ import { useStore } from '~/stores/admin'
 import ExamProctorsListLoading from './loading/ExamProctorsList'
 
 const ExamProctorsList = ({ addable = false }) => {
-  const { ExamStore: exam, ExamAdminStore: examAdmin } = useStore()
+  const { ExamAdminStore: examAdmin } = useStore()
   const [loading, setLoading] = useState(true)
 
   useEffect(async () => {
@@ -26,8 +26,7 @@ const ExamProctorsList = ({ addable = false }) => {
     <List
       grid={{ column: 2 }}
       dataSource={proctors}
-      renderItem={entry => {
-        const [proctor, _id] = entry
+      renderItem={([_id, proctor = {}]) => {
         const { info, email, status } = proctor
         return (
           <List.Item key={_id}>
