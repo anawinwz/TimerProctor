@@ -145,6 +145,13 @@ class ExamAdminStore {
       throw new Error(message || 'เกิดข้อผิดพลาดในการเปลี่ยนชื่อ')
     }
   }
+
+  @action
+  updateAllowLogin(allow) {
+    try {
+      this.examStore.timeWindow.realtime.allowLogin = allow
+    } catch {}
+  }
 }
 
 export default ExamAdminStore
