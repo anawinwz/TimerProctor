@@ -16,7 +16,7 @@ class AttemptStore {
   async getAttempt() {
     const examId = this.examStore.id
     
-    const { status: resStatus, message, payload } = await fetchAPIwithToken(`/exams/${examId}/attempt`, {})
+    const { status: resStatus, message, payload } = await fetchAPIwithToken(`/exams/${examId}/testers`, {})
     if (!resStatus || !['failed', 'ok'].includes(resStatus)) throw new Error(message || 'ไม่สามารถขอเริ่มการสอบได้')
     else if (resStatus === 'failed') throw new APIFailedError(message)
 
