@@ -19,13 +19,13 @@ const ExamProctorsList = ({ addable = false }) => {
     } catch {}
   }, [])
 
-  const proctor = Object.entries(examAdmin.proctors)
+  const proctors = Object.entries(examAdmin.proctors)
 
   if (loading) return <ExamProctorsListLoading addable={addable} />
   return <>
     <List
       grid={{ column: 2 }}
-      dataSource={examAdmin.proctors}
+      dataSource={proctors}
       renderItem={entry => {
         const [proctor, _id] = entry
         const { info, email, status } = proctor

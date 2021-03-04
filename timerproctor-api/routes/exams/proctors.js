@@ -19,7 +19,7 @@ router.get('/', adminAuthen, populateExam, async (req, res) => {
   const user = req.user
   const isExamOwner = String(exam.owner) === String(user._id)
   try {  
-    const proctors = await Proctoring.find(
+    const results = await Proctoring.find(
       {
         exam: exam._id, 
         ...(qStatus && qStatus !== 'all' ? 
@@ -35,8 +35,8 @@ router.get('/', adminAuthen, populateExam, async (req, res) => {
       }
     )
     .populate('user', '_id info email')
-    .toJSON()
-    .reduce((acc, proctor) => {
+
+    const proctors = results.toJSON().reduce((acc, proctor) => {
       const { _id, user, status } = proctor
       return {
         ...acc,
