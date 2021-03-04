@@ -4,18 +4,16 @@ import dot from 'dot-object'
 
 import { JWT_GAPPS_SECRET } from '../../config'
 
-import { adminAuthen, authenticate, roleBasedAuthen } from '../../middlewares/authentication'
+import { adminAuthen, roleBasedAuthen } from '../../middlewares/authentication'
 import { onlyExamOwner, populateExam } from '../../middlewares/exam'
 import testers from './testers'
 import form from './form'
 
 import Exam from '../../models/exam'
 import User from '../../models/user'
-import Attempt from '../../models/attempt'
 
 import dayjs from '../../utils/dayjs'
 import { jsonResponse, getExamNsp, getFirstValidationErrMessage } from '../../utils/helpers'
-import { convertEventToSnapshot, getCompletedAttemptsCount, getLastAttempt } from '../../utils/attempt'
 import { createSocketToken } from '../../utils/token'
 import { ValidationError } from '../../utils/error'
 

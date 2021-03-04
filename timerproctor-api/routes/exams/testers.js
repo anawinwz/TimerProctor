@@ -8,7 +8,12 @@ import Attempt from '../../models/attempt'
 import AttemptEvent from '../../models/attemptEvent'
 
 import { jsonResponse } from '../../utils/helpers'
-import { convertAttemptToTester, convertEventToSnapshot } from '../../utils/attempt'
+import {
+  convertAttemptToTester,
+  convertEventToSnapshot,
+  getCompletedAttemptsCount,
+  getLastAttempt
+} from '../../utils/attempt'
 
 const router = Router({ mergeParams: true })
 
