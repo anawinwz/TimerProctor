@@ -29,7 +29,7 @@ class ExamAdminStore {
     const examId = this.examStore?.id
     if (examId !== this.lastExamId) {
       this.lastExamId = examId
-      
+
       this.socketToken = ''
       this.counts = initialCounts
       this.testers = {}
@@ -50,6 +50,7 @@ class ExamAdminStore {
   async getTesters() {
     try {
       this.loading = true
+      const examId = this.examStore.id
       const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers`)
       if (res.status === 'ok') {
         this.testers = res.payload.testers
