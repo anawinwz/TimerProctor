@@ -8,10 +8,11 @@ const router = Router()
 router.get('/', adminAuthen, async (req, res) => {
   try {
     const proctorings = await Proctoring.find({ user: req.user._id }, { user: 0 })
+      .lean()
       .populate('exam', 'name timeWindow createdAt updatedAt')
     const exams = proctorings.map(proctoring => ({
       proctoringStatus: proctoring.status,
-      ...proctoring.exam.toJSON()
+      ...proctoring.exam
     }))
     return res.json(jsonResponse('ok', { proctorings: exams } ))
   } catch {
