@@ -10,6 +10,7 @@ import ContentBox from '~/components/admin/ContentBox'
 import ErrorContentBox from '~/components/admin/ErrorContentBox'
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
+import ExamProctorsList from '~/components/admin/ExamProctorsList'
 
 const ExamSettings = () => {
   const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
@@ -45,7 +46,9 @@ const ExamSettings = () => {
         <Tabs.TabPane
           tab="กรรมการคุมสอบ"
           key="proctors"
-        />
+        >
+          <ExamProctorsList />
+        </Tabs.TabPane>
         <Tabs.TabPane
           tab="ผู้เข้าสอบ"
           key="testtakers"
