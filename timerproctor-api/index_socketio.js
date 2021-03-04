@@ -25,6 +25,7 @@ export default io
 export const ioExam = io.of(ioNamespace)
 
 ioExam.on('connection', authorize({
+  required: true,
   secret: JWT_SOCKET_SECRET,
   timeout: 15000,
   decodedPropertyName: 'attempt',
