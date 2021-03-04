@@ -5,7 +5,7 @@ import { jsonResponse } from '../utils/helpers'
 
 const router = Router()
 
-router.get('/', adminAuthen, async (req, res, next) => {
+router.get('/', adminAuthen, async (req, res) => {
   try {
     const proctorings = await Proctoring.find({ user: req.user._id }, { user: 0 })
       .populate('exam', 'name timeWindow createdAt updatedAt')

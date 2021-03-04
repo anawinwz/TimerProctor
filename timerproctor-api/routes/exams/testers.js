@@ -18,7 +18,7 @@ import {
 
 const router = Router({ mergeParams: true })
 
-router.get('/', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.get('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   const { status } = req.query
   if (status && !['all', 'loggedin', 'authenticating', 'authenticated', 'started', 'completed'].includes(status))
     return res.json(jsonResponse('error', 'Invalid request.'))
@@ -47,7 +47,7 @@ router.get('/', adminAuthen, populateExam, onlyExamOwner, async (req, res, next)
   }
 })
 
-router.get('/count', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.get('/count', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
     const exam = req.exam
     const results = await Attempt.aggregate([
@@ -74,7 +74,7 @@ router.get('/count', adminAuthen, populateExam, onlyExamOwner, async (req, res, 
   }
 })
 
-router.post('/', authenticate, populateExam, async (req, res, next) => {
+router.post('/', authenticate, populateExam, async (req, res) => {
   try {
     const { _id: examId, authentication, timeWindow, maxAttempts = 1 } = req.exam
     const { _id: userId, email, info } = req.user
@@ -138,7 +138,7 @@ router.post('/', authenticate, populateExam, async (req, res, next) => {
   }
 })
 
-router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
+router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res) => {
   try {
     const attempt = await req.attempt
       .populate('user')
@@ -153,7 +153,7 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttem
   }
 })
 
-router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
+router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res) => {
   try {
     const { snapshots } = await req.attempt.populate('snapshots').execPopulate()
     return res.json(jsonResponse('ok', {
@@ -164,7 +164,7 @@ router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamOwner, pop
   }
 })
 
-router.get('/:testerId/events', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res, next) => {
+router.get('/:testerId/events', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res) => {
   try {
     const attempt = req.attempt
     const { type } = req.query

@@ -6,7 +6,7 @@ import users from './users'
 
 const router = Router()
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   return res.json(jsonResponse())
 })
 router.use('/exams', exams)

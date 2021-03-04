@@ -21,7 +21,7 @@ dot.keepArray = true
 
 const router = Router()
 
-router.get('/', adminAuthen, async (req, res, next) => {
+router.get('/', adminAuthen, async (req, res) => {
   try {
     const exams = await Exam.find(
       { owner: req.user._id },
@@ -38,7 +38,7 @@ router.get('/', adminAuthen, async (req, res, next) => {
   }
 })
 
-router.post('/create', async (req, res, next) => {
+router.post('/create', async (req, res) => {
   try {
     const { token } = req.body
     const payload = jwt.verify(token, JWT_GAPPS_SECRET)
@@ -88,7 +88,7 @@ router.post('/create', async (req, res, next) => {
   
 })
 
-router.post('/updateLinked', async (req, res, next) => {
+router.post('/updateLinked', async (req, res) => {
   try {
     const { token } = req.body
     const payload = jwt.verify(token, JWT_GAPPS_SECRET)
@@ -139,7 +139,7 @@ router.post('/updateLinked', async (req, res, next) => {
   }
 })
 
-router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, res, next) => {
+router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, res) => {
   const exam = req.exam
   
   let ret = exam.toJSON()
@@ -161,7 +161,7 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   
   return res.json(ret)
 })
-router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
     const exam = req.exam
 
@@ -199,7 +199,7 @@ router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res, 
   }
 })
 
-router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam, (req, res, next) => {
+router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam, (req, res) => {
   const exam = req.exam
   const { announcements } = exam
   if (exam.timeWindow.mode !== 'realtime')
@@ -220,7 +220,7 @@ router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam
     })
   }
 })
-router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   const exam = req.exam
   const { content } = req.body
   if (exam.timeWindow.mode !== 'realtime')
@@ -251,7 +251,7 @@ router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, asyn
 router.use('/:id/form', form)
 router.use('/:id/testers', testers)
 
-router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, next) => {
+router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res) => {
   try {
     const { _id: userId } = req.user
     const socketToken = createSocketToken(userId, userId, 'proctor')
@@ -264,7 +264,7 @@ router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res, nex
   }
 })
 
-router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
     const { status } = req.body
     const exam = req.exam
@@ -295,7 +295,7 @@ router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, 
   }
 })
 
-router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
     const exam = req.exam
     const { allow } = req.body

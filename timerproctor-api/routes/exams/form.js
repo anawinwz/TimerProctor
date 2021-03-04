@@ -12,7 +12,7 @@ import { getLastAttempt } from '../../utils/attempt'
 
 const router = Router({ mergeParams: true })
 
-router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res, next) => {
+router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res) => {
   const { linked = {} } = req.exam
   const { provider, publicURL, cached, settings } = linked
   if (provider !== 'gforms' || !publicURL)
@@ -41,7 +41,7 @@ router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res, nex
   }
 })
 
-router.post('/submit', authenticate, populateExam, async (req, res, next) => {
+router.post('/submit', authenticate, populateExam, async (req, res) => {
   const { body, exam, user } = req
 
   const { _id: userId } = user

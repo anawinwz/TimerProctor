@@ -9,7 +9,7 @@ import { createAccessToken, createRefreshToken } from '../utils/token'
 
 const router = Router()
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', async (req, res) => {
   const { idToken, admin = false } = req.body
 
   try {
@@ -55,7 +55,7 @@ router.post('/login', async (req, res, next) => {
   }
 })
 
-router.post('/renew', async (req, res, next) => {
+router.post('/renew', async (req, res) => {
   try {
     const { refreshToken, admin = false } = req.body
 
