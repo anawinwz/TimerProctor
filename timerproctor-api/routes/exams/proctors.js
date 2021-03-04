@@ -11,8 +11,8 @@ import { jsonResponse } from '../../utils/helpers'
 const router = Router({ mergeParams: true })
 
 router.get('/', adminAuthen, populateExam, async (req, res) => {
-  const { status } = req.query
-  if (status && !['all', 'invited', 'accepted', 'rejected'].includes(status))
+  const { qStatus } = req.query
+  if (qStatus && !['all', 'invited', 'accepted', 'rejected'].includes(qStatus))
     return res.json(jsonResponse('error', 'Invalid request.'))
   
   const exam = req.exam
@@ -22,8 +22,8 @@ router.get('/', adminAuthen, populateExam, async (req, res) => {
     const proctors = await Proctoring.find(
       {
         exam: exam._id, 
-        ...(status && status !== 'all' ? 
-          { status: status } : {}
+        ...(qStatus && qStatus !== 'all' ? 
+          { status: qStatus } : {}
         )
       }, 
       {
@@ -34,7 +34,15 @@ router.get('/', adminAuthen, populateExam, async (req, res) => {
         })
       }
     )
-    .populate('user')
+    .populate('user', '_id info email')
+    .toJSON()
+    .reduce((acc, proctor) => {
+      const { _id, user, status } = proctor
+      return {
+        ...acc,
+        [_id]: { ...user, status }
+      }
+    }, {})
 
     return res.json(jsonResponse('ok', { proctors }))
   } catch (err) {

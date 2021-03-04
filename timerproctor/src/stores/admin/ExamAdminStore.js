@@ -18,6 +18,7 @@ class ExamAdminStore {
   @observable socketToken = ''
   @observable counts = initialCounts
   @observable testers = {}
+  @observable proctors = {}
 
   constructor(rootStore) {
     this.rootStore = rootStore
@@ -33,6 +34,7 @@ class ExamAdminStore {
       this.socketToken = ''
       this.counts = initialCounts
       this.testers = {}
+      this.proctors = {}
     }
   }
 
@@ -55,7 +57,7 @@ class ExamAdminStore {
       if (res.status === 'ok') {
         this.testers = res.payload.testers
       } else {
-        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลหน้านี้')
+        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดรายชื่อผู้เข้าสอบ')
       }
     } finally {
       this.loading = false
@@ -124,6 +126,8 @@ class ExamAdminStore {
       } else {
         throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลผู้เข้าสอบ')
       }
+    } catch {
+      throw new Error('เกิดข้อผิดพลาดในการโหลดข้อมูลผู้เข้าสอบ')
     } finally {
       this.loading = false
     }
@@ -160,6 +164,21 @@ class ExamAdminStore {
     try {
       this.examStore.timeWindow.realtime.allowLogin = allow
     } catch {}
+  }
+
+  @action
+  async getProctors() {
+    try {
+      const examId = this.examStore.id
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/proctors`)
+      if (res.status === 'ok') {
+        this.proctors = res.payload.proctors
+      } else {
+        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดรายชื่อกรรมการคุมสอบ')
+      }
+    } catch {
+      throw new Error('เกิดข้อผิดพลาดในการโหลดรายชื่อกรรมการคุมสอบ')
+    }
   }
 }
 
