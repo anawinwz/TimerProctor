@@ -8,6 +8,7 @@ import Attempt from '../../models/attempt'
 import AttemptEvent from '../../models/attemptEvent'
 
 import { jsonResponse } from '../../utils/helpers'
+import { createSocketToken } from '../../utils/token'
 import {
   convertAttemptToTester,
   convertEventToSnapshot,
