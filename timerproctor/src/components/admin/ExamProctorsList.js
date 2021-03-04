@@ -1,12 +1,21 @@
 import { useEffect, useState } from 'react'
-import { List, Avatar } from 'antd'
+import styled from 'styled-components'
+import { List, Avatar, Form, Input, Button, Checkbox } from 'antd'
+import { MailOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import ExamProctorsListLoading from './loading/ExamProctorsList'
 
-const ExamProctorsList = ({ addable = false }) => {
+const StyledForm = styled(Form)`
+  margin-bottom: 10px;
+  .ant-form-item {
+    margin-bottom: 0px;
+  }
+`
+
+const ExamProctorsList = ({ addable = true }) => {
   const { ExamAdminStore: examAdmin } = useStore()
   const [loading, setLoading] = useState(true)
 
@@ -23,6 +32,22 @@ const ExamProctorsList = ({ addable = false }) => {
 
   if (loading) return <ExamProctorsListLoading addable={addable} />
   return <>
+    {
+      addable &&
+      <StyledForm>
+        <Form.Item name="email">
+          <Input
+            type="email"
+            prefix={<MailOutlined />}
+            placeholder="กรอกอีเมลบุคคลที่ต้องการเชิญ"
+            suffix={<Button type="primary" htmlType="submit">เชิญ</Button>}
+          />
+        </Form.Item>
+        <Form.Item name="notify">
+          <Checkbox>ส่งอีเมลแจ้งเตือน</Checkbox>
+        </Form.Item>
+      </StyledForm>
+    }
     <List
       grid={{ column: 2 }}
       dataSource={proctors}

@@ -9,7 +9,7 @@ const ExamProctorsListLoading = ({ addable = false }) => (
           width: '200px',
           marginBottom: '10px'
         }}
-        size="normal"
+        size="large"
       />
     }
     <Skeleton avatar active paragraph={{ rows: 0 }} />
