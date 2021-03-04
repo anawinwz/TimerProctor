@@ -14,6 +14,7 @@ const AdminExamPage = ({ match }) => {
 
   useEffect(async () => {
     await exam.getInfo({ id: match.params?.id })
+    examAdmin.clearInfo()
     await examAdmin.startProctor()
   }, [match.params?.id])
 

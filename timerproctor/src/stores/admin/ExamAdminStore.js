@@ -23,6 +23,16 @@ class ExamAdminStore {
   }
 
   @action
+  clearInfo() {
+    const examId = this.examStore?.id
+    if (examId !== this.lastExamId) {
+      this.lastExamId = examId
+      this.counts = initialCounts
+      this.testers = {}
+    }
+  }
+
+  @action
   async startProctor() {
     try {
       const examId = this.examStore?.id
@@ -36,12 +46,6 @@ class ExamAdminStore {
   async getTesters() {
     try {
       this.loading = true
-      const examId = this.examStore?.id
-      if (examId !== this.lastExamId) {
-        this.lastExamId = examId
-        this.testers = {}
-      }
-
       const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers`)
       if (res.status === 'ok') {
         this.testers = res.payload.testers
