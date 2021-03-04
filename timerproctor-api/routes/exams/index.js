@@ -163,6 +163,44 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   
   return res.json(ret)
 })
+router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
+  try {
+    const exam = req.exam
+
+    let updates = req.body
+
+    const { mode: timeWindowMode, schedule } = updates?.timeWindow || {}
+    if (timeWindowMode) {
+      if (timeWindowMode === 'schedule') {
+        const { startDate, endDate } = schedule || {}
+        if (!startDate)
+          throw new ValidationError('timeWindow.schedule.startDate', 'ต้องระบุวัน-เวลาเริ่มการสอบ')
+        if (!endDate)
+          throw new ValidationError('timeWindow.schedule.endDate', 'ต้องระบุวัน-เวลาสิ้นสุดการสอบ')
+
+        if (!dayjs(startDate).isBefore(endDate))
+          throw new ValidationError('timeWindow.schedule.startDate', 'วัน-เวลาเริ่มต้องเกิดขึ้นก่อนวัน-เวลาสิ้นสุดการสอบ')
+      } else {
+        updates.announcements = []
+      }
+    }
+
+    
+    updates.updatedAt = Date.now()
+    await Exam.updateOne({ _id: exam._id }, dot.dot(updates), { runValidators: true })
+
+    return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      return res.json(jsonResponse('failed', getFirstValidationErrMessage(err.errors)))
+    } else {
+      console.log(err)
+      return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบอัปเดตข้อมูลการสอบ'))
+    }
+    
+  }
+})
+
 router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam, (req, res, next) => {
   const exam = req.exam
   const { announcements } = exam
@@ -359,44 +397,6 @@ router.post('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (
   } catch (err) {
     console.log(err)
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าอนุญาตการเข้าห้องสอบ'))
-  }
-})
-
-router.post('/:id/update', adminAuthen, populateExam, onlyExamOwner, async (req, res, next) => {
-  try {
-    const exam = req.exam
-
-    let updates = req.body
-
-    const { mode: timeWindowMode, schedule } = updates?.timeWindow || {}
-    if (timeWindowMode) {
-      if (timeWindowMode === 'schedule') {
-        const { startDate, endDate } = schedule || {}
-        if (!startDate)
-          throw new ValidationError('timeWindow.schedule.startDate', 'ต้องระบุวัน-เวลาเริ่มการสอบ')
-        if (!endDate)
-          throw new ValidationError('timeWindow.schedule.endDate', 'ต้องระบุวัน-เวลาสิ้นสุดการสอบ')
-
-        if (!dayjs(startDate).isBefore(endDate))
-          throw new ValidationError('timeWindow.schedule.startDate', 'วัน-เวลาเริ่มต้องเกิดขึ้นก่อนวัน-เวลาสิ้นสุดการสอบ')
-      } else {
-        updates.announcements = []
-      }
-    }
-
-    
-    updates.updatedAt = Date.now()
-    await Exam.updateOne({ _id: exam._id }, dot.dot(updates), { runValidators: true })
-
-    return res.json(jsonResponse('ok', 'อัปเดตข้อมูลการสอบแล้ว'))
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      return res.json(jsonResponse('failed', getFirstValidationErrMessage(err.errors)))
-    } else {
-      console.log(err)
-      return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบอัปเดตข้อมูลการสอบ'))
-    }
-    
   }
 })
 

@@ -30,7 +30,7 @@ const ExamSettingsForm = () => {
   const updateExam = useCallback(async (data) => {
     setIsSubmit(true)
     try {
-      const res = await fetchAPIwithAdminToken(`/exams/${exam.id}/update`, data)
+      const res = await fetchAPIwithAdminToken(`/exams/${exam.id}`, data, 'PATCH')
       const { status } = res
       if (status === 'ok') {
         message.success(`อัปเดตข้อมูลการสอบเรียบร้อยแล้ว!`)

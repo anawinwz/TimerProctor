@@ -9,11 +9,13 @@ export class APIFailedError extends Error {
 
 export const baseUrl = process.env.REACT_APP_API_BASEURL || 'http://localhost:5000'
 
-export const fetchAPI = async (endpoint, body = null) => {
+export const fetchAPI = async (endpoint, body = null, method = null) => {
   try {
     const url = `${baseUrl}${endpoint}`
-    const res = await axios(url, !body ? {} : {
-      method: 'POST',
+    const res = await axios(url, !body ? {
+      method: method || 'GET'
+    } : {
+      method: method || 'POST',
       data: body
     })
     
@@ -24,16 +26,17 @@ export const fetchAPI = async (endpoint, body = null) => {
   }
 }
 
-export const fetchAPIwithToken = async (endpoint, body = null, token = userToken) => {
+export const fetchAPIwithToken = async (endpoint, body = null, method = null, token = userToken) => {
   try {
     const url = `${baseUrl}${endpoint}`
     const res = await axios(url, 
       !body ?
       {
+        method: method || 'GET',
         headers: { 'X-Access-Token': token.accessToken },
       } :
       {
-        method: 'POST',
+        method: method || 'POST',
         headers: {
           'X-Access-Token': token.accessToken,
         },
@@ -44,7 +47,7 @@ export const fetchAPIwithToken = async (endpoint, body = null, token = userToken
     if (data.status === 'tokenExpired') {
       try {
         await token.renewToken()
-        return fetchAPIwithToken(endpoint, body, token)
+        return fetchAPIwithToken(endpoint, body, null, token)
       } catch (err) {
         console.log(err, err.needRelogin)
         if (err.needRelogin && token.isAdmin) {
@@ -62,4 +65,4 @@ export const fetchAPIwithToken = async (endpoint, body = null, token = userToken
   }
 }
 
-export const fetchAPIwithAdminToken = (endpoint, body) => fetchAPIwithToken(endpoint, body, adminToken)
+export const fetchAPIwithAdminToken = (endpoint, body, method) => fetchAPIwithToken(endpoint, body, method, adminToken)

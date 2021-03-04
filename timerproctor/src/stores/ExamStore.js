@@ -31,7 +31,7 @@ class ExamStore {
     try {
       this.loading = true
 
-      const res = this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`, null, this.token) : await fetchAPI(`/exams/${this.id}`)
+      const res = this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`, null, null, this.token) : await fetchAPI(`/exams/${this.id}`)
       Object.assign(this.info, {}, res)
       this.name = this.info.name
       this.lastFetch = Date.now()
@@ -66,7 +66,7 @@ class ExamStore {
   @action
   async getAnnouncements() {
     try {
-      const { status, payload } = await fetchAPIwithToken(`/exams/${this.id}/announcements`, null, this.token)
+      const { status, payload } = await fetchAPIwithToken(`/exams/${this.id}/announcements`, null, null, this.token)
       this.announcements = (status === 'ok') ? payload.announcements : []
     } catch {
       this.announcements = []
