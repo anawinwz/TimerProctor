@@ -107,6 +107,8 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
     if (!proctorUser) {
       const newUser = new User({ email: email })
       proctorUser = await newUser.save()
+    } else if (String(proctorUser._id) === String(exam.owner)) {
+      return res.json(jsonResponse('failed', 'ไม่สามารถเชิญอาจารย์เจ้าของการสอบเป็นกรรมการฯ ได้'))
     }
 
     const proctor = new Proctoring({
