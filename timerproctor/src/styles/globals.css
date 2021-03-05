@@ -23,3 +23,7 @@ body {
 tr.ant-table-row.risk td, tr.ant-table-row.risk td:hover {
   background: #FFF0CA !important;
 }
+
+.d-block {
+  display: block;
+}

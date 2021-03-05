@@ -1,43 +1,62 @@
-import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import { message, Typography } from 'antd'
+import { useCallback } from 'react'
+import { List, Typography } from 'antd'
+import { CalendarOutlined, LoadingOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
 
-import { fetchAPIwithAdminToken } from '~/utils/api'
+import { observer } from 'mobx-react-lite'
 
-import ContentBox from './ContentBox'
-import AddExamButton from './AddExamButton'
-import ExamsListTable from './ExamsListTable'
+import StatusTag from './StatusTag'
 
-const { Title } = Typography
+import { rangeStr, shortDateStr } from '~/utils/date'
 
-const ExamsList = ({ pageSize = 5 }) => {
-  const history = useHistory()
+const ExamsList = ({ pageSize = 5, loading = false, dataSource = [], header = null }) => {
+  const renderExam = useCallback(exam => {
+    const { _id, name, status, timeWindow, updatedAt, createdAt } = exam
 
-  const [loading, setLoading] = useState(true)
-  const [exams, setExams] = useState([])
-
-  useEffect(async () => {
-    try {
-      const res = await fetchAPIwithAdminToken('/exams')
-      const { status, payload, message } = res
-      if (status === 'ok') {
-        setExams(payload.exams)
-        setLoading(false)
-      } else {
-        throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบของฉัน')
-      }
-    } catch (err) {
-      message.error(err.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบของฉัน')
-    }
+    let str_timeWindow = ''
+    if (status === 'unset' || !timeWindow) str_timeWindow = '-'
+    else if (timeWindow.mode === 'realtime') str_timeWindow = 'ตามเวลาจริง'
+    else str_timeWindow = rangeStr(timeWindow.schedule?.startDate, timeWindow.schedule?.endDate)
+  
+    return (
+      <List.Item>
+        <List.Item.Meta
+          title={
+            <Link to={`/admin/exams/${_id}/${status === 'unset' ? 'settings' : 'overview'}`}>
+              <Typography.Title level={5}>{ name }</Typography.Title>
+            </Link>
+          }
+          description={
+            <>
+              <StatusTag className="d-block" status={status} />
+              <Typography.Text className="d-block">
+                <CalendarOutlined /> { str_timeWindow }
+              </Typography.Text>
+              <Typography.Text className="d-block" type="secondary">
+                { shortDateStr(updatedAt || createdAt) }
+              </Typography.Text>
+            </>
+          }
+        />
+      </List.Item>
+    )
   }, [])
 
   return (
-    <ContentBox>
-      <Title level={3}>การสอบของฉัน</Title>
-      <AddExamButton />
-      <ExamsListTable loading={loading} pageSize={pageSize} dataSource={exams} />
-    </ContentBox>
-  ) 
+    <List
+      bordered
+      header={header}
+      loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
+      size="small"
+      rowKey="_id"
+      dataSource={dataSource}
+      pagination={{ 
+        position: 'bottom',
+        pageSize: pageSize,
+      }}
+      renderItem={renderExam}
+    />
+  )
 }
 
-export default ExamsList
+export default observer(ExamsList)

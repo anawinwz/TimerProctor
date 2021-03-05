@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import { message, Typography } from 'antd'
 
 import { fetchAPIwithAdminToken } from '~/utils/api'
 
 import ContentBox from './ContentBox'
-import ExamsListTable from './ExamsListTable'
+import ExamsList from './ExamsList'
 
 const { Title } = Typography
 
-const ProctoringsList = () => {
-  const history = useHistory()
-
+const ProctoringsListBox = () => {
   const [loading, setLoading] = useState(true)
   const [proctorings, setProctorings] = useState([])
 
@@ -33,9 +30,9 @@ const ProctoringsList = () => {
   return (
     <ContentBox>
       <Title level={3}>การคุมสอบของฉัน</Title>
-      <ExamsListTable loading={loading} dataSource={proctorings} />
+      <ExamsList loading={loading} dataSource={proctorings} />
     </ContentBox>
   ) 
 }
 
-export default ProctoringsList
+export default ProctoringsListBox

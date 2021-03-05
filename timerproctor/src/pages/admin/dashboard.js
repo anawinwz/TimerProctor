@@ -1,13 +1,13 @@
-import ExamsList from '~/components/admin/ExamsList'
-import ProctoringsList from '~/components/admin/ProctoringsList'
+import ExamsListBox from '~/components/admin/ExamsListBox'
+import ProctoringsListBox from '~/components/admin/ProctoringsListBox'
 import useAppTitle from '~/hooks/useAppTitle'
 
 const AdminDashboard = () => {
   useAppTitle('หน้าหลัก', { admin: true })
   return (
     <>
-      <ExamsList />
-      <ProctoringsList />
+      <ExamsListBox />
+      <ProctoringsListBox />
     </>
   )
 }
