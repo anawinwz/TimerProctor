@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components'
-import { List, Avatar, Form, Input, Button, Checkbox } from 'antd'
+import { List, Avatar, Form, Input, Button, Checkbox, message } from 'antd'
 import { MailOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
@@ -18,6 +18,7 @@ const StyledForm = styled(Form)`
 const ExamProctorsList = ({ addable = true }) => {
   const { ExamAdminStore: examAdmin } = useStore()
   const [loading, setLoading] = useState(true)
+  const [inviting, setInviting] = useState(false)
 
   useEffect(async () => {
     setLoading(true)
@@ -25,26 +26,47 @@ const ExamProctorsList = ({ addable = true }) => {
     try {
       await examAdmin?.getProctors()
       setLoading(false)
-    } catch {}
+    } catch (err) {
+      message.error(err.message)
+    }
   }, [])
 
   const proctors = Object.entries(examAdmin.proctors)
+  const inviteProctor = useCallback(async ({ email, notify = false }) => {
+    setInviting(true)
+    try {
+      await examAdmin?.inviteProctor(email, notify)
+    } catch (err) {
+      message.error(err.message)
+    } finally {
+      setInviting(false)
+    }
+  }, [])
 
   if (loading) return <ExamProctorsListLoading addable={addable} />
   return <>
     {
       addable &&
-      <StyledForm>
+      <StyledForm onFinish={inviteProctor}>
         <Form.Item name="email">
           <Input
             type="email"
             prefix={<MailOutlined />}
             placeholder="กรอกอีเมลบุคคลที่ต้องการเชิญ"
-            suffix={<Button type="primary" htmlType="submit">เชิญ</Button>}
+            disabled={inviting}
+            suffix={
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={inviting}
+              >
+                เชิญ
+              </Button>
+            }
           />
         </Form.Item>
-        <Form.Item name="notify">
-          <Checkbox>ส่งอีเมลแจ้งเตือน</Checkbox>
+        <Form.Item name="notify" valuePropName="checked">
+          <Checkbox disabled={inviting}>ส่งอีเมลแจ้งเตือน</Checkbox>
         </Form.Item>
       </StyledForm>
     }

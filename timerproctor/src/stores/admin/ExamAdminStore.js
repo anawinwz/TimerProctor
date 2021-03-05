@@ -150,7 +150,7 @@ class ExamAdminStore {
   @action
   async editName(name) {
     const examId = this.examStore?.id 
-    const res = await fetchAPIwithAdminToken(`/exams/${examId}/update`, { name })
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}`, { name }, 'PATCH')
     const { status, message } = res
     if (status === 'ok')  {
       this.examStore?.updateInfo({ name })
@@ -178,6 +178,20 @@ class ExamAdminStore {
       }
     } catch {
       throw new Error('เกิดข้อผิดพลาดในการโหลดรายชื่อกรรมการคุมสอบ')
+    }
+  }
+
+  @action
+  async inviteProctor(email = '', notify = false) {
+    if (!email) return false
+    
+    const examId = this.examStore?.id 
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}/proctors`, { email, notify })
+    const { status, message } = res
+    if (status === 'ok')  {
+      return this.getProctors()
+    } else {
+      throw new Error(message || 'เกิดข้อผิดพลาดในการเชิญบุคคลนี้เป็นกรรมการ')
     }
   }
 }
