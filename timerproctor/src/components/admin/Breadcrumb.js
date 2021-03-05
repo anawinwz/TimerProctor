@@ -2,11 +2,10 @@ import { Breadcrumb } from 'antd'
 import { withRouter, Link } from 'react-router-dom'
 
 const breadcrumbNameMap = {
-  '/exams': 'การสอบของฉัน',
+  '/exams': 'การสอบและการคุมสอบ',
   '/exams/:id/settings': 'ตั้งค่าการสอบ',
   '/exams/:id/overview': 'ภาพรวมการสอบ',
   '/exams/:id/testers/:id' : 'รายงานผู้เข้าสอบ',
-  '/proctorings': 'การคุมสอบของฉัน',
 }
 
 const AdminBreadcrumb = withRouter(props => {
