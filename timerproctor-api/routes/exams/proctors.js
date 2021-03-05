@@ -76,7 +76,8 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
     ])
 
     if (results.length > 0) {
-      const { status } = results[0]
+      const proctor = results[0]
+      const { status } = proctor
 
       if (status !== 'rejected') {
         return res.json(jsonResponse(
@@ -85,6 +86,16 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
             'คุณเคยเชิญบุคคลนี้ไปแล้ว แต่ยังไม่มีการตอบรับ/ปฏิเสธ' :
             'บุคคลนี้กำลังเป็นกรรมการคุมสอบอยู่แล้ว'
         ))
+      } else {
+        proctor.status = 'invited'
+        proctor.invitedAt = Date.now
+        proctor.respondedAt = undefined
+        await proctor.save()
+
+        if (notify) {
+        }
+        
+        return res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] ${notify ? 'พร้อมอีเมลแจ้งเตือน' : ''}อีกครั้งเรียบร้อยแล้ว`))
       }
     }
   } catch {
