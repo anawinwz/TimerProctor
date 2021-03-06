@@ -6,7 +6,7 @@ import StatusTag from './StatusTag'
 
 import { rangeStr, shortDateStr } from '~/utils/date'
 
-const ExamsListItem = ({ exam }) => {
+const ExamsListItem = ({ exam, onProctoringRespond = () => {} }) => {
   const { _id, name, status, timeWindow, updatedAt, createdAt, proctoring } = exam
 
   let str_timeWindow = ''
@@ -18,8 +18,8 @@ const ExamsListItem = ({ exam }) => {
   return (
     <List.Item
       actions={proctoring?.status === 'invited' ? [
-        <a href="#">ตอบรับ</a>,
-        <a href="#">ปฏิเสธ</a>
+        <a onClick={() => onProctoringRespond(proctoring.id, 'accepted')}>ตอบรับ</a>,
+        <a onClick={() => onProctoringRespond(proctoring.id, 'rejected')}>ปฏิเสธ</a>
       ] : []}
     >
       <List.Item.Meta
