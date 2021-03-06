@@ -3,10 +3,10 @@ import { List } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
-import ExamListItem from './ExamListItem'
+import ExamsListItem from './ExamsListItem'
 
 const ExamsList = ({ pageSize = 5, loading = false, dataSource = [], header = null }) => {
-  const renderExam = useCallback(exam => <ExamListItem exam={exam} />, [])
+  const renderExam = useCallback(exam => <ExamsListItem exam={exam} />, [])
 
   return (
     <List

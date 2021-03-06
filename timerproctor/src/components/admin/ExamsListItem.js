@@ -6,7 +6,7 @@ import StatusTag from './StatusTag'
 
 import { rangeStr, shortDateStr } from '~/utils/date'
 
-const ExamListItem = ({ exam }) => {
+const ExamsListItem = ({ exam }) => {
   const { _id, name, status, timeWindow, updatedAt, createdAt, proctoring } = exam
 
   let str_timeWindow = ''
@@ -46,4 +46,4 @@ const ExamListItem = ({ exam }) => {
   )
 }
 
-export default ExamListItem
+export default ExamsListItem
