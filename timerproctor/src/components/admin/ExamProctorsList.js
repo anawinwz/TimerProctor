@@ -6,6 +6,8 @@ import { MailOutlined } from '@ant-design/icons'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
+import { proctorStatuses } from '~/utils/const'
+
 import ExamProctorsListLoading from './loading/ExamProctorsList'
 
 const StyledForm = styled(Form)`
@@ -80,7 +82,7 @@ const ExamProctorsList = ({ addable = true }) => {
             <List.Item.Meta
               avatar={<Avatar src={info?.photoURL} size="large" />}
               title={info?.displayName || email}
-              description={status}
+              description={proctorStatuses[status] || status}
             />
           </List.Item>
         )

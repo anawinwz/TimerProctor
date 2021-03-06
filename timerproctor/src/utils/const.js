@@ -30,3 +30,9 @@ export const testerEventsType = {
 }
 
 export const photoRejectReasons = ['รูปไม่ชัดเจน', 'ประเภทบัตรไม่ถูกต้อง', 'บุคคลในภาพและในบัตรไม่ตรง']
+
+export const proctorStatuses = {
+  invited: 'ส่งคำเชิญแล้ว',
+  accepted: 'ตอบรับแล้ว',
+  rejected: 'ปฏิเสธแล้ว'
+}
