@@ -1,4 +1,6 @@
 import Exam from '../models/exam'
+import Proctoring from '../models/proctoring'
+
 import { jsonResponse } from '../utils/helpers'
 import dayjs from '../utils/dayjs'
 
@@ -13,8 +15,32 @@ export const populateExam = async (req, res, next) => {
   }
 }
 
-export const onlyExamOwner = async (req, res, next) => {
+export const onlyExamOwner = (req, res, next) => {
   if (String(req.exam.owner) === String(req.user._id)) return next()
+  return res.json(jsonResponse('failed', 'Access Denied.'))
+}
+
+export const onlyExamProctors = async (req, res, next) => {
+  const proctoring = await Proctoring.findOne({
+    exam: req.exam._id,
+    user: req.user._id,
+    status: 'accepted'
+  })
+
+  if (proctoring) return next()
+  return res.json(jsonResponse('failed', 'Access Denied.'))
+}
+
+export const onlyExamPersonnel = async (req, res, next) => {
+  if (String(req.exam.owner) === String(req.user._id)) return next()
+  
+  const proctoring = await Proctoring.findOne({
+    exam: req.exam._id,
+    user: req.user._id,
+    status: 'accepted'
+  })
+
+  if (proctoring) return next()
   return res.json(jsonResponse('failed', 'Access Denied.'))
 }
 
