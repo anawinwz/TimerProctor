@@ -5,7 +5,7 @@ import dot from 'dot-object'
 import { JWT_GAPPS_SECRET } from '../../config'
 
 import { adminAuthen, roleBasedAuthen } from '../../middlewares/authentication'
-import { onlyExamOwner, populateExam } from '../../middlewares/exam'
+import { onlyExamOwner, onlyExamPersonnel, populateExam } from '../../middlewares/exam'
 
 import form from './form'
 import testers from './testers'
@@ -254,7 +254,7 @@ router.use('/:id/form', form)
 router.use('/:id/testers', testers)
 router.use('/:id/proctors', proctors)
 
-router.post('/:id/startProctor', adminAuthen, populateExam, async (req, res) => {
+router.post('/:id/startProctor', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) => {
   try {
     const { _id: userId } = req.user
     const socketToken = createSocketToken(userId, userId, 'proctor')

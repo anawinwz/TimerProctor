@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import { authenticate, adminAuthen } from '../../middlewares/authentication'
-import { onlyExamOwner, populateExam } from '../../middlewares/exam'
+import { onlyExamPersonnel, populateExam } from '../../middlewares/exam'
 import { populateAttempt } from '../../middlewares/attempt'
 
 import Attempt from '../../models/attempt'
@@ -18,7 +18,7 @@ import {
 
 const router = Router({ mergeParams: true })
 
-router.get('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
+router.get('/', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) => {
   const { status } = req.query
   if (status && !['all', 'loggedin', 'authenticating', 'authenticated', 'started', 'completed'].includes(status))
     return res.json(jsonResponse('error', 'Invalid request.'))
@@ -46,7 +46,7 @@ router.get('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบ'))
   }
 })
-router.get('/count', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
+router.get('/count', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) => {
   try {
     const exam = req.exam
     const results = await Attempt.aggregate([
@@ -136,7 +136,7 @@ router.post('/', authenticate, populateExam, async (req, res) => {
   }
 })
 
-router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res) => {
+router.get('/:testerId', adminAuthen, populateExam, onlyExamPersonnel, populateAttempt, async (req, res) => {
   try {
     const attempt = await req.attempt
       .populate('user')
@@ -151,7 +151,7 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamOwner, populateAttem
   }
 })
 
-router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res) => {
+router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamPersonnel, populateAttempt, async (req, res) => {
   try {
     const { snapshots } = await req.attempt.populate('snapshots').execPopulate()
     return res.json(jsonResponse('ok', {
@@ -162,7 +162,7 @@ router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamOwner, pop
   }
 })
 
-router.get('/:testerId/events', adminAuthen, populateExam, onlyExamOwner, populateAttempt, async (req, res) => {
+router.get('/:testerId/events', adminAuthen, populateExam, onlyExamPersonnel, populateAttempt, async (req, res) => {
   try {
     const attempt = req.attempt
     const { type } = req.query
