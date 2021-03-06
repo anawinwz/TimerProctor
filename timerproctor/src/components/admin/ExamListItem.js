@@ -7,20 +7,28 @@ import StatusTag from './StatusTag'
 import { rangeStr, shortDateStr } from '~/utils/date'
 
 const ExamListItem = ({ exam }) => {
-  const { _id, name, status, timeWindow, updatedAt, createdAt } = exam
+  const { _id, name, status, timeWindow, updatedAt, createdAt, proctoring } = exam
 
   let str_timeWindow = ''
   if (status === 'unset' || !timeWindow) str_timeWindow = '-'
   else if (timeWindow.mode === 'realtime') str_timeWindow = 'ตามเวลาจริง'
   else str_timeWindow = rangeStr(timeWindow.schedule?.startDate, timeWindow.schedule?.endDate)
 
+  const canLink = !proctoring?.status || proctoring.status === 'accepted'
   return (
-    <List.Item>
+    <List.Item
+      actions={proctoring?.status === 'invited' ? [
+        <a href="#">ตอบรับ</a>,
+        <a href="#">ปฏิเสธ</a>
+      ] : []}
+    >
       <List.Item.Meta
         title={
-          <Link to={`/admin/exams/${_id}/${status === 'unset' ? 'settings' : 'overview'}`}>
+          canLink ? 
+            <Link to={`/admin/exams/${_id}/${status === 'unset' ? 'settings' : 'overview'}`}>
+              <Typography.Title level={5}>{ name }</Typography.Title>
+            </Link> :
             <Typography.Title level={5}>{ name }</Typography.Title>
-          </Link>
         }
         description={
           <>

@@ -10,12 +10,13 @@ const ExamsList = ({ pageSize = 5, loading = false, dataSource = [], header = nu
 
   return (
     <List
-      bordered
-      header={header}
       loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
       size="small"
-      rowKey="_id"
+      itemLayout="horizontal"
+      bordered
+      header={header}
       dataSource={dataSource}
+      rowKey="_id"
       pagination={{ 
         position: 'bottom',
         pageSize: pageSize,
