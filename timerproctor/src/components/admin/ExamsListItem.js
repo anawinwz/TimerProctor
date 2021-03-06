@@ -17,6 +17,7 @@ const ExamsListItem = ({ exam, onProctoringRespond = () => {} }) => {
   const canLink = !proctoring?.status || proctoring.status === 'accepted'
   return (
     <List.Item
+      key={_id}
       actions={proctoring?.status === 'invited' ? [
         <a onClick={() => onProctoringRespond(proctoring.id, 'accepted')}>ตอบรับ</a>,
         <a onClick={() => onProctoringRespond(proctoring.id, 'rejected')}>ปฏิเสธ</a>
