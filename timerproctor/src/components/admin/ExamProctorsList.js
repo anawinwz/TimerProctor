@@ -82,7 +82,10 @@ const ExamProctorsList = ({ addable = true }) => {
             <List.Item.Meta
               avatar={<Avatar src={info?.photoURL} size="large" />}
               title={info?.displayName || email}
-              description={proctorStatuses[status] || status}
+              description={<>
+                { proctorStatuses[status] || status }{' '}
+                { status === 'rejected' && <a onClick={() => inviteProctor({ email })}>เชิญอีกครั้ง</a> }
+              </>}
             />
           </List.Item>
         )
