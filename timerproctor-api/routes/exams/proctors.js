@@ -87,10 +87,13 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
             'บุคคลนี้กำลังเป็นกรรมการคุมสอบอยู่แล้ว'
         ))
       } else {
-        proctor.status = 'invited'
-        proctor.invitedAt = Date.now
-        proctor.respondedAt = undefined
-        await proctor.save()
+        await Proctoring.updateOne({ _id: proctor._id }, {
+          $set: {
+            status: 'invited',
+            invitedAt: Date.now(),
+            respondedAt: undefined
+          }
+        })
 
         if (notify) {
         }
