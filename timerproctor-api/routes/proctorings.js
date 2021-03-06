@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import Proctoring from '../models/proctoring'
 import { adminAuthen } from '../middlewares/authentication'
-import { jsonResponse } from '../utils/helpers'
+import { jsonResponse, getFirstValidationErrMessage } from '../utils/helpers'
 
 const router = Router()
 
@@ -51,11 +51,14 @@ router.patch('/:id', adminAuthen, async (req, res) => {
       return res.json(jsonResponse('failed', `คุณ${status === 'accepted' ? 'ตอบรับ':'ปฏิเสธ'}การคุมสอบนี้ไปแล้ว`))
     
     proctorings.status = newStatus
-    proctorings.respondedAt = Date.now
+    proctorings.respondedAt = Date.now()
     await proctorings.save()
 
     res.json(jsonResponse('ok', `${newStatus === 'accepted' ? 'ตอบรับ':'ปฏิเสธ'}การคุมสอบนี้สำเร็จ!`))
   } catch (err) {
+    if (err.name === 'ValidationError') 
+      return res.json(jsonResponse('failed', getFirstValidationErrMessage(err.errors)))
+    
     res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในระบบตอบรับ/ปฏิเสธการคุมสอบ'))
   }
 })

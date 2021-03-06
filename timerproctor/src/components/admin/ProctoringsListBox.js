@@ -10,7 +10,7 @@ const { Title } = Typography
 
 const ProctoringsListBox = () => {
   const [loading, setLoading] = useState(true)
-  const [lastRefresh, setLastRefresh] = useState(Date.now)
+  const [lastRefresh, setLastRefresh] = useState(Date.now())
   const [proctorings, setProctorings] = useState([])
 
   useEffect(async () => {
@@ -34,7 +34,7 @@ const ProctoringsListBox = () => {
       const res = await fetchAPIwithAdminToken(`/proctorings/${id}`, { status: respond }, 'PATCH')
       const { status, payload, message } = res
       if (status === 'ok') {
-        setLastRefresh(Date.now)
+        setLastRefresh(Date.now())
       } else {
         throw new Error(message || 'เกิดข้อผิดพลาดในการตอบรับ/ปฏิเสธการคุมสอบ')
       }
