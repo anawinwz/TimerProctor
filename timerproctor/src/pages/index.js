@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
@@ -10,11 +10,9 @@ const MainPage = () => {
   const { AppStore: { hydrated } } = useStore()
   if (!hydrated) return <Loading />
   return (
-    <Router>
-      <Switch>
-        <Route path="/exams/:id" component={ExamPage} />
-      </Switch>
-    </Router>
+    <Switch>
+      <Route path="/exams/:id" component={ExamPage} />
+    </Switch>
   )
 }
 
