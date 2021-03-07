@@ -26,9 +26,10 @@ const ExamPage = ({ match }) => {
   const { ExamStore: exam, SocketStore: socketStore, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
   const [socketLoading, setSocketLoading] = useState(false)
 
-  useEffect(() => {
-    exam.getInfo({ id: match.params?.id })
-  }, [match.params?.id])
+  useEffect(async () => {
+    exam.clearInfo()
+    await exam.getInfo({ id: match.params.id })
+  }, [match.params.id])
 
   useTitle(exam?.name || 'TimerProctor')
 

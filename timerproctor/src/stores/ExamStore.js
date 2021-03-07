@@ -19,6 +19,16 @@ class ExamStore {
   }
 
   @action
+  clearInfo() {
+    this.lastFetch = 0
+
+    this.id = ''
+    this.name = ''
+    this.info = {}
+    this.announcements = []
+  }
+
+  @action
   async getInfo(options = {}) {
     const { id, reload = false } = options
     if (!reload && this.info?.name && (!id || this.id === id) && Date.now() - this.lastFetch < 15000) {
