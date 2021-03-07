@@ -15,7 +15,7 @@ import Exam from '../../models/exam'
 import User from '../../models/user'
 
 import dayjs from '../../utils/dayjs'
-import { jsonResponse, getExamNsp, getFirstValidationErrMessage } from '../../utils/helpers'
+import { jsonResponse, getExamNsp, getFirstValidationErrMessage, isExamProctor } from '../../utils/helpers'
 import { createSocketToken } from '../../utils/token'
 import { ValidationError } from '../../utils/error'
 
@@ -147,7 +147,11 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   let ret = exam.toJSON()
   delete ret.linked?.cached?.data
 
-  const isThisExamPersonnel = String(req.user?._id) === String(exam.owner)
+  const isThisExamPersonnel = req.fromAdmin && (
+    String(req.user._id) === String(exam.owner) ||
+    await isExamProctor(exam.id, req.user._id)
+  )
+
   if (!req.fromAdmin || !isThisExamPersonnel) {
     delete ret.announcements
 
@@ -201,13 +205,16 @@ router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res) 
   }
 })
 
-router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam, (req, res) => {
+router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam, async (req, res) => {
   const exam = req.exam
   const { announcements } = exam
   if (exam.timeWindow.mode !== 'realtime')
     return res.json(jsonResponse('failed', 'ไม่สามารถเรียกดูประกาศของการสอบประเภทนี้ได้'))
   
-  const isThisExamPersonnel = String(req.user?._id) === String(exam.owner)
+  const isThisExamPersonnel = req.fromAdmin && (
+    String(req.user._id) === String(exam.owner) ||
+    await isExamProctor(exam.id, req.user._id)
+  )
 
   if (!req.fromAdmin || !isThisExamPersonnel) {
     let ret = []
