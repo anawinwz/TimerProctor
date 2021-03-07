@@ -1,5 +1,5 @@
-// import 'antd/dist/antd.css'
-// import './styles/globals.css'
+import 'antd/dist/antd.css'
+import './styles/globals.css'
 
 import { BrowserRouter, Router, Switch, Route } from 'react-router-dom'
 import { createBrowserHistory, createMemoryHistory } from 'history'
