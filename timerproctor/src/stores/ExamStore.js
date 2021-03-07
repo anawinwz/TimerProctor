@@ -3,7 +3,7 @@ import { fetchAPI, fetchAPIwithToken } from '~/utils/api'
 import { userToken, adminToken } from '~/utils/token'
 
 class ExamStore {
-  @observable loading = false
+  @observable loading = true
   @observable error = null
   @observable lastFetch = 0
 
