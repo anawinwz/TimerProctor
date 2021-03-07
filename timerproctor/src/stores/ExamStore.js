@@ -42,11 +42,19 @@ class ExamStore {
       this.loading = true
 
       const res = this.fromAdmin ? await fetchAPIwithToken(`/exams/${this.id}`, null, null, this.token) : await fetchAPI(`/exams/${this.id}`)
-      Object.assign(this.info, {}, res)
-      this.name = this.info.name
-      this.lastFetch = Date.now()
-      this.error = null
-      return this.info
+      const { status, payload, message } = res
+      if (status === 'ok') {
+        const { exam } = payload
+        Object.assign(this.info, {}, exam)
+
+        this.name = this.info.name
+        
+        this.lastFetch = Date.now()
+        this.error = null
+        return this.info
+      } else {
+        throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบ')
+      }
     } catch (err) {
       Object.assign(this.info, {})
       this.error = err

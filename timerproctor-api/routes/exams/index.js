@@ -152,7 +152,7 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
     await isExamProctor(exam.id, req.user._id)
   )
 
-  if (!req.fromAdmin || !isThisExamPersonnel) {
+  if (!req.fromAdmin) {
     delete ret.announcements
 
     delete ret.owner
@@ -163,9 +163,11 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
     
     delete ret.timeWindow?.realtime?.allowLogin
     delete ret.authentication?.login?.email?.allowedDomains
+  } else if (!isThisExamPersonnel) {
+    return res.json(jsonResponse('failed', 'คุณไม่มีสิทธิ์เข้าถึงการสอบนี้'))
   }
   
-  return res.json(ret)
+  return res.json(jsonResponse('ok', { exam: ret }))
 })
 router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
