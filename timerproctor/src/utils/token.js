@@ -1,7 +1,7 @@
 import { fetchAPI } from './api'
 import jwt_decode from 'jwt-decode'
 
-const localStorage = window.localStorage
+const localStorage = typeof window === 'undefined' ? {} : window.localStorage
 
 class TokenManager {
   constructor(key = '', isAdmin = false) {

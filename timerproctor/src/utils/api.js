@@ -7,7 +7,7 @@ export class APIFailedError extends Error {
   }
 }
 
-export const baseUrl = process.env.REACT_APP_API_BASEURL || 'http://localhost:5000'
+export const baseUrl = process.env.RAZZLE_API_BASEURL || 'http://localhost:5000'
 
 export const fetchAPI = async (endpoint, body = null, method = null) => {
   try {

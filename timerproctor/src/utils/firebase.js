@@ -12,7 +12,7 @@ const config = {
   measurementId: "G-JCVPT80SMR"
 }
 
-const instance = firebase.initializeApp(config)
+const instance = typeof window === 'undefined' ? { auth: () => {}, storage: () => {} } : firebase.initializeApp(config)
 
 export const auth = instance.auth()
 
