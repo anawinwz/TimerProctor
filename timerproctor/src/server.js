@@ -17,6 +17,10 @@ export const renderApp = (req, res) => {
     </StaticRouter>
   )
 
+  if (context.url) {
+    return res.redirect(context.url, context.status || 302)
+  }
+
   const html = template
     .replace(/%PUBLIC_URL%/g, '')
     .replace(
