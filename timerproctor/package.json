@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "razzle start",
     "build": "razzle build",
-    "test": "razzle test"
+    "test": "razzle test",
+    "start": "NODE_ENV=production node build/server.js"
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",

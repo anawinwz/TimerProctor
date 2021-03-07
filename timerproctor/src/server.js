@@ -1,3 +1,4 @@
+import { StaticRouter } from 'react-router-dom'
 import App from './App'
 import React from 'react'
 import express from 'express'
@@ -10,7 +11,11 @@ const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
 export const renderApp = (req, res) => {
   const context = {}
-  const markup = renderToString(<App context={context} />)
+  const markup = renderToString(
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  )
 
   const html = template
     .replace(/%PUBLIC_URL%/g, '')
