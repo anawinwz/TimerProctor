@@ -6,7 +6,8 @@ import { renderToString } from 'react-dom/server'
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
 export const renderApp = (req, res) => {
-  const markup = renderToString(<App />)
+  const context = {}
+  const markup = renderToString(<App context={context} />)
 
   const html =
     // prettier-ignore
@@ -29,7 +30,7 @@ export const renderApp = (req, res) => {
   </body>
 </html>`
 
-  return { html }
+  return { html, status: context.status }
 }
 
 const server = express()
@@ -38,8 +39,8 @@ server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .get('/*', (req, res) => {
-    const { html } = renderApp(req, res)
-    res.send(html)
+    const { html, status = 200 } = renderApp(req, res)
+    res.status(status).send(html)
   })
 
 export default server

@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 class AppStore {
-  @observable hydrated = false
+  @observable hydrated = typeof window === 'undefined' ? true: false
   @action hydrateFinish() {
     this.hydrated = true
   }
