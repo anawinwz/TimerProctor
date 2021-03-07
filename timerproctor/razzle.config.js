@@ -1,6 +1,18 @@
 // razzle.config.js
 module.exports = {
-  plugins: ['scss'],
+  plugins: [{
+    name: 'less',
+    options: {
+      less: {
+        dev: {
+          javascriptEnabled: true
+        },
+        prod: {
+          javascriptEnabled: true
+        }
+      }
+    }
+  }],
   modifyWebpackConfig({
     env: {
       target, // the target 'node' or 'web'

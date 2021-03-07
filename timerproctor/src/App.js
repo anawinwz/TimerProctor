@@ -1,5 +1,5 @@
-import 'antd/dist/antd.css'
-import './styles/globals.css'
+import 'antd/dist/antd.less'
+import './styles/App.less'
 
 import { Switch, Route } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
