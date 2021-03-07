@@ -1,9 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import { showModal } from '~/utils/modal'
+
+import Loading from '~/components/exams/Loading'
+import Error from '~/components/exams/Error'
+import NotFound from '~/components/exams/NotFound'
 
 import ExamSettingsPage from './[id]/settings'
 import ExamOverviewPage from './[id]/overview'
@@ -11,18 +15,23 @@ import ExamTesterPage from './[id]/testers/[testerId]'
 
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
+  const [socketLoading, setSocketLoading] = useState(false)
 
   useEffect(async () => {
-    await exam.getInfo({ id: match.params?.id })
-    examAdmin.clearInfo()
-    await examAdmin.startProctor()
-  }, [match.params?.id])
+    exam.clearInfo()
+    try {
+      await exam.getInfo({ id: match.params.id })
+      examAdmin.clearInfo()
+      await examAdmin.startProctor()
+    } catch {}
+  }, [match.params.id])
 
   useEffect(() => {
     if (examAdmin.socketToken) {
       try {
+        setSocketLoading(true)
         socketStore.init(`/exams/${exam.id}`)
-          .on('authenticated', () => {})
+          .on('authenticated', () => setSocketLoading(false))
           .on('unauthorized', error => {
             throw error
           })
@@ -68,6 +77,9 @@ const AdminExamPage = ({ match }) => {
     }
   }, [examAdmin.socketToken])
 
+  if (exam.loading || socketLoading) return <Loading />
+  else if (exam.error) return <Error />
+  else if (!exam.info.name) return <NotFound />
   return (
     <Switch>
       <Route exact path={match.url + '/settings'} component={ExamSettingsPage} />

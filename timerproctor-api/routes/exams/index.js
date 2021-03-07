@@ -45,7 +45,7 @@ router.post('/create', async (req, res) => {
     const { token } = req.body
     const payload = jwt.verify(token, JWT_GAPPS_SECRET)
     if (!payload) {
-      return jsonResponse('error', 'Access Denied.')
+      return res.json(jsonResponse('error', 'Access Denied.'))
     }
 
     const { provider, id, publicURL, ownerEmail, name, desc } = payload
@@ -95,7 +95,7 @@ router.post('/updateLinked', async (req, res) => {
     const { token } = req.body
     const payload = jwt.verify(token, JWT_GAPPS_SECRET)
     if (!payload) {
-      return jsonResponse('error', 'Access Denied.')
+      return res.json(jsonResponse('error', 'Access Denied.'))
     }
 
     const { provider, id, settings } = payload
