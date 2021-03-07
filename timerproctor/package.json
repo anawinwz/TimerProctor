@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test"
+    "dev": "razzle start",
+    "build": "razzle build",
+    "test": "razzle test"
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
@@ -20,7 +20,6 @@
     "mobx": "^5.15.7",
     "mobx-persist": "^0.4.1",
     "mobx-react-lite": "^2.2.2",
-    "razzle": "^3.3.13",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -33,7 +32,8 @@
   },
   "devDependencies": {
     "babel-plugin-root-import": "^6.6.0",
-    "babel-plugin-styled-components": "^1.8.0"
+    "babel-plugin-styled-components": "^1.8.0",
+    "razzle": "^3.3.13"
   },
   "browserslist": {
     "production": [
