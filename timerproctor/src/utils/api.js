@@ -52,8 +52,8 @@ export const fetchAPIwithToken = async (endpoint, body = null, method = null, to
       } catch (err) {
         console.log(err, err.needRelogin)
         if (err.needRelogin && token.isAdmin) {
-          setNextURL(window.location.pathname)
-          window.location = '/admin/login'
+          const q = setNextURL(window.location.pathname) ? '' : `?nextURL=${encodeURIComponent(window.location.pathname)}`
+          window.location = `/admin/login${q}`
           return false
         } else {
           throw err
