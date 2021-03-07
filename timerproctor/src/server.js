@@ -18,24 +18,24 @@ export const renderApp = (req, res) => {
   )
 
   if (context.url) {
-    return res.redirect(context.url, context.status || 302)
+    res.redirect(context.status || 302, context.url)
+  } else {
+    const html = template
+      .replace(/%PUBLIC_URL%/g, '')
+      .replace(
+        /<!--%ASSETS_CLIENT_CSS%-->/g,
+        assets.client.css ? `<link rel="stylesheet" href="${assets.client.css}">` : ''
+      )
+      .replace(/%ASSETS_CLIENT_CSS%/g, assets.client.css)
+      .replace('<!--%MARKUP%-->', markup)
+      .replace(
+        /<!--%ASSETS_CLIENT_CSS%-->/g,
+        `<script src="${assets.client.js}" defer crossorigin></script>`
+      )
+      .replace(/%ASSETS_CLIENT_JS%/g, assets.client.js)
+    
+    res.status(context.status || 200).send(html)
   }
-
-  const html = template
-    .replace(/%PUBLIC_URL%/g, '')
-    .replace(
-      /<!--%ASSETS_CLIENT_CSS%-->/g,
-      assets.client.css ? `<link rel="stylesheet" href="${assets.client.css}">` : ''
-    )
-    .replace(/%ASSETS_CLIENT_CSS%/g, assets.client.css)
-    .replace('<!--%MARKUP%-->', markup)
-    .replace(
-      /<!--%ASSETS_CLIENT_CSS%-->/g,
-      `<script src="${assets.client.js}" defer crossorigin></script>`
-    )
-    .replace(/%ASSETS_CLIENT_JS%/g, assets.client.js)
-
-  return { html, status: context.status }
 }
 
 const server = express()
@@ -44,8 +44,7 @@ server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .get('/*', (req, res) => {
-    const { html, status = 200 } = renderApp(req, res)
-    res.status(status).send(html)
+    renderApp(req, res)
   })
 
 export default server
