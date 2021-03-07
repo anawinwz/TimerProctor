@@ -14,7 +14,7 @@ const AdminLayout = ({ children }) => {
   const { location } = useHistory()
   const { AuthStore: { isLoggedIn, token } } = useStore()
   if (!isLoggedIn || !token.accessToken) {
-    window.sessionStorage.setItem('nextURL', location.pathname)
+    if (typeof window !== 'undefined') window.sessionStorage.setItem('nextURL', location.pathname)
     return <Redirect to="/admin/login" />
   }
   return (

@@ -12,7 +12,7 @@ const IntroLogin = () => {
   
   const history = useHistory()
   
-  const nextURL = useMemo(() => window.sessionStorage.getItem('nextURL'), [])
+  const nextURL = useMemo(() => typeof window !== 'undefined' ? window.sessionStorage.getItem('nextURL') : '', [])
   const login = useCallback(async method => {
     try {
       await auth.doAuthen(method)
