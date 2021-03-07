@@ -7,7 +7,7 @@ import { useStore } from '~/stores/admin'
 
 import { fetchAPIwithAdminToken } from '~/utils/api'
 
-const ExamAllowLoginToggle = () => {
+const ExamAllowLoginToggle = ({ disabled = false }) => {
   const { ExamStore: exam } = useStore()
 
   const [loading, setLoading] = useState(false)
@@ -31,16 +31,19 @@ const ExamAllowLoginToggle = () => {
   }, [exam?.id])
 
   const allowLogin = exam?.timeWindow?.realtime?.allowLogin || false
+  const defaultTooltip = exam.status === 'started' ? 'อนุญาตให้ผู้เข้าสอบเข้ามาในห้องสอบเพิ่มเติมได้อยู่' : 'อนุญาตให้ผู้เข้าสอบเข้าสู่ระบบมารอในห้องสอบก่อนเริ่มได้'
+  const tooltip = disabled ? 'ปรับได้เฉพาะอาจารย์เจ้าของการสอบ' : defaultTooltip
   return (
-    <Tooltip placement="topLeft" title={exam.status === 'started' ? 'อนุญาตให้ผู้เข้าสอบเข้ามาในห้องสอบเพิ่มเติมได้อยู่' : 'อนุญาตให้ผู้เข้าสอบเข้าสู่ระบบมารอในห้องสอบก่อนเริ่มได้'}>
+    <Tooltip placement="topLeft" title={tooltip} color={disabled ? 'red' : null}>
       <Switch
+        disabled={disabled}
         loading={loading}
         checked={allowLogin}
         checkedChildren={<CheckOutlined />}
         unCheckedChildren={<CloseOutlined />}
         onChange={updateAllowLogin}
       />{' '}
-      อนุญาตให้เข้าห้องสอบได้ <InfoCircleFilled />
+      อนุญาตให้เข้าห้องสอบได้ {disabled ? null: <InfoCircleFilled />}
     </Tooltip>
   )
 }

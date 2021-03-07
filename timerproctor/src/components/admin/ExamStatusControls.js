@@ -25,10 +25,11 @@ const ExamSettingsButton = observer(({ examId = '' }) => (
 ))
 
 const ExamStatusControls = () => {
-  const { ExamStore: exam } = useStore()
+  const { ExamStore: exam, ExamAdminStore: examAdmin } = useStore()
 
   const status = exam?.status
   const timeWindowMode = exam?.timeWindow?.mode
+  const isExamOwner = examAdmin?.isExamOwner
 
   const controlExam = useCallback(async (id, mode) => {
     if (!id) return false
@@ -66,18 +67,28 @@ const ExamStatusControls = () => {
     <Space direction="vertical">
       { status === 'started' ? (
         <Wrapper>
-          <Button type="danger" icon={<StopOutlined />} onClick={stopExam}>สิ้นสุดการสอบ</Button> 
+          <Button
+            type="danger"
+            icon={<StopOutlined />}
+            onClick={stopExam}
+            disabled={!isExamOwner}
+          >สิ้นสุดการสอบ</Button> 
           <span>ดำเนินไปแล้ว { fromNowStr(exam?.timeWindow?.realtime?.startedAt) }</span>
         </Wrapper>
         ) : (
         <Wrapper>
-          <Button type="primary" icon={<CaretRightFilled />} onClick={startExam}>เริ่มการสอบ</Button>
+          <Button
+            type="primary"
+            icon={<CaretRightFilled />}
+            onClick={startExam}
+            disabled={!isExamOwner}
+          >เริ่มการสอบ</Button>
           <ExamAnnouncementsModal />
           <ExamSettingsButton examId={exam.id} />
         </Wrapper>
         )
       }
-      <ExamAllowLoginToggle />
+      <ExamAllowLoginToggle disabled={!isExamOwner} />
     </Space>
   )
 }

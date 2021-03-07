@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { fetchAPIwithAdminToken } from '~/utils/api'
 
 const initialCounts = {
@@ -23,6 +23,7 @@ class ExamAdminStore {
   constructor(rootStore) {
     this.rootStore = rootStore
     this.examStore = rootStore.ExamStore
+    this.authStore = rootStore.AuthStore
   }
 
   @action
@@ -36,6 +37,13 @@ class ExamAdminStore {
       this.testers = {}
       this.proctors = {}
     }
+  }
+
+  @computed
+  get isExamOwner() {
+    let ownerId = this.examStore?.info?.owner
+    if (typeof ownerId?._id === 'string') ownerId = ownerId._id
+    return ownerId === this.authStore.userId
   }
 
   @action
