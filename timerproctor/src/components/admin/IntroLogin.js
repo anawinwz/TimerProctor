@@ -1,8 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Card, Space, Typography, message, Alert } from 'antd'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
+
+import { getNextURL, removeNextURL } from '~/utils/redirect'
 
 import Logo from '~/components/Logo'
 import GoogleLoginButton from '~/components/buttons/GoogleLoginButton'
@@ -11,13 +13,13 @@ const IntroLogin = () => {
   const { AuthStore: auth } = useStore()
   
   const history = useHistory()
-  
-  const nextURL = useMemo(() => typeof window !== 'undefined' ? window.sessionStorage.getItem('nextURL') : '', [])
+  const nextURL = getNextURL(history.location)
+
   const login = useCallback(async method => {
     try {
       await auth.doAuthen(method)
 
-      if (nextURL) window.sessionStorage.removeItem('nextURL')
+      if (nextURL) removeNextURL()
       history.replace(nextURL || '/admin/dashboard')
     } catch (err) {
       message.error(err.message)

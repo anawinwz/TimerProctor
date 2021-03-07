@@ -5,6 +5,7 @@ import { useStore } from '~/stores/admin'
 import Header from '~/components/admin/Header'
 import Breadcrumb from '~/components/admin/Breadcrumb'
 import CenterContainer from '~/components/CenterContainer'
+import { setNextURL } from '~/utils/redirect'
 
 const headerMargin = {
   marginTop: '10px'
@@ -14,8 +15,10 @@ const AdminLayout = ({ children }) => {
   const { location } = useHistory()
   const { AuthStore: { isLoggedIn, token } } = useStore()
   if (!isLoggedIn || !token.accessToken) {
-    if (typeof window !== 'undefined') window.sessionStorage.setItem('nextURL', location.pathname)
-    return <Redirect to="/admin/login" />
+    let q = ''
+    if (!setNextURL(location.pathname))
+      q = `?nextURL=${encodeURIComponent(location.pathname)}`
+    return <Redirect to={`/admin/login${q}`} />
   }
   return (
     <>

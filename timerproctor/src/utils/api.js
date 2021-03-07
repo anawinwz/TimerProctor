@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { setNextURL } from './redirect'
 import { userToken, adminToken } from './token'
 
 export class APIFailedError extends Error {
@@ -51,7 +52,7 @@ export const fetchAPIwithToken = async (endpoint, body = null, method = null, to
       } catch (err) {
         console.log(err, err.needRelogin)
         if (err.needRelogin && token.isAdmin) {
-          window.sessionStorage.setItem('nextURL', window.location.pathname)
+          setNextURL(window.location.pathname)
           window.location = '/admin/login'
           return false
         } else {
