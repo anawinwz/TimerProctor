@@ -1,4 +1,8 @@
 {
+  "presets": [
+    "razzle/babel",
+    "react-app"
+  ],
   "plugins": [
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     ["styled-components", { "ssr": true }],
