@@ -8,8 +8,7 @@ import { fetchAPI } from '~/utils/api'
 class AuthStore {
   @observable loggingIn = false
 
-  @persist @observable userId = ''
-  
+  @persist @observable firebaseUID = ''
   @persist @observable email = ''
   @persist @observable displayName = ''
   @persist @observable photoURL = ''
@@ -22,7 +21,12 @@ class AuthStore {
 
   @computed
   get isLoggedIn() {
-    return this.userId.length > 0
+    return this.firebaseUID.length > 0
+  }
+
+  @computed
+  get userId() {
+    return this.token.getUserId()
   }
 
   @action
@@ -67,7 +71,7 @@ class AuthStore {
     if (status && status === 'ok') {
       const { accessToken, refreshToken, email, info } = payload
       const { displayName, photoURL } = info
-      this.setUser({ userId: user.uid, email, displayName, photoURL })
+      this.setUser({ firebaseUID: user.uid, email, displayName, photoURL })
 
       this.token.accessToken = accessToken
       this.token.refreshToken = refreshToken
@@ -79,8 +83,8 @@ class AuthStore {
   }
 
   @action
-  setUser({ userId, email, displayName, photoURL }) {
-    this.userId = userId
+  setUser({ firebaseUID, email, displayName, photoURL }) {
+    this.firebaseUID = firebaseUID
     this.email = email
     this.displayName = displayName
     this.photoURL = photoURL
@@ -91,7 +95,7 @@ class AuthStore {
     try {
       await auth.signOut()
     } finally {
-      this.setUser({ userId: '', email: '', displayName: '', photoURL: '' })
+      this.setUser({ firebaseUID: '', email: '', displayName: '', photoURL: '' })
       
       this.token.removeAccessToken()
       this.token.removeRefreshToken()

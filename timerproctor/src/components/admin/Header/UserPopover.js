@@ -61,7 +61,7 @@ const UserPopover = () => {
     name: auth.displayName,
     email: auth.email,
     avatar: auth.photoURL
-  }), [auth.userId])
+  }), [auth.firebaseUID])
 
   const logout = useCallback(async () => {
     await auth.logout()

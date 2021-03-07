@@ -32,7 +32,7 @@ class AttemptStore {
       try {
         const ext = image.includes('/png') ? 'png' : 'jpeg'
         const timestamp = Date.now()
-        const ref = `testtakers/${this.authStore.userId}/${this.examStore.id}/snaps/${timestamp}.${ext}`
+        const ref = `testtakers/${this.authStore.firebaseUID}/${this.examStore.id}/snaps/${timestamp}.${ext}`
       
         await storage.ref(ref).putString(image, 'data_url')
 

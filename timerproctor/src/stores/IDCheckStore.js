@@ -31,7 +31,7 @@ class IDCheckStore {
       
       try {
         const ext = image.includes('/png') ? 'png' : 'jpeg'
-        const ref = `testtakers/${this.authStore.userId}/${this.examStore.id}/idCheck.${ext}`
+        const ref = `testtakers/${this.authStore.firebaseUID}/${this.examStore.id}/idCheck.${ext}`
         const timestamp = Date.now()
       
         await storage.ref(ref).putString(image, 'data_url')

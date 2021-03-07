@@ -1,4 +1,5 @@
 import { fetchAPI } from './api'
+import jwt_decode from 'jwt-decode'
 
 const localStorage = window.localStorage
 
@@ -12,6 +13,14 @@ class TokenManager {
   get accessToken() { return localStorage.getItem(this.key) || '' }
   set accessToken(token) { localStorage.setItem(this.key, token) }
   removeAccessToken() { return localStorage.removeItem(this.key) }
+
+  getUserId() {
+    if (!this.accessToken) return null
+    try {
+      const { _id } = jwt_decode(this.accessToken)
+      return _id
+    } catch { return null }
+  }
 
   get refreshToken() { return localStorage.getItem(this.refreshKey) || '' }
   set refreshToken(token) { localStorage.setItem(this.refreshKey, token) }
