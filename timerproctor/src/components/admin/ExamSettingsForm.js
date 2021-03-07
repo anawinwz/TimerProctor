@@ -18,7 +18,7 @@ const opt_timeWindowModes = toOptions(timeWindowModes)
 const opt_loginMethods = toOptions(loginMethods)
 const opt_idCheckModes = toOptions(idCheckModes)
 
-const ExamSettingsForm = () => {
+const ExamSettingsForm = ({ disabled = false }) => {
   const { ExamStore: exam } = useStore()
 
   const [isSubmit, setIsSubmit] = useState(false)
@@ -85,33 +85,35 @@ const ExamSettingsForm = () => {
         <Radio.Group
           options={opt_timeWindowModes}
           optionType="button"
+          disabled={disabled}
         />
       </Form.Item>
       { 
         toggles.schedule &&
         <>
           <Form.Item label="วัน-เวลาเริ่มการสอบ" name={['timeWindow', 'schedule', 'startDate']}>
-            <DatePicker showTime showSecond={false} />
+            <DatePicker showTime showSecond={false} disabled={disabled} />
           </Form.Item>
           <Form.Item label="วัน-เวลาสิ้นสุดการสอบ" name={['timeWindow', 'schedule', 'endDate']}>
-            <DatePicker showTime showSecond={false} />
+            <DatePicker showTime showSecond={false} disabled={disabled} />
           </Form.Item>
         </>
       }
       <Form.Item label="จำกัดเวลาทำ (นาที)" name={['timer', 'duration']} initialValue={50}>
-        <InputNumber min={1} />
+        <InputNumber min={1} disabled={disabled} />
       </Form.Item>
       <Form.Item label="แสดงนาฬิกาจับเวลา" name={['timer', 'isShow']} valuePropName="checked">
-        <Switch />
+        <Switch disabled={disabled} />
       </Form.Item>
       <Form.Item label="คำชี้แจง" name={['desc']}>
-        <Input.TextArea rows={3} />
+        <Input.TextArea rows={3} disabled={disabled} />
       </Form.Item>
 
       <Divider plain>การยืนยันตนผู้เข้าสอบ</Divider>
       <Form.Item label="ต้องล็อกอินก่อน" name={['authentication', 'login', 'methods']}>
         <Checkbox.Group
           options={opt_loginMethods}
+          disabled={disabled}
         />
       </Form.Item>
       { 
@@ -119,20 +121,27 @@ const ExamSettingsForm = () => {
         <Collapse style={{ marginBottom: '15px' }}>
           <Collapse.Panel header="ตั้งค่าล็อกอินทั่วไป" key="email">
             <Form.Item label="โดเมนอีเมลที่อนุญาต" name={['authentication', 'login', 'email', 'allowedDomains']} help="เช่น ku.th, ku.ac.th มีผลกับวิธี <อีเมล> และ <บัญชี Google>">
-              <Select mode="tags" tokenSeparators={[',']} placeholder="ปล่อยว่างคือไม่จำกัด" maxTagCount={6} open={false} />
+              <Select
+                mode="tags"
+                tokenSeparators={[',']}
+                placeholder="ปล่อยว่างคือไม่จำกัด"
+                maxTagCount={6}
+                open={false}
+                disabled={disabled}
+              />
             </Form.Item>
           </Collapse.Panel>
         { 
           toggles.sso &&
           <Collapse.Panel header={`ตั้งค่า ${loginMethods.sso}`} key="sso">
             <Form.Item label="Client ID" name={['authentication', 'login', 'sso', 'CLIENT_ID']}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
             <Form.Item label="Client Secret" name={['authentication', 'login', 'sso', 'CLIENT_SECRET']}>
-              <Input.Password />
+              <Input.Password disabled={disabled} />
             </Form.Item>
             <Form.Item label="User Scope" name={['authentication', 'login', 'sso', 'USER_SCOPE']}>
-              <Input />
+              <Input disabled={disabled} />
             </Form.Item>
           </Collapse.Panel>
         }
@@ -142,11 +151,12 @@ const ExamSettingsForm = () => {
         <Radio.Group
           options={opt_idCheckModes}
           optionType="button"
+          disabled={disabled}
         />
       </Form.Item>
       
       <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-        <Button type="primary" htmlType="submit" loading={isSubmit}>
+        <Button type="primary" htmlType="submit" loading={isSubmit} disabled={disabled}>
           บันทึกการตั้งค่า
         </Button>
       </Form.Item>

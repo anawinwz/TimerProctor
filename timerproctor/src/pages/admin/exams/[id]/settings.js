@@ -8,6 +8,7 @@ import useAppTitle from '~/hooks/useAppTitle'
 
 import ContentBox from '~/components/admin/ContentBox'
 import ErrorContentBox from '~/components/admin/ErrorContentBox'
+import Alert from '~/components/admin/Alert'
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
 import ExamProctorsList from '~/components/admin/ExamProctorsList'
@@ -30,24 +31,28 @@ const ExamSettings = () => {
       message.error(err.message || 'เกิดข้อผิดพลาดในการเปลี่ยนแปลงชื่อ')
     }
   }, [examAdmin])
+
+  const isExamOwner = examAdmin.isExamOwner
   
   if (loading) return <ContentBox><Skeleton /></ContentBox>
   else if (error) return <ErrorContentBox />
   return (
     <ContentBox>
-      <ExamTitle exam={exam} editable={true} onEdit={onEditName} />
+      <ExamTitle exam={exam} editable={isExamOwner} onEdit={onEditName} />
       <Tabs defaultActiveKey="general">
         <Tabs.TabPane
           tab="ทั่วไป"
           key="general"
         >
-          <ExamSettingsForm /> 
+          { !isExamOwner && <Alert showIcon type="info" message="มีเพียงอาจารย์เจ้าของการสอบเท่านั้นที่แก้ไขการตั้งค่าได้" /> }
+          <ExamSettingsForm disabled={!isExamOwner} /> 
         </Tabs.TabPane>
         <Tabs.TabPane
           tab="กรรมการคุมสอบ"
           key="proctors"
         >
-          <ExamProctorsList />
+          { !isExamOwner && <Alert showIcon type="info" message="มีเพียงอาจารย์เจ้าของการสอบเท่านั้นที่เชิญกรรมการเพิ่มได้" /> }
+          <ExamProctorsList addable={isExamOwner} />
         </Tabs.TabPane>
         <Tabs.TabPane
           tab="ผู้เข้าสอบ"
