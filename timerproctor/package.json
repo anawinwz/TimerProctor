@@ -19,6 +19,7 @@
     "mobx": "^5.15.7",
     "mobx-persist": "^0.4.1",
     "mobx-react-lite": "^2.2.2",
+    "razzle": "^3.3.13",
     "react": "^17.0.1",
     "react-app-rewired": "^2.1.6",
     "react-dom": "^17.0.1",
