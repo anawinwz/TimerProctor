@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react'
-import { Modal, Button, Upload, message } from 'antd'
-import { ImportOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { Modal, Button } from 'antd'
+import { ImportOutlined } from '@ant-design/icons'
+
+import ExcelImporter from './ExcelImporter'
 
 const ExamTesterIDMappingsImport = () => {
   const [visible, setVisible] = useState(false)
@@ -18,18 +20,7 @@ const ExamTesterIDMappingsImport = () => {
         maskClosable={false}
         destroyOnClose={true}
       >
-        <Upload.Dragger
-          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-          multiple={false}
-        >
-          <p className="ant-upload-drag-icon">
-            <FileExcelOutlined />
-          </p>
-          <p className="ant-upload-text">คลิกหรือลากไฟล์ Excel, CSV มาวางที่นี่เพื่อนำเข้า</p>
-          <p className="ant-upload-hint">
-            รองรับได้เพียง 1 ไฟล์เท่านั้น
-          </p>
-        </Upload.Dragger>
+        <ExcelImporter />
       </Modal>
     </>
   )
