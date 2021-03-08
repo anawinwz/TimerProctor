@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
+import { message } from 'antd'
 import { useStore } from '~/stores/admin'
 
 import { showModal } from '~/utils/modal'
@@ -27,11 +28,16 @@ const AdminExamPage = ({ match }) => {
   }, [match.params.id])
 
   useEffect(() => {
+    let hideSocketLoading
     if (examAdmin.socketToken) {
+      hideSocketLoading = message.loading('กำลังเชื่อมต่อเซิร์ฟเวอร์คุมสอบ...')
       try {
         setSocketLoading(true)
         socketStore.init(`/exams/${exam.id}`)
-          .on('authenticated', () => setSocketLoading(false))
+          .on('authenticated', () => {
+            if (typeof hideSocketLoading === 'function') hideSocketLoading()
+            setSocketLoading(false)
+          })
           .on('unauthorized', error => {
             throw error
           })
@@ -73,11 +79,12 @@ const AdminExamPage = ({ match }) => {
       }
     }
     return () => {
+      if (typeof hideSocketLoading === 'function') hideSocketLoading() 
       socketStore.destroy()
     }
   }, [examAdmin.socketToken])
 
-  if (exam.loading || socketLoading) return <Loading />
+  if (exam.loading) return <Loading />
   else if (exam.error) return <Error />
   else if (!exam.info.name) return <NotFound />
   return (
