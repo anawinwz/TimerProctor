@@ -202,6 +202,20 @@ class ExamAdminStore {
       throw new Error(message || 'เกิดข้อผิดพลาดในการเชิญบุคคลนี้เป็นกรรมการ')
     }
   }
+
+  @action
+  async cancelProctor(_id = '') {
+    if (!_id) return false
+    
+    const examId = this.examStore?.id 
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}/proctors/${_id}`, null, 'DELETE')
+    const { status, message } = res
+    if (status === 'ok')  {
+      return this.getProctors()
+    } else {
+      throw new Error(message || 'เกิดข้อผิดพลาดในการยกเลิกบุคคลนี้จากกรรมการ')
+    }
+  }
 }
 
 export default ExamAdminStore

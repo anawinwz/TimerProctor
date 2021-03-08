@@ -44,6 +44,16 @@ const ExamProctorsList = ({ addable = true }) => {
       setInviting(false)
     }
   }, [])
+  const cancelProctor = useCallback(async (_id) => {
+    setInviting(true)
+    try {
+      await examAdmin?.cancelProctor(_id)
+    } catch (err) {
+      message.error(err.message)
+    } finally {
+      setInviting(false)
+    }
+  }, [])
 
   if (loading) return <ExamProctorsListLoading addable={addable} />
   return <>
@@ -73,19 +83,27 @@ const ExamProctorsList = ({ addable = true }) => {
       </StyledForm>
     }
     <List
-      grid={{ column: 2 }}
       dataSource={proctors}
       renderItem={([_id, proctor = {}]) => {
         const { info, email, status } = proctor
         return (
-          <List.Item key={_id}>
+          <List.Item
+            key={_id}
+            actions={[
+              ...(['invited', 'accepted'].includes(status) ?
+                [<a onClick={() => cancelProctor(_id)}>ยกเลิก{status === 'accepted' ? 'สิทธิ์':'คำเชิญ'}</a>] :
+                []
+              ),
+              ...(status === 'rejected' ?
+                [<a onClick={() => inviteProctor({ email })}>เชิญอีกครั้ง</a>] :
+                []
+              )
+            ]}
+          >
             <List.Item.Meta
               avatar={<Avatar src={info?.photoURL} size="large" />}
               title={info?.displayName || email}
-              description={<>
-                { proctorStatuses[status] || status }{' '}
-                { status === 'rejected' && <a onClick={() => inviteProctor({ email })}>เชิญอีกครั้ง</a> }
-              </>}
+              description={proctorStatuses[status] || status}
             />
           </List.Item>
         )
