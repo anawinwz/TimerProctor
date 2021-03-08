@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import XLSX from 'xlsx'
-import { Upload, Select, Table, Button } from 'antd'
+import { Upload, Select, Table, Button, Alert } from 'antd'
 import { FileExcelOutlined } from '@ant-design/icons'
 
 const ExcelImporter = () => {
@@ -98,14 +98,19 @@ const ExcelImporter = () => {
           options={sheetNamesOptions}
           onChange={setSheetName}
         />
+        { sheet.length === 0 && <Alert type="info" message="แผ่นนี้ไม่มีข้อมูล" banner /> }
         {
           sheet.length > 0 &&
           <>
-            พบรายการที่ใช้ได้ {filteredSheet.length} รายการ
+            { 
+              emailField === testerIDField && 
+              <Alert type="error" message="ช่อง [อีเมล] และ [รหัสประจำตัวฯ] ต้องเป็นคนละช่องกัน" banner />
+            }
             <Table
+              size="small"
               columns={columns}
-              dataSource={filteredSheet.slice(0, 5)}
-              pagination={false}
+              dataSource={filteredSheet}
+              pagination={{ pageSize: 5 }}
             />
             <Button type="primary" block disabled={emailField === testerIDField}>
               นำเข้า
