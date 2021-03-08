@@ -9,6 +9,10 @@ const ExamTesterIDMappingsImport = () => {
   const showThisModal = useCallback(() => setVisible(true), [])
   const hideThisModal = useCallback(() => setVisible(false), [])
 
+  const onImport = useCallback((sheet = []) => {
+    hideThisModal()
+  }, [])
+
   return (
     <>
       <Button type="primary" icon={<ImportOutlined />} onClick={showThisModal}>นำเข้ารายชื่อ</Button>
@@ -20,7 +24,7 @@ const ExamTesterIDMappingsImport = () => {
         maskClosable={false}
         destroyOnClose={true}
       >
-        <ExcelImporter />
+        <ExcelImporter onImport={onImport} />
       </Modal>
     </>
   )

@@ -4,7 +4,7 @@ import { Upload, Select, Table, Button } from 'antd'
 import { FileExcelOutlined, TableOutlined } from '@ant-design/icons'
 import Alert from '~/components/admin/Alert'
 
-const ExcelImporter = () => {
+const ExcelImporter = ({ onImport = () => {} }) => {
   const [fileName, setFileName] = useState('')
 
   const [wb, setWb] = useState(null)
@@ -59,6 +59,14 @@ const ExcelImporter = () => {
     }
     return []
   }, [sheet])
+  
+  const filteredSheet = useMemo(() => 
+    sheet.map(row => ({
+      email: row[emailField],
+      testerID: row[testerIDField]
+    })).filter(row => !!row.email || !!row.testerID),
+    [sheet, emailField, testerIDField]
+  )
 
   if (wb) {
     const sheetNamesOptions = wb.SheetNames.map(name => ({
@@ -66,6 +74,7 @@ const ExcelImporter = () => {
       key: name,
       label: <><TableOutlined /> { name }</>
     }))
+
     const columns = [
       {
         title: <>
@@ -96,10 +105,7 @@ const ExcelImporter = () => {
         ellipsis: true
       }
     ]
-    const filteredSheet = sheet.map(row => ({
-      email: row[emailField],
-      testerID: row[testerIDField]
-    })).filter(row => !!row.email || !!row.testerID)
+
     return (
       <>
         <div style={{ marginBottom: '10px' }}>
@@ -122,7 +128,11 @@ const ExcelImporter = () => {
           <>
             { 
               emailField === testerIDField && 
-              <Alert type="error" message="ช่อง [อีเมล] และ [รหัสประจำตัวฯ] ต้องเป็นคนละช่องกัน" banner />
+              <Alert
+                type="error"
+                message="ช่อง [อีเมล] และ [รหัสประจำตัวฯ] ต้องเป็นคนละช่องกัน"
+                banner
+              />
             }
             <Table
               size="small"
@@ -130,7 +140,12 @@ const ExcelImporter = () => {
               dataSource={filteredSheet}
               pagination={{ pageSize: 5 }}
             />
-            <Button type="primary" block disabled={emailField === testerIDField}>
+            <Button
+              type="primary"
+              block
+              disabled={emailField === testerIDField}
+              onClick={() => onImport(filteredSheet)}
+            >
               นำเข้า
             </Button>
           </>
