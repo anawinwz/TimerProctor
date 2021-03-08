@@ -4,16 +4,34 @@ import React from 'react'
 import express from 'express'
 import { renderToString } from 'react-dom/server'
 
+import RootStore from './stores/index'
+import AdminRootStore from './stores/admin'
+
 const fs = require('fs')
 const template = fs.readFileSync('src/_app.html', 'utf-8')
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
-export const renderApp = (req, res) => {
+export const getDataFromURL = async (url = '') => {
+  const store = new RootStore()
+  const adminStore = new AdminRootStore()
+
+  const isAdmin = url.startsWith('/admin')
+  
+  const examURL = url.match(/^(?:\/admin|\/)exams\/([a-z0-9]+)/) || []
+  if (examURL.length === 2) {
+    await (isAdmin ? adminStore : store).ExamStore.getInfo({ id: examURL[1] })
+  }
+  return { store, adminStore }
+}
+
+export const renderApp = async (req, res) => {
+  const { store, adminStore } = await getDataFromURL(req.url)
+
   const context = {}
   const markup = renderToString(
     <StaticRouter location={req.url} context={context}>
-      <App />
+      <App store={store} adminStore={adminStore} />
     </StaticRouter>
   )
 

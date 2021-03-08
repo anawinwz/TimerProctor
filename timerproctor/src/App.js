@@ -11,10 +11,10 @@ import AdminRootStore, { AdminStoreContext } from './stores/admin'
 import AdminPage from './pages/admin'
 import MainPage from './pages/index'
 
-function App() {
+function App({ store = new RootStore(), adminStore = new AdminRootStore() }) {
   return (
-    <StoreContext.Provider value={new RootStore()}>
-      <AdminStoreContext.Provider value={new AdminRootStore()}>
+    <StoreContext.Provider value={store}>
+      <AdminStoreContext.Provider value={adminStore}>
         <ConfigProvider locale={thTH}>
         <Switch>
           <Route path="/admin" component={AdminPage} />
