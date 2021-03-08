@@ -16,11 +16,12 @@ const schema = new Schema(
     },
     status: {
       type: String,
-      enum: ['invited', 'accepted', 'rejected'],
+      enum: ['invited', 'accepted', 'rejected', 'cancelled'],
       default: 'invited'
     },
     invitedAt: { type: Date, default: Date.now },
-    respondedAt: Date
+    respondedAt: Date,
+    cancelledAt: Date
   }
 )
 

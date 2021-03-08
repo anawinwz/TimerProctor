@@ -23,7 +23,8 @@ router.get('/', adminAuthen, populateExam, async (req, res) => {
       {
         exam: exam._id, 
         ...(qStatus && qStatus !== 'all' ? 
-          { status: qStatus } : {}
+          { status: qStatus } :
+          { status: { $nin: ['cancelled'] } }
         )
       }, 
       {
@@ -79,7 +80,7 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
       const proctor = results[0]
       const { status } = proctor
 
-      if (status !== 'rejected') {
+      if (['invited', 'accepted'].includes(status)) {
         return res.json(jsonResponse(
           'failed',
           status === 'invited' ?
@@ -91,7 +92,8 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
           $set: {
             status: 'invited',
             invitedAt: Date.now(),
-            respondedAt: undefined
+            respondedAt: undefined,
+            cancelledAt: undefined
           }
         })
 
@@ -126,6 +128,28 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
     return res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] ${notify ? 'พร้อมอีเมลแจ้งเตือน' : ''}เรียบร้อยแล้ว`))
   } catch {
     return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในการเชิญบุคคลนี้'))
+  }
+})
+
+router.delete('/:proctorId', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
+  const { proctorId } = req.params
+  try {
+    const proctoring = await Proctoring.findOne({
+      _id: proctorId,
+      exam: req.exam._id,
+      status: { $in: ['invited', 'accepted'] }
+    })
+
+    if (!proctoring)
+      return res.json(jsonResponse('failed', 'ไม่พบสิทธิ์การคุมสอบที่ต้องการยกเลิก'))
+    
+    proctoring.status = 'cancelled'
+    proctoring.cancelledAt = Date.now()
+    await proctoring.save()
+
+    return res.json(jsonResponse('ok', 'ยกเลิกสิทธิ์การคุมสอบดังกล่าวเรียบร้อยแล้ว'))
+  } catch {
+    res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในระบบยกเลิกสิทธิ์คุมสอบ'))
   }
 })
 

@@ -38,21 +38,21 @@ router.patch('/:id', adminAuthen, async (req, res) => {
       return res.json(jsonResponse('failed', 'Access Denied.'))
 
   try {
-    const proctorings = await Proctoring.findOne({
+    const proctoring = await Proctoring.findOne({
       _id: id,
       user: req.user._id
     })
 
-    if (!proctorings)
+    if (!proctoring)
       return res.json(jsonResponse('failed', 'ไม่พบการคุมสอบที่ต้องการตอบรับ/ปฏิเสธ'))
 
-    const { status } = proctorings
+    const { status } = proctoring
     if (status !== 'invited')
       return res.json(jsonResponse('failed', `คุณ${status === 'accepted' ? 'ตอบรับ':'ปฏิเสธ'}การคุมสอบนี้ไปแล้ว`))
     
-    proctorings.status = newStatus
-    proctorings.respondedAt = Date.now()
-    await proctorings.save()
+    proctoring.status = newStatus
+    proctoring.respondedAt = Date.now()
+    await proctoring.save()
 
     res.json(jsonResponse('ok', `${newStatus === 'accepted' ? 'ตอบรับ':'ปฏิเสธ'}การคุมสอบนี้สำเร็จ!`))
   } catch (err) {
