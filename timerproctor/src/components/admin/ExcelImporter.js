@@ -106,7 +106,7 @@ const ExcelImporter = () => {
           <FileExcelOutlined /> {fileName}
           <Select
             className="w-100"
-            placeholder="เลือกแผ่นเอกสาร"
+            placeholder={<><TableOutlined /> เลือกแผ่นเอกสาร</>}
             value={sheetName}
             options={sheetNamesOptions}
             onChange={setSheetName}
