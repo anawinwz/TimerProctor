@@ -22,6 +22,8 @@ const ExamProctorsList = ({ addable = true }) => {
   const [loading, setLoading] = useState(true)
   const [inviting, setInviting] = useState(false)
 
+  const [form] = Form.useForm()
+
   useEffect(async () => {
     setLoading(true)
 
@@ -38,12 +40,13 @@ const ExamProctorsList = ({ addable = true }) => {
     setInviting(true)
     try {
       await examAdmin?.inviteProctor(email, notify)
+      form.resetFields()
     } catch (err) {
       message.error(err.message)
     } finally {
       setInviting(false)
     }
-  }, [])
+  }, [form])
   const cancelProctor = useCallback(async (_id) => {
     setInviting(true)
     try {
@@ -59,7 +62,7 @@ const ExamProctorsList = ({ addable = true }) => {
   return <>
     {
       addable &&
-      <StyledForm onFinish={inviteProctor}>
+      <StyledForm form={form} onFinish={inviteProctor}>
         <Form.Item name="email">
           <Input
             type="email"
