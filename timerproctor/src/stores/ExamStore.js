@@ -52,6 +52,9 @@ class ExamStore {
         this.lastFetch = Date.now()
         this.error = null
         return this.info
+      } else if (status === 'notfound') {
+        this.clearInfo()
+        this.error = null
       } else {
         throw new Error(message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลการสอบ')
       }
