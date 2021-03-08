@@ -10,7 +10,7 @@ const ExcelImporter = ({ onImport = () => {} }) => {
   const [wb, setWb] = useState(null)
   const [sheetName, setSheetName] = useState('')
   const [emailField, setEmailField] = useState(0)
-  const [testerIDField, setTesterIDField] = useState(1)
+  const [testerIdField, setTesterIDField] = useState(1)
 
   const beforeUpload = useCallback(file => {
     setFileName(file.name)
@@ -63,9 +63,9 @@ const ExcelImporter = ({ onImport = () => {} }) => {
   const filteredSheet = useMemo(() => 
     sheet.map(row => ({
       email: row[emailField],
-      testerID: row[testerIDField]
-    })).filter(row => !!row.email || !!row.testerID),
-    [sheet, emailField, testerIDField]
+      testerId: row[testerIdField]
+    })).filter(row => !!row.email || !!row.testerId),
+    [sheet, emailField, testerIdField]
   )
 
   if (wb) {
@@ -95,13 +95,13 @@ const ExcelImporter = ({ onImport = () => {} }) => {
           รหัสประจำตัวผู้เข้าสอบ
           <Select
             className="d-block"
-            value={testerIDField}
+            value={testerIdField}
             options={fieldOptions}
             onChange={setTesterIDField}
             size="small"
           />
         </>,
-        dataIndex: 'testerID',
+        dataIndex: 'testerId',
         ellipsis: true
       }
     ]
@@ -127,7 +127,7 @@ const ExcelImporter = ({ onImport = () => {} }) => {
           sheet.length > 0 &&
           <>
             { 
-              emailField === testerIDField && 
+              emailField === testerIdField && 
               <Alert
                 type="error"
                 message="ช่อง [อีเมล] และ [รหัสประจำตัวฯ] ต้องเป็นคนละช่องกัน"
@@ -143,7 +143,7 @@ const ExcelImporter = ({ onImport = () => {} }) => {
             <Button
               type="primary"
               block
-              disabled={emailField === testerIDField}
+              disabled={emailField === testerIdField}
               onClick={() => onImport(filteredSheet)}
             >
               นำเข้า

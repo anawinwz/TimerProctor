@@ -3,7 +3,7 @@ import ExamTesterIDMappingsImport from './ExamTesterIDMappingsImport'
 
 const columns = [
   { title: 'อีเมล', dataIndex: 'email', width: '60%' },
-  { title: 'รหัสประจำตัวผู้เข้าสอบ', dataIndex: 'testerID' }
+  { title: 'รหัสประจำตัวผู้เข้าสอบ', dataIndex: 'testerId' }
 ]
 
 const ExamTesterIDMappingsList = () => {
