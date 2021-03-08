@@ -1,15 +1,20 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import XLSX from 'xlsx'
-import { Upload, Select, Table, Button, Alert } from 'antd'
-import { FileExcelOutlined } from '@ant-design/icons'
+import { Upload, Select, Table, Button } from 'antd'
+import { FileExcelOutlined, TableOutlined } from '@ant-design/icons'
+import Alert from '~/components/admin/Alert'
 
 const ExcelImporter = () => {
+  const [fileName, setFileName] = useState('')
+
   const [wb, setWb] = useState(null)
   const [sheetName, setSheetName] = useState('')
   const [emailField, setEmailField] = useState(0)
   const [testerIDField, setTesterIDField] = useState(1)
 
   const beforeUpload = useCallback(file => {
+    setFileName(file.name)
+
     const reader = new FileReader()
     const type = !!reader.readAsBinaryString ? 'binary' : 'array'
     reader.onload = e => {
@@ -56,7 +61,11 @@ const ExcelImporter = () => {
   }, [sheet])
 
   if (wb) {
-    const sheetNamesOptions = wb.SheetNames.map(name => ({ value: name }))
+    const sheetNamesOptions = wb.SheetNames.map(name => ({
+      value: name,
+      key: name,
+      label: <><TableOutlined /> { name }</>
+    }))
     const columns = [
       {
         title: <>
@@ -69,7 +78,8 @@ const ExcelImporter = () => {
             size="small"
           />
         </>,
-        dataIndex: 'email'
+        dataIndex: 'email',
+        ellipsis: true
       },
       {
         title: <>
@@ -82,7 +92,8 @@ const ExcelImporter = () => {
             size="small"
           />
         </>,
-        dataIndex: 'testerID'
+        dataIndex: 'testerID',
+        ellipsis: true
       }
     ]
     const filteredSheet = sheet.map(row => ({
@@ -91,14 +102,21 @@ const ExcelImporter = () => {
     })).filter(row => !!row.email || !!row.testerID)
     return (
       <>
-        <Select
-          className="w-100"
-          placeholder="เลือกแผ่นเอกสาร Excel"
-          value={sheetName}
-          options={sheetNamesOptions}
-          onChange={setSheetName}
-        />
-        { sheet.length === 0 && <Alert type="info" message="แผ่นนี้ไม่มีข้อมูล" banner /> }
+        <div style={{ marginBottom: '10px' }}>
+          <FileExcelOutlined /> {fileName}
+          <Select
+            className="w-100"
+            placeholder="เลือกแผ่นเอกสาร"
+            value={sheetName}
+            options={sheetNamesOptions}
+            onChange={setSheetName}
+            allowClear
+          />
+        </div>
+        { 
+          sheet.length === 0 &&
+          <Alert type="info" message={sheetName ? 'แผ่นนี้ไม่มีข้อมูล' : 'กรุณาเลือกแผ่นที่ต้องการ'} banner />
+        }
         {
           sheet.length > 0 &&
           <>
