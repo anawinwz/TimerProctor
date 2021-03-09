@@ -343,15 +343,15 @@ router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (r
   }
 })
 
-router.get('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamPersonnel, async (res, req) => {
+router.get('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) => {
   try {
-    const { testerIdMappings = [] } = req.exam
+    const { testerIdMappings = [] } = req.exam.toJSON()
     return res.json(jsonResponse('ok', { mappings: testerIdMappings }))
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการเรียกรายชื่อที่นำเข้าไว้'))
   }
 })
-router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, async (res, req) => {
+router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   const exam = req.exam
   const { mappings } = req.body
   if (typeof mappings !== 'array')
