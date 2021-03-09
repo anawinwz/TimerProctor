@@ -345,7 +345,7 @@ router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (r
 
 router.get('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamPersonnel, async (res, req) => {
   try {
-    const { testerIdMappings = [] } = req.exam.toJSON()
+    const { testerIdMappings = [] } = req.exam
     return res.json(jsonResponse('ok', { mappings: testerIdMappings }))
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการเรียกรายชื่อที่นำเข้าไว้'))
