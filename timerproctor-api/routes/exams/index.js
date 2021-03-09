@@ -146,6 +146,7 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
   
   let ret = exam.toJSON()
   delete ret.linked?.cached?.data
+  delete ret.testerIdMappings
 
   const isThisExamPersonnel = req.fromAdmin && (
     String(req.user._id) === String(exam.owner) ||
@@ -174,6 +175,18 @@ router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res) 
     const exam = req.exam
 
     let updates = req.body
+
+    const notAllowedKeys = [
+      'owner',
+      'linked',
+      'createdAt',
+      'updatedAt',
+      'announcements',
+      'testerIdMappings'
+    ]
+    if (notAllowedKeys.some(key => typeof updates[key] !== 'undefined')) {
+      throw new ValidationError(key, 'คุณไม่ได้รับอนุญาตให้แก้ไขข้อมูลส่วนนี้')
+    }
 
     const { mode: timeWindowMode, schedule } = updates?.timeWindow || {}
     if (timeWindowMode) {
