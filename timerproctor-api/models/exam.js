@@ -105,6 +105,12 @@ const schema = new Schema(
         seen: { type: Number, default: 0 }
       }],
       default: []
+    },
+    testerIdMappings: {
+      type: [{
+        email: String,
+        testerId: String
+      }]
     }
   }
 )
