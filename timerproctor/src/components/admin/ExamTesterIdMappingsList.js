@@ -1,15 +1,15 @@
 import { Table } from 'antd'
-import ExamTesterIDMappingsImport from './ExamTesterIDMappingsImport'
+import ExamTesterIdMappingsImport from './ExamTesterIdMappingsImport'
 
 const columns = [
   { title: 'อีเมล', dataIndex: 'email', width: '60%' },
   { title: 'รหัสประจำตัวผู้เข้าสอบ', dataIndex: 'testerId' }
 ]
 
-const ExamTesterIDMappingsList = () => {
+const ExamTesterIdMappingsList = () => {
   return (
     <>
-      <ExamTesterIDMappingsImport />
+      <ExamTesterIdMappingsImport />
       <Table
         columns={columns}
       />
@@ -17,4 +17,4 @@ const ExamTesterIDMappingsList = () => {
   )
 }
 
-export default ExamTesterIDMappingsList
+export default ExamTesterIdMappingsList

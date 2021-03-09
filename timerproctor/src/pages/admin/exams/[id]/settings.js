@@ -12,7 +12,7 @@ import Alert from '~/components/admin/Alert'
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
 import ExamProctorsList from '~/components/admin/ExamProctorsList'
-import ExamTesterIDMappingsList from 'components/admin/ExamTesterIDMappingsList'
+import ExamTesterIdMappingsList from 'components/admin/ExamTesterIdMappingsList'
 
 const ExamSettings = () => {
   const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()
@@ -59,7 +59,7 @@ const ExamSettings = () => {
           tab="ผู้เข้าสอบ"
           key="testtakers"
         >
-          <ExamTesterIDMappingsList />
+          <ExamTesterIdMappingsList />
         </Tabs.TabPane>
       </Tabs>
     </ContentBox>

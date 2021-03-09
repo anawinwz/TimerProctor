@@ -10,7 +10,7 @@ const ExcelImporter = ({ onImport = () => {} }) => {
   const [wb, setWb] = useState(null)
   const [sheetName, setSheetName] = useState('')
   const [emailField, setEmailField] = useState(0)
-  const [testerIdField, setTesterIDField] = useState(1)
+  const [testerIdField, setTesterIdField] = useState(1)
 
   const beforeUpload = useCallback(file => {
     setFileName(file.name)
@@ -39,7 +39,7 @@ const ExcelImporter = ({ onImport = () => {} }) => {
       const sheet = XLSX.utils.sheet_to_json(ws, { header: 1 })
       if (sheet.length > 0) {
         setEmailField(0)
-        setTesterIDField(sheet[0].length >= 2 ? 1 : 0)
+        setTesterIdField(sheet[0].length >= 2 ? 1 : 0)
       }
       return sheet
     }
@@ -97,7 +97,7 @@ const ExcelImporter = ({ onImport = () => {} }) => {
             className="d-block"
             value={testerIdField}
             options={fieldOptions}
-            onChange={setTesterIDField}
+            onChange={setTesterIdField}
             size="small"
           />
         </>,

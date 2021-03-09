@@ -4,7 +4,7 @@ import { ImportOutlined } from '@ant-design/icons'
 
 import ExcelImporter from './ExcelImporter'
 
-const ExamTesterIDMappingsImport = () => {
+const ExamTesterIdMappingsImport = () => {
   const [visible, setVisible] = useState(false)
   const showThisModal = useCallback(() => setVisible(true), [])
   const hideThisModal = useCallback(() => setVisible(false), [])
@@ -30,4 +30,4 @@ const ExamTesterIDMappingsImport = () => {
   )
 }
 
-export default ExamTesterIDMappingsImport
+export default ExamTesterIdMappingsImport
