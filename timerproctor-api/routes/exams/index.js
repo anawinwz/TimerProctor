@@ -75,13 +75,13 @@ router.post('/create', async (req, res) => {
       return res.json(jsonResponse('ok', 'สร้างการสอบที่เชื่อมกับฟอร์มนี้เรียบร้อยแล้ว!\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor'))
     } else {
       if (String(exam.owner) === String(ownerUser._id))
-        return res.json(jsonResponse('error', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
+        return res.json(jsonResponse('failed', `คุณเคยสร้างการสอบจากฟอร์มนี้ไปแล้ว\r\nตรวจสอบได้ที่ [การสอบของฉัน] ใน TimerProctor`))
 
       exam.populate('owner', 'email', (err, exam) => {
         if (err)
-          return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบเพื่อรับเชิญเป็นกรรมการฯ`))
+          return res.json(jsonResponse('failed', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบเพื่อรับเชิญเป็นกรรมการฯ`))
 
-        return res.json(jsonResponse('error', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบ (${exam.owner.email}) เพื่อรับเชิญเป็นกรรมการฯ`))
+        return res.json(jsonResponse('failed', `มีผู้สร้างการสอบจากฟอร์มนี้ใน TimerProctor ไปแล้ว\r\nกรุณาติดต่ออาจารย์เจ้าของการสอบ (${exam.owner.email}) เพื่อรับเชิญเป็นกรรมการฯ`))
       })     
     }
   } catch {
@@ -239,7 +239,7 @@ router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam
     res.json(jsonResponse('ok', { announcements: ret }))
   } else {
     exam.populate('announcements.creator', (err, exam) => {
-      if (err) res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในการโหลดข้อมูลประกาศ'))
+      if (err) res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดข้อมูลประกาศ'))
       res.json(jsonResponse('ok', { announcements: exam.announcements }))
     })
   }
@@ -268,7 +268,7 @@ router.post('/:id/announcements', adminAuthen, populateExam, onlyExamOwner, asyn
       return res.json(jsonResponse('failed', getFirstValidationErrMessage(err.errors)))
     }
     
-    return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในการประกาศถึงผู้เข้าสอบ'))
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการประกาศถึงผู้เข้าสอบ'))
   }
 })
 
@@ -321,13 +321,13 @@ router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, 
 })
 
 router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
+  const exam = req.exam
+  const { allow } = req.body
+
+  if (typeof allow !== 'boolean') 
+    return res.json(jsonResponse('failed', 'Access Denied.'))
+
   try {
-    const exam = req.exam
-    const { allow } = req.body
-
-    if (typeof allow !== 'boolean') 
-      return res.json(jsonResponse('failed', 'Access Denied.'))
-
     if (exam.timeWindow.mode !== 'realtime')
       return res.json(jsonResponse('failed', `ไม่สามารถตั้งค่า${allow ? '' : 'ไม่'}อนุญาตการเข้าห้องสอบนี้ได้`))
   
@@ -340,6 +340,29 @@ router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (r
   } catch (err) {
     console.log(err)
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าอนุญาตการเข้าห้องสอบ'))
+  }
+})
+
+router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, async (res, req) => {
+  const exam = req.exam
+  const { mappings } = req.body
+  if (typeof mappings !== 'array')
+    return res.json(jsonResponse('failed', 'Access Denied.'))
+
+  if (mappings.some(mapping => 
+    typeof mapping !== 'object' ||
+    Object.keys(mapping).length !== 2 ||
+    !mapping.email || !mapping.testerId
+  ))
+    return res.json(jsonResponse('failed', 'รูปแบบข้อมูลนำเข้าไม่ถูกต้อง'))
+
+  try {
+    exam.testerIdMappings = mappings
+    await exam.save()
+
+    return res.json(jsonResponse('ok', `นำเข้า ${mappings.length} รายการเรียบร้อยแล้ว`))
+  } catch {
+    return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดขณะนำเข้ารายชื่อ'))
   }
 })
 
