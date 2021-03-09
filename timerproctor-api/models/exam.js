@@ -110,7 +110,8 @@ const schema = new Schema(
       type: [{
         email: String,
         testerId: String
-      }]
+      }],
+      default: []
     }
   }
 )

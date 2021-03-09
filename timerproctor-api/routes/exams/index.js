@@ -343,6 +343,10 @@ router.put('/:id/allowLogin', adminAuthen, populateExam, onlyExamOwner, async (r
   }
 })
 
+router.get('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamPersonnel, async (res, req) => {
+  const { testerIdMappings = [] } = req.exam.toJSON()
+  return res.json(jsonResponse('ok', { mappings: testerIdMappings }))
+})
 router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, async (res, req) => {
   const exam = req.exam
   const { mappings } = req.body
