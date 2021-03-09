@@ -19,6 +19,7 @@ class ExamAdminStore {
   @observable counts = initialCounts
   @observable testers = {}
   @observable proctors = {}
+  @observable testerIdMappings = []
 
   constructor(rootStore) {
     this.rootStore = rootStore
@@ -36,6 +37,7 @@ class ExamAdminStore {
       this.counts = initialCounts
       this.testers = {}
       this.proctors = {}
+      this.testerIdMappings = []
     }
   }
 
@@ -214,6 +216,35 @@ class ExamAdminStore {
       return this.getProctors()
     } else {
       throw new Error(message || 'เกิดข้อผิดพลาดในการยกเลิกบุคคลนี้จากกรรมการ')
+    }
+  }
+
+  @action
+  async getTesterIdMappings() {
+    try {
+      const examId = this.examStore.id
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testerIdMappings`)
+      if (res.status === 'ok') {
+        this.testerIdMappings = res.payload.mappings
+      } else {
+        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดรายชื่อที่นำเข้าไว้')
+      }
+    } catch {
+      throw new Error('เกิดข้อผิดพลาดในการโหลดรายชื่อที่นำเข้าไว้')
+    }
+  }
+
+  @action
+  async importTesterIdMappings(sheet = []) {
+    if (typeof sheet !== 'array' || sheet.length === 0) return false
+    
+    const examId = this.examStore?.id 
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}/testerIdMappings`, { mappings: sheet }, 'PUT')
+    const { status, message } = res
+    if (status === 'ok')  {
+      this.testerIdMappings = [...sheet]
+    } else {
+      throw new Error(message || 'เกิดข้อผิดพลาดในการนำเข้ารายชื่อ')
     }
   }
 }

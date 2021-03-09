@@ -1,4 +1,10 @@
-import { Table } from 'antd'
+import { useEffect, useState } from 'react'
+import { message, Table } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+
+import { useStore } from '~/stores/admin'
+import { observer } from 'mobx-react-lite'
+
 import ExamTesterIdMappingsImport from './ExamTesterIdMappingsImport'
 
 const columns = [
@@ -7,14 +13,29 @@ const columns = [
 ]
 
 const ExamTesterIdMappingsList = () => {
+  const { ExamAdminStore: examAdmin } = useStore()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(async () => {
+    setLoading(true)
+    try {
+      await examAdmin?.getTesterIdMappings()
+      setLoading(false)
+    } catch (err) {
+      message.error(err.message)
+    }
+  }, [])
+
   return (
     <>
       <ExamTesterIdMappingsImport />
       <Table
+        loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
         columns={columns}
+        dataSource={examAdmin.testerIdMappings}
       />
     </>
   )
 }
 
-export default ExamTesterIdMappingsList
+export default observer(ExamTesterIdMappingsList)
