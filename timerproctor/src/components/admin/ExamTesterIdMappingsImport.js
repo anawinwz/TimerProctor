@@ -19,7 +19,7 @@ const ExamTesterIdMappingsImport = () => {
       await examAdmin?.importTesterIdMappings(sheet)
       hideThisModal()
     } catch (err) {
-      message.error(err)
+      message.error(err.message)
     }
   }, [])
 
