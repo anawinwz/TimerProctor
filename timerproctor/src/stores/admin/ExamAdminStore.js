@@ -236,7 +236,7 @@ class ExamAdminStore {
 
   @action
   async importTesterIdMappings(sheet = []) {
-    if (typeof sheet !== 'array' || sheet.length === 0) return false
+    if (!Array.isArray(sheet) || sheet.length === 0) return false
     
     const examId = this.examStore?.id 
     const res = await fetchAPIwithAdminToken(`/exams/${examId}/testerIdMappings`, { mappings: sheet }, 'PUT')
