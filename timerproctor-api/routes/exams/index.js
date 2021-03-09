@@ -354,7 +354,7 @@ router.get('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamPersonnel
 router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   const exam = req.exam
   const { mappings } = req.body
-  if (typeof mappings !== 'array')
+  if (!mappings || !Array.isArray(mappings))
     return res.json(jsonResponse('failed', 'Access Denied.'))
 
   if (mappings.some(mapping => 
