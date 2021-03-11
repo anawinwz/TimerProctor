@@ -151,6 +151,39 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamPersonnel, populateA
   }
 })
 
+router.patch('/:testerId/status', adminAuthen, populateExam, onlyExamPersonnel, populateAttempt, async (req, res) => {
+  const { status, reason = '' } = req.body
+  if (!status || ['loggedin', 'terminated'].includes(status))
+    return res.json(jsonResponse('failed', 'ค่าสถานะที่ต้องการเปลี่ยนไม่ถูกต้อง'))
+
+  const attempt = req.attempt
+  if (attempt.status !== 'started')
+    return res.json(jsonResponse('failed', 'ไม่สามารถเปลี่ยนแปลงสถานะของผู้เข้าสอบรายนี้ได้'))
+  
+  if (attempt.status === status)
+    return res.json(jsonResponse('failed', 'ผู้เข้าสอบรายนี้อยู่ในสถานะดังกล่าวอยู่แล้ว'))
+  
+
+  const socketId = attempt.socketId
+  try {
+    attempt.status = status
+    attempt.socketId = undefined
+    await attempt.save()
+  } catch {
+    return res.json(jsonResponse('error', 'ไม่สามารถบันทึกค่าสถานะใหม่ให้กับผู้เข้าสอบรายนี้ได้'))
+  }
+
+  try {
+    if (status === 'terminated') {
+      getExamNsp(req.exam._id).to(socketId).emit('terminated', reason, () => {
+        getExamNsp(req.exam._id)?.[socketId]?.disconnect(true)
+      })
+    }
+  } catch {}
+
+  return res.json(jsonResponse('ok', 'เปลี่ยนสถานะของผู้เข้าสอบเรียบร้อยแล้ว'))
+})
+
 router.get('/:testerId/snapshots', adminAuthen, populateExam, onlyExamPersonnel, populateAttempt, async (req, res) => {
   try {
     const { snapshots } = await req.attempt.populate('snapshots').execPopulate()
