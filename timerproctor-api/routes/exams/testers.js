@@ -178,6 +178,7 @@ router.patch('/:testerId/status', adminAuthen, populateExam, onlyExamPersonnel, 
       getExamNsp(req.exam._id).to(socketId).emit('terminated', reason, () => {
         getExamNsp(req.exam._id)?.[socketId]?.disconnect(true)
       })
+      getExamNsp(req.exam._id).to('proctor').emit('testerStatus', { id: attempt._id, status: 'terminated' })
     }
   } catch {}
 
