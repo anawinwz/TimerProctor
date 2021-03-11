@@ -12,13 +12,17 @@ const schema = new Schema(
     timestamp: { type: Date, default: Date.now },
     type: {
       type: String,
-      enum: ['snapshot', 'face', 'window'],
+      enum: ['socket', 'snapshot', 'face', 'window'],
       required: true
     },
     info: {
       facesCount: Number,
       windowEvent: String,
-      timeDiff: Number
+      timeDiff: Number,
+      socketEvent: {
+        name: String,
+        info: Schema.Types.Mixed
+      }
     },
     evidence: {
       type: { type: String, enum: ['photo'] },
