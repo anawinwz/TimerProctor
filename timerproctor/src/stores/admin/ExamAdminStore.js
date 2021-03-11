@@ -235,6 +235,21 @@ class ExamAdminStore {
   }
 
   @action
+  async deleteTesterIdMappings() {
+    try {
+      const examId = this.examStore.id
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testerIdMappings`, null, 'DELETE')
+      if (res.status === 'ok') {
+        this.testerIdMappings = []
+      } else {
+        throw new Error(res.message || 'เกิดข้อผิดพลาดในการลบรายชื่อที่นำเข้าไว้')
+      }
+    } catch {
+      throw new Error('เกิดข้อผิดพลาดในการลบรายชื่อที่นำเข้าไว้')
+    }
+  }
+
+  @action
   async importTesterIdMappings(sheet = []) {
     if (!Array.isArray(sheet) || sheet.length === 0) return false
     
