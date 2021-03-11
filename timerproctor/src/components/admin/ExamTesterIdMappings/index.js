@@ -32,6 +32,7 @@ const ExamTesterIdMappings = () => {
       <ImportModal />
       <DeleteButton />
       <Table
+        size="small"
         loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
         columns={columns}
         dataSource={examAdmin.testerIdMappings}
