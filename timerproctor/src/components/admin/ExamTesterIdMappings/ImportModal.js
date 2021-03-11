@@ -14,7 +14,25 @@ const ImportModal = () => {
   const showThisModal = useCallback(() => setVisible(true), [])
   const hideThisModal = useCallback(() => setVisible(false), [])
 
+  const checkIfReplace = () => new Promise(resolve => {
+    const oldMappings = examAdmin?.testerIdMappings
+    if (!oldMappings?.length)
+      return resolve(true)
+
+    Modal.confirm({
+      title: `คุณแน่ใจหรือว่าต้องการเขียนทับรายชื่อเดิม?`,
+      content: `รายชื่อเดิมทั้ง ${oldMappings.length} ชื่อจะถูกลบและแทนที่ด้วยรายชื่อใหม่ การดำเนินการนี้ไม่สามารถยกเลิกได้`,
+      okText: 'เขียนทับ',
+      okType: 'danger',
+      cancelText: 'ยกเลิก',
+      onOk: () => resolve(true),
+      onCancel: () => resolve(false)
+    })
+  })
   const onImport = useCallback(async (sheet = []) => {
+    const actionConfirmed = await checkIfReplace()
+    if (!actionConfirmed) return false
+    
     try {
       await examAdmin?.importTesterIdMappings(sheet)
       hideThisModal()
