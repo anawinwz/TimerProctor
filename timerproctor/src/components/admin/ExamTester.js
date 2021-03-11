@@ -8,7 +8,8 @@ const ImageBox = styled(`div`)`
   width: 100%;
   height: 160px;
   border-radius: 10px;
-  background-size: cover;
+  background-color: black;
+  background-size: contain;
   background-position: center;
   .hover-box {
     display: none;
