@@ -6,6 +6,7 @@ import { useStore } from '~/stores/admin'
 import { observer } from 'mobx-react-lite'
 
 import ImportModal from './ImportModal'
+import DeleteButton from './DeleteButton'
 
 const columns = [
   { title: 'อีเมล', dataIndex: 'email', width: '60%' },
@@ -29,6 +30,7 @@ const ExamTesterIdMappings = () => {
   return (
     <>
       <ImportModal />
+      <DeleteButton />
       <Table
         loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
         columns={columns}
