@@ -32,9 +32,9 @@ export const getSnapshot = (videoEl, options = {}) => {
   if (maxWidthOrHeight) {
     if (orgWidth > orgHeight) {
       width = maxWidthOrHeight
-      height = whRatio * maxWidthOrHeight
+      height = 1/whRatio * maxWidthOrHeight
     } else {
-      width = 1/whRatio * maxWidthOrHeight
+      width = whRatio * maxWidthOrHeight
       height = maxWidthOrHeight
     }
   }
