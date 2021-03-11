@@ -41,11 +41,11 @@ router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res) => 
   }
 })
 
-router.post('/submit', authenticate, populateExam, async (req, res) => {
+router.post('/responses', authenticate, populateExam, async (req, res) => {
   const { body, exam, user } = req
 
   const { _id: userId } = user
-  const { _id: examId, linked } = exam
+  const { _id: examId, linked, testerIdMappings = [] } = exam
   const lastAttempt = await getLastAttempt(examId, userId)
 
   if (!lastAttempt || lastAttempt.status !== 'started')
@@ -77,6 +77,10 @@ router.post('/submit', authenticate, populateExam, async (req, res) => {
 
     let entryValue = ''
     if (type === 'email') entryValue = user.email
+    else if (type === 'testerId') {
+      const { testerId } = testerIdMappings.find(mapping => String(mapping.email) === String(user.email))
+      entryValue = testerId
+    }
 
     bodyEntries.push([entryKey, entryValue])
   }

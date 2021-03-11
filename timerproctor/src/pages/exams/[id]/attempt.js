@@ -29,7 +29,7 @@ const AttemptPage = () => {
   }, [])
 
   const onCompleted = useCallback(async values => {
-    const res = await fetchAPIwithToken(`/exams/${exam.id}/form/submit`, values)
+    const res = await fetchAPIwithToken(`/exams/${exam.id}/form/responses`, values)
     const { status, message } = res
     if (status === 'ok') {
       setCompleted(true)
