@@ -5,9 +5,9 @@ import { ImportOutlined } from '@ant-design/icons'
 import { useStore } from '~/stores/admin'
 import { observer } from 'mobx-react-lite'
 
-import ExcelImporter from './ExcelImporter'
+import ExcelImporter from '~/components/admin/ExcelImporter'
 
-const ExamTesterIdMappingsImport = () => {
+const ImportModal = () => {
   const { ExamAdminStore: examAdmin } = useStore()
 
   const [visible, setVisible] = useState(false)
@@ -40,4 +40,4 @@ const ExamTesterIdMappingsImport = () => {
   )
 }
 
-export default observer(ExamTesterIdMappingsImport)
+export default observer(ImportModal)

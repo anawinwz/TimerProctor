@@ -5,14 +5,14 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { useStore } from '~/stores/admin'
 import { observer } from 'mobx-react-lite'
 
-import ExamTesterIdMappingsImport from './ExamTesterIdMappingsImport'
+import ImportModal from './ImportModal'
 
 const columns = [
   { title: 'อีเมล', dataIndex: 'email', width: '60%' },
   { title: 'รหัสประจำตัวผู้เข้าสอบ', dataIndex: 'testerId' }
 ]
 
-const ExamTesterIdMappingsList = () => {
+const ExamTesterIdMappings = () => {
   const { ExamAdminStore: examAdmin } = useStore()
   const [loading, setLoading] = useState(true)
 
@@ -28,7 +28,7 @@ const ExamTesterIdMappingsList = () => {
 
   return (
     <>
-      <ExamTesterIdMappingsImport />
+      <ImportModal />
       <Table
         loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
         columns={columns}
@@ -38,4 +38,4 @@ const ExamTesterIdMappingsList = () => {
   )
 }
 
-export default observer(ExamTesterIdMappingsList)
+export default observer(ExamTesterIdMappings)
