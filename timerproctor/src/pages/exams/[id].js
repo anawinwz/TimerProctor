@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Switch } from 'react-router-dom'
+import { Switch, useHistory } from 'react-router-dom'
 import { useTitle } from 'react-use'
+import { Modal } from 'antd'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
@@ -13,8 +14,6 @@ import LayoutRoute from '~/components/LayoutRoute'
 import DefaultLayout from '~/layouts/default'
 import ExamLayout from '~/layouts/exams'
 
-import { showModal } from '~/utils/modal'
-
 import IntroPage from './[id]/index'
 import AuthenPage from './[id]/authenticate'
 import WaitingPage from './[id]/waiting'
@@ -23,8 +22,10 @@ import CompletedPage from './[id]/completed'
 import FailedPage from './[id]/failed'
 
 const ExamPage = ({ match }) => {
+  const history = useHistory()
   const { ExamStore: exam, SocketStore: socketStore, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
   const [socketLoading, setSocketLoading] = useState(false)
+  const [flushSocket, setFlushSocket] = useState(0)
 
   useEffect(async () => {
     exam.clearInfo()
@@ -51,17 +52,39 @@ const ExamPage = ({ match }) => {
             }
           })
           .on('examAnnouncement', text => exam.updateAnnouncement(text))
+          .on('terminated', () => {
+            Modal.error({
+              title: 'คุณถูกเชิญออกจากการสอบ',
+              content: 'กรรมการพิจารณาเชิญคุณออกจากการสอบแล้ว',
+              okText: 'รับทราบ',
+              cancelButtonProps: {
+                style: { display: 'none' }
+              },
+              maskClosable: false,
+              onOk: () => history.replace(`/exams/${exam.id}`),
+              onCancel: () => history.replace(`/exams/${exam.id}`)
+            })
+          })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: attempt.socketToken }))
           .connect()
       } catch {
-        showModal('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้', 'กรุณาเข้าสู่การสอบใหม่อีกครั้ง')
+        Modal.error({
+          title: 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้',
+          content: 'กรุณา [ลองเชื่อมต่ออีกครั้ง] หรือ [เข้าสู่การสอบใหม่]',
+          maskClosable: false,
+          okText: 'ลองเชื่อมต่ออีกครั้ง',
+          cancelText: 'เข้าสู่การสอบใหม่',
+          onOk: () => setFlushSocket(prev => prev + 1),
+          onCancel: () => history.replace(`/exams/${exam.id}`)
+        })
+        
         socketStore.destroy()
       }
     }
     return () => {
       socketStore.destroy()
     }
-  }, [attempt.socketToken])
+  }, [attempt.socketToken, flushSocket])
 
   if (exam.loading || socketLoading) return <Loading />
   else if (exam.error) return <Error />
