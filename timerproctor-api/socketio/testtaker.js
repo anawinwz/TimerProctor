@@ -6,6 +6,21 @@ export default (socket, user = {}) => {
   const socketInfo = socket?.attempt
   const examId = getExamIdFromSocket(socket)
 
+  socket.on('disconnect', reason => {
+    const newEvent = new AttemptEvent({
+      attempt: socketInfo.id,
+      timestamp: Date.now(),
+      type: 'socket',
+      info: {
+        socketEvent: {
+          name: 'disconnect',
+          info: reason
+        }
+      }
+    })
+    newEvent.save()
+  })
+
   socket.on('idCheck', async (data, callback) => {
     const { image, timestamp } = data
     if (!socketInfo || !image || !timestamp) {
