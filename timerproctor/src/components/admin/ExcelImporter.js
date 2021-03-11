@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import XLSX from 'xlsx'
-import { Upload, Select, Table, Button } from 'antd'
+import { Upload, Select, Table, Button, Checkbox } from 'antd'
 import { FileExcelOutlined, TableOutlined } from '@ant-design/icons'
 import Alert from '~/components/admin/Alert'
 
@@ -9,6 +9,7 @@ const ExcelImporter = ({ onImport = () => {} }) => {
 
   const [wb, setWb] = useState(null)
   const [sheetName, setSheetName] = useState('')
+  const [hasHeader, setHasHeader] = useState(false)
   const [emailField, setEmailField] = useState(0)
   const [testerIdField, setTesterIdField] = useState(1)
 
@@ -33,11 +34,14 @@ const ExcelImporter = ({ onImport = () => {} }) => {
     if (wb?.SheetNames.length > 0) setSheetName(wb.SheetNames[0])
   }, [wb?.SheetNames])
 
+  const onCheckHasHeader = useCallback(e => setHasHeader(e.target.checked), [])
+
   const sheet = useMemo(() => {
     if (wb && sheetName) {
       const ws = wb.Sheets[sheetName]
       const sheet = XLSX.utils.sheet_to_json(ws, { header: 1 })
       if (sheet.length > 0) {
+        if (sheet.length === 1) setHasHeader(false)
         setEmailField(0)
         setTesterIdField(sheet[0].length >= 2 ? 1 : 0)
       }
@@ -64,8 +68,10 @@ const ExcelImporter = ({ onImport = () => {} }) => {
     sheet.map(row => ({
       email: row[emailField],
       testerId: row[testerIdField]
-    })).filter(row => !!row.email || !!row.testerId),
-    [sheet, emailField, testerIdField]
+    }))
+    .filter(row => !!row.email || !!row.testerId)
+    .slice(hasHeader ? 1 : 0),
+    [sheet, hasHeader, emailField, testerIdField]
   )
 
   if (wb) {
@@ -126,6 +132,14 @@ const ExcelImporter = ({ onImport = () => {} }) => {
         {
           sheet.length > 0 &&
           <>
+            { sheet.length > 1 &&
+              <Checkbox
+                checked={hasHeader}
+                onChange={onCheckHasHeader}
+              >
+                ตัดข้อมูลแถวแรก (ส่วนหัว) ออก
+              </Checkbox>
+            }
             { 
               emailField === testerIdField && 
               <Alert
