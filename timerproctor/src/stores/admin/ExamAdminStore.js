@@ -158,6 +158,20 @@ class ExamAdminStore {
   }
 
   @action
+  async terminateTester(_id = '', reason = '') {
+    if (!_id) return false
+    
+    const examId = this.examStore?.id 
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/${_id}`, { status: 'terminated', reason }, 'PATCH')
+    const { status, message } = res
+    if (status === 'ok')  {
+      return this.updateLocalTester(_id, { status: 'terminated' })
+    } else {
+      throw new Error(message || 'เกิดข้อผิดพลาดในการเชิญผู้เข้าสอบรายนี้ออก')
+    }
+  }
+
+  @action
   async editName(name) {
     const examId = this.examStore?.id 
     const res = await fetchAPIwithAdminToken(`/exams/${examId}`, { name }, 'PATCH')
