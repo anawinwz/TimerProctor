@@ -78,8 +78,8 @@ router.post('/responses', authenticate, populateExam, async (req, res) => {
     let entryValue = ''
     if (type === 'email') entryValue = user.email
     else if (type === 'testerId') {
-      const { testerId } = testerIdMappings.find(mapping => String(mapping.email) === String(user.email))
-      entryValue = testerId
+      const mapping = testerIdMappings.find(mapping => String(mapping.email) === String(user.email))
+      entryValue = mapping?.testerId || ''
     }
 
     bodyEntries.push([entryKey, entryValue])
