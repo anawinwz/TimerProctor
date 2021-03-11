@@ -373,5 +373,20 @@ router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, as
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดขณะนำเข้ารายชื่อ'))
   }
 })
+router.delete('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
+  const exam = req.exam
+  const { testerIdMappings } = exam
+  if (!testerIdMappings || (Array.isArray(testerIdMappings) && testerIdMappings.length === 0))
+    return res.json(jsonResponse('failed', 'การสอบนี้ไม่มีข้อมูลรายชื่อผู้เข้าสอบอยู่แล้ว'))
+  
+  try {
+    exam.testerIdMappings = []
+    await exam.save()
+
+    return res.json(jsonResponse('ok', `ลบรายชื่อทั้ง ${testerIdMappings.length} รายการออกแล้ว`))
+  } catch {
+    return res.json(jsonResponse('error', 'ไม่สามารถลบรายชื่อผู้เข้าสอบทั้งหมดออกได้'))
+  }  
+})
 
 export default router
