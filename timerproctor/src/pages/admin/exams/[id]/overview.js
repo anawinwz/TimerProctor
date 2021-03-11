@@ -28,7 +28,7 @@ const ExamOverview = () => {
 
   useEffect(async () => {
     await examStore?.getInfo()
-    examAdmin?.getCounts(true)
+    examAdmin?.getTestersCount(true)
     examAdmin?.getTesters()
   }, [])
 

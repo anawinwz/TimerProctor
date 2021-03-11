@@ -75,6 +75,20 @@ class ExamAdminStore {
   }
 
   @action
+  async getTestersCount(isInit = false) {
+    try {
+      this.loading = true
+      const examId = this.examStore?.id
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/count`)
+      const { status, payload } = res
+      if (status === 'ok') this.counts = Object.assign({}, isInit ? initialCounts : this.counts, payload.counts)
+    } catch {
+    } finally {
+      this.loading = false
+    }
+  }
+
+  @action
   addLocalTester(tester = {}) {
     const { _id } = tester
     if (this.updateLocalTester(_id, tester)) return true
@@ -138,20 +152,6 @@ class ExamAdminStore {
       }
     } catch {
       throw new Error('เกิดข้อผิดพลาดในการโหลดข้อมูลผู้เข้าสอบ')
-    } finally {
-      this.loading = false
-    }
-  }
-
-  @action
-  async getCounts(isInit = false) {
-    try {
-      this.loading = true
-      const examId = this.examStore?.id
-      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/count`)
-      const { status, payload } = res
-      if (status === 'ok') this.counts = Object.assign({}, isInit ? initialCounts : this.counts, payload.counts)
-    } catch {
     } finally {
       this.loading = false
     }
