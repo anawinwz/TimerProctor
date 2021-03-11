@@ -35,7 +35,7 @@ const ApproveView = ({ testers = [] }) => {
     socketStore.socket.emit('idCheckResponse', { id: userId, mode, reason }, data => {
       if (data?.err) return false
     })
-    examAdmin.updateTester(userId, 
+    examAdmin.updateLocalTester(userId, 
       mode === 'accept' ? { status: 'authenticated' } : 
       { checkedByMe: true }
     )

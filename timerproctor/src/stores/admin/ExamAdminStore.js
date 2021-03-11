@@ -75,9 +75,9 @@ class ExamAdminStore {
   }
 
   @action
-  addTester(tester = {}) {
+  addLocalTester(tester = {}) {
     const { _id } = tester
-    if (this.updateTester(_id, tester)) return true
+    if (this.updateLocalTester(_id, tester)) return true
 
     Object.assign(this.testers, {}, { [_id]: tester })
     this.counts.all += 1
@@ -85,7 +85,7 @@ class ExamAdminStore {
   }
 
   @action
-  updateTester(_id, changes = {}) {
+  updateLocalTester(_id, changes = {}) {
     if (!_id || !this.testers[_id]) return false
 
     const oldStatus = this.testers[_id].status
@@ -98,7 +98,7 @@ class ExamAdminStore {
   }
 
   @action
-  addSnapshotToTester(_id, snapshot = {}) {
+  addSnapshotToLocalTester(_id, snapshot = {}) {
     if (!_id || !this.testers[_id]) return false
     
     const oldSnapshots = this.testers[_id].snapshots
@@ -110,7 +110,7 @@ class ExamAdminStore {
   }
 
   @action
-  addEventToTester(_id, event = {}) {
+  addSnapshotToLocalTester(_id, event = {}) {
     if (!_id || !this.testers[_id]) return false
     
     const oldEvents = this.testers[_id].events
@@ -131,8 +131,8 @@ class ExamAdminStore {
 
       const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/${testerId}${scope ? `/${scope}` : ''}`)
       if (res.status === 'ok') {
-        if (scope) this.updateTester(testerId, res.payload)
-        else this.addTester(res.payload)
+        if (scope) this.updateLocalTester(testerId, res.payload)
+        else this.addLocalTester(res.payload)
       } else {
         throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดข้อมูลผู้เข้าสอบ')
       }

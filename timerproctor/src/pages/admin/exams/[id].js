@@ -43,14 +43,14 @@ const AdminExamPage = ({ match }) => {
           })
           .on('examStatus', payload => exam.updateStatus(payload))
           .on('examAllowLogin', payload => examAdmin.updateAllowLogin(payload))
-          .on('newTester', tester => examAdmin.addTester(tester))
+          .on('newTester', tester => examAdmin.addLocalTester(tester))
           .on('testerStatus', payload => {
             const { id, status } = payload
-            examAdmin.updateTester(id, { status })
+            examAdmin.updateLocalTester(id, { status })
           })
           .on('idCheckRequest', payload => {
             const { id, socketId, photoURL, timestamp } = payload
-            examAdmin.updateTester(id, {
+            examAdmin.updateLocalTester(id, {
               status: 'authenticating',
               socketId: socketId,
               idCheck: {
@@ -63,14 +63,14 @@ const AdminExamPage = ({ match }) => {
           .on('newSnapshot', payload => {
             const { id, url, timestamp } = payload
             const snapshot = { url: url, timestamp: timestamp }
-            examAdmin.updateTester(id, {
+            examAdmin.updateLocalTester(id, {
               lastSnapshot: snapshot
             })
-            examAdmin.addSnapshotToTester(id, snapshot)
+            examAdmin.addSnapshotToLocalTester(id, snapshot)
           })
           .on('newEvent', payload => {
             const { id, event } = payload
-            examAdmin.addEventToTester(id, event)
+            examAdmin.addSnapshotToLocalTester(id, event)
           })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
           .connect()
