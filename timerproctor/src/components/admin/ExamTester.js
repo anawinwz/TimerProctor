@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { useCallback } from 'react'
-import { Row, Col, Modal } from 'antd'
+import { Row, Col } from 'antd'
 import { Link } from 'react-router-dom'
 import { StopOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import ExamTesterTerminateModal from './ExamTesterTerminateModal'
 
 const ImageBox = styled(`div`)`
   width: 100%;
@@ -37,22 +37,18 @@ const ButtonCol = styled(Col)`
 `
 
 const ExamTester = ({ tester }) => {
-  const terminate = useCallback(() => {
-    Modal.confirm({
-      title: `คุณแน่ใจหรือว่าต้องการเชิญ ${tester.name} ออกจากห้องสอบ?`,
-      content: `การดำเนินการนี้ไม่สามารถยกเลิกได้`,
-      okText: 'ยืนยันการเชิญออก',
-      okType: 'danger',
-      cancelText: 'ยกเลิก',
-    })
-  }, [tester])
+  const [show, _, modal] = ExamTesterTerminateModal({
+    testerId: tester._id,
+    testerName: tester.name
+  })
 
   return (
     <>
+      { modal }
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot?.url || tester.avatar})` }}>
         <div className="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
-            <ButtonCol span={6} onClick={terminate}>
+            <ButtonCol span={6} onClick={show}>
               <StopOutlined /> เชิญออก
             </ButtonCol>
             <ButtonCol span={6}>

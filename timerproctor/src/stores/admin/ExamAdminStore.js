@@ -162,7 +162,7 @@ class ExamAdminStore {
     if (!_id) return false
     
     const examId = this.examStore?.id 
-    const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/${_id}`, { status: 'terminated', reason }, 'PATCH')
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/${_id}/status`, { status: 'terminated', reason }, 'PATCH')
     const { status, message } = res
     if (status === 'ok')  {
       return this.updateLocalTester(_id, { status: 'terminated' })
