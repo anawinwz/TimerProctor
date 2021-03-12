@@ -34,6 +34,8 @@ router.get('/', adminAuthen, async (req, res) => {
         updatedAt: 1
       }
     )
+    .lean()
+    
     return res.json(jsonResponse('ok', {
       exams: exams.map(exam => ({
         ...exam,
