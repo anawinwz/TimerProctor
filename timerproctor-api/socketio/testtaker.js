@@ -18,7 +18,18 @@ export default (socket, user = {}) => {
         }
       }
     })
-    newEvent.save()
+    newEvent.save((err, newEvent) => {
+      if (err) return false
+      
+      let toSend = newEvent.toJSON()
+      delete toSend._id
+      delete toSend.attempt
+
+      getExamNsp(examId).to('proctor').emit('newEvent', {
+        id: socketInfo.id,
+        event: toSend
+      })
+    })
   })
 
   socket.on('idCheck', async (data, callback) => {
