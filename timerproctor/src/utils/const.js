@@ -32,7 +32,8 @@ export const testerTerminatableStatuses = [
 export const testerEventsType = {
   face: 'ตรวจจับใบหน้า',
   window: 'ตรวจจับการสลับแท็บ',
-  snapshot: 'สุ่มบันทึกภาพ'
+  snapshot: 'สุ่มบันทึกภาพ',
+  socket: 'การเชื่อมต่อระบบคุมสอบ'
 }
 
 export const photoRejectReasons = ['รูปไม่ชัดเจน', 'ประเภทบัตรไม่ถูกต้อง', 'บุคคลในภาพและในบัตรไม่ตรง']

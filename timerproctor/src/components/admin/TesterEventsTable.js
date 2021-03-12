@@ -56,6 +56,19 @@ const columns = [
         case 'snapshot': return `ภาพมี ${info.facesCount} ใบหน้า`
         case 'face':
           return info.facesCount == 0 ? 'ไม่พบใบหน้า' : `พบหลายบุคคลบนภาพ (${info.facesCount} ใบหน้า)`
+        case 'socket':
+          const { name, info: eventInfo } = info.socketEvent
+          switch (name) {
+            case 'disconnect':
+              switch (eventInfo) {
+                case 'client namespace disconnect': return 'ปลายทางขอตัดการเชื่อมต่อเอง'
+                case 'ping timeout': return 'ไม่ตอบสนองในเวลาที่กำหนด (เน็ตช้า)'
+                case 'transport close': return 'การเชื่อมต่อขาดหาย (หลุด หรือสลับ 3G/4G <-> Wi-Fi)'
+                default: return 'ไม่ทราบรายละเอียด'
+              }
+            default: return 'ไม่ทราบรายละเอียด'
+          }
+          break
         default: return `ไม่ทราบรายละเอียด`
       }
     }
