@@ -59,6 +59,7 @@ const columns = [
         case 'socket':
           const { name, info: eventInfo } = info.socketEvent
           switch (name) {
+            case 'authorized': return 'เชื่อมต่อสำเร็จ'
             case 'disconnect':
               switch (eventInfo) {
                 case 'client namespace disconnect': return 'ปลายทางขอตัดการเชื่อมต่อเอง'
