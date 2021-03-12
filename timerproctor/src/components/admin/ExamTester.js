@@ -56,10 +56,10 @@ const ExamTester = ({ tester }) => {
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot?.url || tester.avatar})` }}>
         <div className="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
-            <ButtonCol span={6} onClick={terminatable ? show : () => {}} disabled={!terminatable}>
+            <ButtonCol xs={24} md={6} onClick={terminatable ? show : () => {}} disabled={!terminatable}>
               <StopOutlined /> เชิญออก
             </ButtonCol>
-            <ButtonCol span={6}>
+            <ButtonCol xs={24} md={6}>
               <Link to={`testers/${tester._id}`}><InfoCircleOutlined /> ข้อมูล</Link>
             </ButtonCol>
           </Row>

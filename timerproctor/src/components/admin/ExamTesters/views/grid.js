@@ -3,11 +3,11 @@ import { observer } from 'mobx-react-lite'
 import ExamTester from '../../ExamTester'
 
 const colSizeMap = {
-  6: { span: 8 },
-  12: { span: 6 },
-  16: { span: 6 },
-  20: { span: 6 },
-  24: { span: 6 },
+  6: { xs: 12, md: 8 },
+  12: { xs: 12, md: 6 },
+  16: { xs: 12, md: 6 },
+  20: { xs: 12, md: 6 },
+  24: { xs: 12, md: 6 },
 }
 
 const GridView = ({ pageSize = 6, testers = [] }) => {
