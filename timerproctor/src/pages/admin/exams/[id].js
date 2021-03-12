@@ -16,7 +16,6 @@ import ExamTesterPage from './[id]/testers/[testerId]'
 
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
-  const [socketLoading, setSocketLoading] = useState(false)
 
   useEffect(async () => {
     exam.clearInfo()
@@ -32,11 +31,9 @@ const AdminExamPage = ({ match }) => {
     if (examAdmin.socketToken && examAdmin.lastExamId === exam.id) {
       hideSocketLoading = message.loading('กำลังเชื่อมต่อเซิร์ฟเวอร์คุมสอบ...')
       try {
-        setSocketLoading(true)
         socketStore.init(`/exams/${exam.id}`)
           .on('authenticated', () => {
             if (typeof hideSocketLoading === 'function') hideSocketLoading()
-            setSocketLoading(false)
           })
           .on('unauthorized', error => {
             throw error
