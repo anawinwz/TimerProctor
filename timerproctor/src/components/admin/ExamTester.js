@@ -11,6 +11,7 @@ const ImageBox = styled(`div`)`
   background-color: black;
   background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
   .hover-box {
     display: none;
     width: 100%;
