@@ -9,11 +9,18 @@ const ExamTesterTerminateModal = ({ testerId = '', testerName = '' }) => {
   const examAdmin = useObserver(() => ExamAdminStore)
 
   const [visible, setVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
   const show = useCallback(() => setVisible(true), [])
   const hide = useCallback(() => setVisible(false), [])
-  const handleOk = () => examAdmin.terminateTester(testerId)
-    .then(hide)
-    .catch(err => message.error(err.message))
+  const handleOk = () => {
+    setLoading(true)
+    return examAdmin.terminateTester(testerId)
+      .then(hide)
+      .catch(err => {
+        message.error(err.message)
+        setLoading(false)
+      })
+  }
   const handleCancel = hide
 
   return [
@@ -26,6 +33,7 @@ const ExamTesterTerminateModal = ({ testerId = '', testerName = '' }) => {
       okText="ยืนยันการเชิญออก"
       okType="danger"
       onOk={handleOk}
+      confirmLoading={loading}
       cancelText="ยกเลิก"
       onCancel={handleCancel}
       maskClosable={false}
