@@ -7,7 +7,7 @@ const ListView = ({ pageSize = 8, testers = [], noDescription = false }) => {
   return (
     <Col span={24}>
       <List
-        grid={{ xs: 1, md: 2 }}
+        grid={{ xs: 1, column: 2 }}
         dataSource={testers}
         renderItem={tester => (
           <List.Item>
