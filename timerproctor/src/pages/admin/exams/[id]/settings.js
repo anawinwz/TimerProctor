@@ -59,6 +59,7 @@ const ExamSettings = () => {
           tab="ผู้เข้าสอบ"
           key="testtakers"
         >
+          { !isExamOwner && <Alert showIcon type="info" message="มีเพียงอาจารย์เจ้าของการสอบเท่านั้นที่นำเข้า/ลบรายชื่อได้" /> }
           <ExamTesterIdMappings />
         </Tabs.TabPane>
       </Tabs>

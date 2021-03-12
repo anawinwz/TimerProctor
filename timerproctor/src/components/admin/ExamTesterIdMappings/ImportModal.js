@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite'
 
 import ExcelImporter from '~/components/admin/ExcelImporter'
 
-const ImportModal = () => {
+const ImportModal = ({ disabled = false }) => {
   const { ExamAdminStore: examAdmin } = useStore()
 
   const [visible, setVisible] = useState(false)
@@ -43,7 +43,9 @@ const ImportModal = () => {
 
   return (
     <>
-      <Button type="primary" icon={<ImportOutlined />} onClick={showThisModal}>นำเข้ารายชื่อ</Button>
+      <Button type="primary" icon={<ImportOutlined />} onClick={showThisModal} disabled={disabled}>
+        นำเข้ารายชื่อ
+      </Button>
       <Modal
         visible={visible}
         title="นำเข้ารายชื่อ"

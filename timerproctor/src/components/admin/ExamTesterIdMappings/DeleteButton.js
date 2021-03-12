@@ -5,7 +5,7 @@ import { Button, message, Modal } from 'antd'
 import { useStore } from '~/stores/admin'
 import { observer } from 'mobx-react-lite'
 
-const DeleteButton = () => {
+const DeleteButton = ({ disabled = false }) => {
   const { ExamAdminStore: examAdmin } = useStore()
 
   const onDelete = useCallback(() => {
@@ -28,7 +28,7 @@ const DeleteButton = () => {
       danger
       icon={<DeleteOutlined />}
       onClick={onDelete}
-      disabled={examAdmin?.testerIdMappings?.length === 0}
+      disabled={disabled || examAdmin?.testerIdMappings?.length === 0}
     >
       ลบทั้งหมด
     </Button>

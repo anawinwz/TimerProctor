@@ -29,8 +29,8 @@ const ExamTesterIdMappings = () => {
 
   return (
     <>
-      <ImportModal />
-      <DeleteButton />
+      <ImportModal disabled={!examAdmin.isExamOwner} />
+      <DeleteButton disabled={!examAdmin.isExamOwner} />
       <Table
         size="small"
         loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
