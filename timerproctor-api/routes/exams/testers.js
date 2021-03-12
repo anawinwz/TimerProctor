@@ -153,7 +153,7 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamPersonnel, populateA
 
 router.patch('/:testerId/status', adminAuthen, populateExam, onlyExamPersonnel, populateAttempt, async (req, res) => {
   const { status, reason = '' } = req.body
-  if (!status || ['loggedin', 'terminated'].includes(status))
+  if (!status || ['authenticating', 'authenticated', 'started'].includes(status))
     return res.json(jsonResponse('failed', 'ค่าสถานะที่ต้องการเปลี่ยนไม่ถูกต้อง'))
 
   const attempt = req.attempt

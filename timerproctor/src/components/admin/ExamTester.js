@@ -3,6 +3,7 @@ import { Row, Col } from 'antd'
 import { Link } from 'react-router-dom'
 import { StopOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import ExamTesterTerminateModal from './ExamTesterTerminateModal'
+import { testerTerminatableStatuses } from 'utils/const'
 
 const ImageBox = styled(`div`)`
   width: 100%;
@@ -35,6 +36,11 @@ const ButtonCol = styled(Col)`
   &:hover {
     opacity: 0.8;
   }
+  ${props => props.disabled ? `
+  cursor: default;
+  opacity: 0.4;
+  &:hover { opacity: 0.4; }
+  ` : ''}
 `
 
 const ExamTester = ({ tester }) => {
@@ -43,13 +49,14 @@ const ExamTester = ({ tester }) => {
     testerName: tester.name
   })
 
+  const terminatable = testerTerminatableStatuses.includes(tester.status)
   return (
     <>
       { modal }
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot?.url || tester.avatar})` }}>
         <div className="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
-            <ButtonCol span={6} onClick={show}>
+            <ButtonCol span={6} onClick={terminatable ? show : () => {}} disabled={!terminatable}>
               <StopOutlined /> เชิญออก
             </ButtonCol>
             <ButtonCol span={6}>

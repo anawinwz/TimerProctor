@@ -23,6 +23,12 @@ export const testerStatuses = {
   completed: 'ส่งคำตอบแล้ว',
 }
 
+export const testerTerminatableStatuses = [
+  'authenticating',
+  'authenticated',
+  'started'
+]
+
 export const testerEventsType = {
   face: 'ตรวจจับใบหน้า',
   window: 'ตรวจจับการสลับแท็บ',

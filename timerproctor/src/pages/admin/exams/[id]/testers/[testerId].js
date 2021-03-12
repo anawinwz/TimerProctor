@@ -8,7 +8,7 @@ import { useStore } from '~/stores/admin'
 
 import useAppTitle from '~/hooks/useAppTitle'
 
-import { testerStatuses } from '~/utils/const'
+import { testerStatuses, testerTerminatableStatuses } from '~/utils/const'
 import { dateStr } from '~/utils/date'
 
 import ContentBox from '~/components/admin/ContentBox'
@@ -62,7 +62,9 @@ const ExamTesterReport = ({ match }) => {
   return (
     <ContentBox>
       <Title level={3}>{ tester.name }</Title>
-      <Button type="danger" icon={<StopOutlined />} onClick={show}>เชิญออก</Button>
+      <Button type="danger" icon={<StopOutlined />} onClick={show} disabled={!testerTerminatableStatuses.includes(tester.status)}>
+        เชิญออก
+      </Button>
       { modal }
       <TesterDescription align="middle">
         <Col xs={24} md={14}>
