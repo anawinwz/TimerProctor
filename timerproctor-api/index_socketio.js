@@ -11,7 +11,7 @@ import AttemptEvent from './models/attemptEvent'
 import { ioNamespace } from './utils/const'
 
 import { authorize } from './utils/socketio-jwt'
-import { getExamIdFromSocket } from './utils/helpers'
+import { getExamIdFromSocket, getExamNsp } from './utils/helpers'
 import bindSocketListener from './socketio'
 
 const io = new Server(server, {
