@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-import { message } from 'antd'
 import { useStore } from '~/stores/admin'
+import { message } from 'antd'
 
 import { showModal } from '~/utils/modal'
 
@@ -10,6 +10,7 @@ import Loading from '~/components/exams/Loading'
 import Error from '~/components/exams/Error'
 import NotFound from '~/components/exams/NotFound'
 
+import ExamPage from './[id]/index'
 import ExamSettingsPage from './[id]/settings'
 import ExamOverviewPage from './[id]/overview'
 import ExamTesterPage from './[id]/testers/[testerId]'
@@ -86,6 +87,7 @@ const AdminExamPage = ({ match }) => {
   else if (!exam.info.name) return <NotFound />
   return (
     <Switch>
+      <Route exact path={match.url + '/'} component={ExamPage} />
       <Route exact path={match.url + '/settings'} component={ExamSettingsPage} />
       <Route exact path={match.url + '/overview'} component={ExamOverviewPage} />
       <Route exact path={match.url + '/testers/:testerId'} component={ExamTesterPage} />
