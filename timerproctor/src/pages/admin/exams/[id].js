@@ -29,7 +29,7 @@ const AdminExamPage = ({ match }) => {
 
   useEffect(() => {
     let hideSocketLoading
-    if (examAdmin.socketToken) {
+    if (examAdmin.socketToken && examAdmin.lastExamId === exam.id) {
       hideSocketLoading = message.loading('กำลังเชื่อมต่อเซิร์ฟเวอร์คุมสอบ...')
       try {
         setSocketLoading(true)
@@ -82,7 +82,7 @@ const AdminExamPage = ({ match }) => {
       if (typeof hideSocketLoading === 'function') hideSocketLoading() 
       socketStore.destroy()
     }
-  }, [examAdmin.socketToken])
+  }, [examAdmin.socketToken, exam.id])
 
   if (exam.loading) return <Loading />
   else if (exam.error) return <Error />

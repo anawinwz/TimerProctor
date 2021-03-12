@@ -29,11 +29,11 @@ class ExamAdminStore {
 
   @action
   clearInfo() {
+    this.socketToken = ''
+
     const examId = this.examStore?.id
     if (examId !== this.lastExamId) {
       this.lastExamId = examId
-
-      this.socketToken = ''
       this.counts = initialCounts
       this.testers = {}
       this.proctors = {}
