@@ -15,7 +15,7 @@ import Exam from '../../models/exam'
 import User from '../../models/user'
 
 import dayjs from '../../utils/dayjs'
-import { jsonResponse, getExamNsp, getFirstValidationErrMessage, isExamProctor } from '../../utils/helpers'
+import { jsonResponse, getExamNsp, getFirstValidationErrMessage, isExamProctor, determineExamStatus } from '../../utils/helpers'
 import { createSocketToken } from '../../utils/token'
 import { ValidationError } from '../../utils/error'
 
@@ -34,7 +34,12 @@ router.get('/', adminAuthen, async (req, res) => {
         updatedAt: 1
       }
     )
-    return res.json(jsonResponse('ok', { exams: exams }))
+    return res.json(jsonResponse('ok', {
+      exams: exams.map(exam => ({
+        ...exam,
+        status: determineExamStatus(exam)
+      }))
+    }))
   } catch (err) {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดรายชื่อการสอบ'))
   }

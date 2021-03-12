@@ -22,7 +22,8 @@ router.get('/', adminAuthen, async (req, res) => {
         invitedAt: proctoring.invitedAt,
         respondedAt: proctoring.respondedAt
       },
-      ...proctoring.exam
+      ...proctoring.exam,
+      status: determineExamStatus(proctoring.exam)
     }))
     return res.json(jsonResponse('ok', { proctorings: exams } ))
   } catch {

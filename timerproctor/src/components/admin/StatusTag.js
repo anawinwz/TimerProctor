@@ -5,7 +5,7 @@ const statuses = {
     name: 'ยังไม่ได้ตั้งค่า',
     color: 'gold',
   },
-  'ready': {
+  'pending': {
     name: 'ยังไม่เริ่ม',
   },
   'started': {
