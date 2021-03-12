@@ -12,6 +12,7 @@ import { testerStatuses } from '~/utils/const'
 import { dateStr } from '~/utils/date'
 
 import ContentBox from '~/components/admin/ContentBox'
+import ExamTesterTerminateModal from '~/components/admin/ExamTesterTerminateModal'
 import UserTag from '~/components/admin/UserTag'
 import CaptionedProgress from '~/components/admin/CaptionedProgress'
 import SnapshotSequence from '~/components/admin/SnapshotSequence'
@@ -46,6 +47,10 @@ const ExamTesterReport = ({ match }) => {
 
   const tester = examAdmin.testers[testerId]
   useAppTitle(tester ? `${tester?.name} - ${exam?.name}` : 'รายงานผู้เข้าสอบ')
+  const [show, _, modal] = ExamTesterTerminateModal({
+    testerId: testerId,
+    testerName: tester?.name
+  })
 
   const checker = useMemo(() => ({
     name: tester?.idCheck?.checker?.info?.displayName,
@@ -57,7 +62,8 @@ const ExamTesterReport = ({ match }) => {
   return (
     <ContentBox>
       <Title level={3}>{ tester.name }</Title>
-      <Button type="danger" icon={<StopOutlined />}>เชิญออก</Button>
+      <Button type="danger" icon={<StopOutlined />} onClick={show}>เชิญออก</Button>
+      { modal }
       <TesterDescription align="middle">
         <Col xs={24} md={14}>
           <Row>
