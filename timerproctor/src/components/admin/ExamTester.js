@@ -43,6 +43,7 @@ const ImageBox = styled(`div`)`
 `
 
 const ButtonCol = styled(Col)`
+  user-select: none;
   cursor: pointer;
   a { color: white; }
   &:hover {
