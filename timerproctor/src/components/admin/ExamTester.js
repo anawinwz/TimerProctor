@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Row, Col } from 'antd'
+import { Row, Col, Typography } from 'antd'
 import { Link } from 'react-router-dom'
 import { StopOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import ExamTesterTerminateModal from './ExamTesterTerminateModal'
@@ -78,7 +78,7 @@ const ExamTester = ({ tester, noStatus = false }) => {
           </Row>
         </div>
       </ImageBox>
-      <span>{ tester.name }</span>
+      <Typography.Text ellipsis className="w-100">{ tester.name }</Typography.Text>
     </>
   )
 }
