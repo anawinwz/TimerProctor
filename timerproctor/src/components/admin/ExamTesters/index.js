@@ -68,7 +68,7 @@ const ExamTesters = ({ status }) => {
       </Row>
       <Row justify="center" gutter={4}>
         { viewMode === 'approve' && <ApproveView testers={pagedTesters} /> }
-        { viewMode === 'grid' && <GridView pageSize={pageSize} testers={pagedTesters} /> }
+        { viewMode === 'grid' && <GridView pageSize={pageSize} testers={pagedTesters} noStatus={status !== 'all'} /> }
         { viewMode === 'list' && <ListView pageSize={pageSize} testers={pagedTesters} noDescription={status !== 'all'} /> }
       </Row>
       { viewMode !== 'approve' &&

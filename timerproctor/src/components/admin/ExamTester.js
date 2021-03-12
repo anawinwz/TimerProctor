@@ -3,9 +3,10 @@ import { Row, Col } from 'antd'
 import { Link } from 'react-router-dom'
 import { StopOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import ExamTesterTerminateModal from './ExamTesterTerminateModal'
-import { testerTerminatableStatuses } from 'utils/const'
+import { testerStatuses, testerTerminatableStatuses } from 'utils/const'
 
 const ImageBox = styled(`div`)`
+  position: relative;
   width: 100%;
   height: 160px;
   border-radius: 10px;
@@ -28,6 +29,17 @@ const ImageBox = styled(`div`)`
   &:hover {
     .hover-box { display: block; }
   }
+  .status-label {
+    position: absolute;
+    z-index: 1;
+    width: fit-content;
+    padding: 2px 5px;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+    font-size: 12px;
+  }
 `
 
 const ButtonCol = styled(Col)`
@@ -43,7 +55,7 @@ const ButtonCol = styled(Col)`
   ` : ''}
 `
 
-const ExamTester = ({ tester }) => {
+const ExamTester = ({ tester, noStatus = false }) => {
   const [show, _, modal] = ExamTesterTerminateModal({
     testerId: tester._id,
     testerName: tester.name
@@ -54,6 +66,7 @@ const ExamTester = ({ tester }) => {
     <>
       { modal }
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot?.url || tester.avatar})` }}>
+        {!noStatus && <span class="status-label">{ testerStatuses[tester.status] }</span> }
         <div className="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
             <ButtonCol xs={24} md={6} onClick={terminatable ? show : () => {}} disabled={!terminatable}>

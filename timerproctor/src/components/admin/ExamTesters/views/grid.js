@@ -10,11 +10,11 @@ const colSizeMap = {
   24: { xs: 12, md: 6 },
 }
 
-const GridView = ({ pageSize = 6, testers = [] }) => {
+const GridView = ({ pageSize = 6, testers = [], noStatus = false }) => {
   if (testers.length === 0) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   return testers.map(tester => (
     <Col key={tester._id} { ...colSizeMap[pageSize] }>
-      <ExamTester tester={tester} />
+      <ExamTester tester={tester} noStatus={noStatus} />
     </Col>
   ))
 }
