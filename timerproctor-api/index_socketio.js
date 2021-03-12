@@ -6,6 +6,7 @@ import { JWT_SOCKET_SECRET } from './config'
 import User from './models/user'
 import Exam from './models/exam'
 import Attempt from './models/attempt'
+import AttemptEvent from './models/attemptEvent'
 
 import { ioNamespace } from './utils/const'
 
@@ -57,8 +58,21 @@ ioExam.on('connection', authorize({
       if (oldSocket) oldSocket.disconnect(true)
     }
 
-    if (role === 'testtaker')
+    if (role === 'testtaker') {
       await Attempt.findByIdAndUpdate(id, { socketId: socket.id })
+      
+      const newEvent = new AttemptEvent({
+        attempt: id,
+        timestamp: Date.now(),
+        type: 'socket',
+        info: {
+          socketEvent: {
+            name: 'authorized'
+          }
+        }
+      })
+      newEvent.save()
+    }
     
     onSuccess()
 
