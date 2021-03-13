@@ -24,6 +24,5 @@ const app = express()
 app.use(express.json({ limit: '4mb' }))
 app.disable('etag')
 app.use(cors())
-app.use('/idphotos', express.static('idphotos'))
 
 export default app
