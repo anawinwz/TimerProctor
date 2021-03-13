@@ -42,9 +42,9 @@ const AdminExamPage = ({ match }) => {
           .on('examStatus', payload => exam.updateStatus(payload))
           .on('examAllowLogin', payload => examAdmin.updateAllowLogin(payload))
           .on('newTester', tester => examAdmin.addLocalTester(tester))
-          .on('testerStatus', payload => {
-            const { id, status } = payload
-            examAdmin.updateLocalTester(id, { status })
+          .on('testerUpdate', payload => {
+            const { id, updates } = payload
+            examAdmin.updateLocalTester(id, updates)
           })
           .on('idCheckRequest', payload => {
             const { id, socketId, photoURL, timestamp } = payload
@@ -68,7 +68,7 @@ const AdminExamPage = ({ match }) => {
           })
           .on('newEvent', payload => {
             const { id, event } = payload
-            examAdmin.addSnapshotToLocalTester(id, event)
+            examAdmin.addEventToLocalTester(id, event)
           })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
           .connect()

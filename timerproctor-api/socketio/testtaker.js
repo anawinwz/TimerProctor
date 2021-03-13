@@ -112,7 +112,7 @@ export default (socket, user = {}) => {
       attempt.status = 'started'
       attempt = await attempt.save()
 
-      getExamNsp(examId).to('proctor').emit('testerStatus', { id: socketInfo.id, status: 'started' })
+      getExamNsp(examId).to('proctor').emit('testerUpdate', { id: socketInfo.id, updates: { status: 'started' } })
     } catch {}
   })
 
@@ -122,7 +122,7 @@ export default (socket, user = {}) => {
       attempt.status = 'completed'
       attempt = await attempt.save()
 
-      getExamNsp(examId).to('proctor').emit('testerStatus', { id: socketInfo.id, status: 'completed' })
+      getExamNsp(examId).to('proctor').emit('testerUpdate', { id: socketInfo.id, updates: { status: 'completed' } })
     } catch {}
   })
 
@@ -132,7 +132,7 @@ export default (socket, user = {}) => {
       attempt.status = 'completed'
       attempt = await attempt.save()
 
-      getExamNsp(examId).to('proctor').emit('testerStatus', { id: socketInfo.id, status: 'completed' })
+      getExamNsp(examId).to('proctor').emit('testerUpdate', { id: socketInfo.id, updates: { status: 'completed' } })
     } catch {}
   })
 

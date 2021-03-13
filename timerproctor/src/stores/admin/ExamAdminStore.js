@@ -124,7 +124,7 @@ class ExamAdminStore {
   }
 
   @action
-  addSnapshotToLocalTester(_id, event = {}) {
+  addEventToLocalTester(_id, event = {}) {
     if (!_id || !this.testers[_id]) return false
     
     const oldEvents = this.testers[_id].events
