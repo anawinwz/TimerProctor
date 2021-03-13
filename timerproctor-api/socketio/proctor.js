@@ -21,9 +21,16 @@ export default (socket, user = {}) => {
       attempt.idCheck.reason = rejectReason
       attempt.idCheck.checker = user._id
       attempt.idCheck.checkedAt = Date.now()
-      await attempt.save() 
+      attempt = await attempt.save() 
       
       getExamNsp(examId).to(socketId).emit('idCheckResponse', { accepted, reason: rejectReason })
+      getExamNsp(examId).to('proctor').emit('testerUpdate', {
+        id: socketId,
+        updates: {
+          status: attempt.status,
+          idCheck: attempt.idCheck
+        }
+      })
       callback({ err: false, update: {} })
     } catch (err) {
       console.log(err)
