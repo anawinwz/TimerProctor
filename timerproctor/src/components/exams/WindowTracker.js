@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import useWindowFocus from 'use-window-focus'
+import useWindowFocus from '~/hooks/useWindowFocus'
 
 const WindowTracker = ({ signal }) => {
   const [lastFocus, setLastFocus] = useState(null)
-  const windowFocused = useWindowFocus()
+  const windowFocused = useWindowFocus(true)
 
   useEffect(() => {
     const timestamp = Date.now()
