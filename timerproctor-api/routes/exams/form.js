@@ -13,7 +13,7 @@ import { getLastAttempt } from '../../utils/attempt'
 const router = Router({ mergeParams: true })
 
 router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res) => {
-  const { _id: userId } = user
+  const { _id: userId } = req.user
   const { _id: examId, linked = {} } = req.exam
 
   const lastAttempt = await getLastAttempt(examId, userId)
