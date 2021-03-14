@@ -88,7 +88,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                   field.rules[idx].validator = (validators[name]) ? validators[name](values) : () => Promise.resolve()
                 }
                 
-                let ItemComponent = null, SubComponent = null
+                let ItemComponent = null, SubComponent = null, moreProps = {}
                 switch (type) {
                   case 'shortAnswer':
                     ItemComponent = isNumber ? <InputNumber placeholder={placeholderText} style={{ width: '100%' }} /> : <Input placeholder={placeholderText} />
@@ -98,6 +98,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                     break
                   case 'dropdown':
                     SubComponent = Select
+                    moreProps = { placeholder: 'เลือก', allowClear: true }
                   case 'checkbox':
                     if (!SubComponent) SubComponent = Checkbox.Group
                   case 'multipleChoice':
@@ -109,7 +110,7 @@ const GoogleForm = ({ form, onCompleted }) => {
                       disabled: !answer,
                       style: verticalChoices
                     }))
-                    ItemComponent = <SubComponent options={options} />
+                    ItemComponent = <SubComponent options={options} {...moreProps} />
                     break
                   case 'linearScale':
                     ItemComponent = <Radio.Group>
