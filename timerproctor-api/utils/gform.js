@@ -159,16 +159,18 @@ const toFieldData = field => {
     }
   } else {
     let rows = [], columns = []
-    for (const subRow of field[4]) {
-      const id = subRow[0]
-      columns = subRow[1]
-      const isRequired = subRow[2] == 1
+    for (const row of field[4]) {
+      const id = row[0]
+      columns = row[1]
+      const isRequired = row[2] == 1
 
-      const title = subRow[3][0]
+      const title = row[3][0]
+      const type = row[11][0] == 1 ? 'checkbox' : 'radio'
       rows.push({
         id: id,
         title: title,
-        rules: isRequired ? [{ required: true }] : []
+        rules: isRequired ? [{ required: true }] : [],
+        type: type
       })
     }
     fieldData.rows = rows
