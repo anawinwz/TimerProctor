@@ -36,12 +36,13 @@ const ApproveView = ({ testers = [] }) => {
       if (data?.err) return false
     })
     examAdmin.updateLocalTester(userId, 
-      mode === 'accept' ? { status: 'authenticated' } : 
-      { checkedByMe: true }
+      mode === 'accept' ? 
+      { status: 'authenticated' } :
+      { status: 'loggedin' }
     )
   }, [socketStore.socket])
 
-  const queue = testers.filter(tester => !tester.checkedByMe)
+  const queue = testers
   if (queue.length === 0) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
   
   const item = queue[0]
