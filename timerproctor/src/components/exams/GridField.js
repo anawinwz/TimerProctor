@@ -1,5 +1,9 @@
 import { Checkbox, Form, Radio, Table } from 'antd'
 
+const customGroupStyles = {
+  tableLayout: 'fixed'
+}
+
 const GridField = ({ info }) => {
   const { rows = [], columns = [] } = info
 
@@ -10,13 +14,15 @@ const GridField = ({ info }) => {
       dataIndex: 'title'
     },
     {
-      title: '',
+      title: <table style={customGroupStyles}><tr>{ columns.map(column => <td>{ column }</td>) }</tr></table>,
       key: 'options',
       render: (_, record) => {
         const Input = record.type === 'checkbox' ? Checkbox : Radio
         return (
           <Form.Item name={`answer_${record.id}:${record.type}`} noStyle>
-            <Input.Group options={columns} />
+            <Input.Group>
+              <table style={customGroupStyles}><tr>{ columns.map(column => <td><Input value={column} /></td>) }</tr></table>
+            </Input.Group>
           </Form.Item>
         )
       }
