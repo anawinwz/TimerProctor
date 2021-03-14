@@ -19,7 +19,7 @@ const GridField = ({ info }) => {
       render: (_, record) => {
         const Input = record.type === 'checkbox' ? Checkbox : Radio
         return (
-          <Form.Item name={`answer_${record.id}:${record.type}`} noStyle>
+          <Form.Item name={`answer_${record.id}:${record.type}`} noStyle rules={record.rules}>
             <Input.Group>
               <table style={customGroupStyles}><tr>{ columns.map(column => <td><Input value={column} /></td>) }</tr></table>
             </Input.Group>
