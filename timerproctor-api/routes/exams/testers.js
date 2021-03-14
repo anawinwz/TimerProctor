@@ -175,12 +175,12 @@ router.patch('/:testerId/status', adminAuthen, populateExam, onlyExamPersonnel, 
 
   try {
     if (status === 'terminated') {
-      getExamNsp(req.exam._id).to(socketId).emit('terminated', reason, () => {
-        getExamNsp(req.exam._id)?.[socketId]?.disconnect(true)
-      })
+      getExamNsp(req.exam._id).to(socketId).emit('terminated', reason)
       getExamNsp(req.exam._id).to('proctor').emit('testerUpdate', { id: attempt._id, updates: { status: 'terminated' } })
     }
-  } catch {}
+  } catch (err) {
+    console.log(err)
+  }
 
   return res.json(jsonResponse('ok', 'เปลี่ยนสถานะของผู้เข้าสอบเรียบร้อยแล้ว'))
 })
