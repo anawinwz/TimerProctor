@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { validateMessages, validators } from '~/utils/form'
 import { getVW } from '~/utils/dom'
 import { isMoment } from '~/utils/date'
+import GridField from './GridField'
 
 const StyledForm = styled(Form)`
   .ant-form-item {
@@ -134,6 +135,9 @@ const GoogleForm = ({ form, onCompleted }) => {
                         height: field.media.height
                       }}
                     />
+                    break
+                  case 'grid':
+                    ItemComponent = <GridField info={field} />
                     break
                   default:
                     break
