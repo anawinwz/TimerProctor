@@ -68,6 +68,7 @@ const GoogleForm = ({ form, onCompleted }) => {
       validateMessages={validateMessages}
       size="large"
       onFinish={onFinish}
+      scrollToFirstError
     >
       {
         Object.entries(sections).map(([idx, fields]) => {
