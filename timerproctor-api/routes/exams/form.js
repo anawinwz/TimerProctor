@@ -24,7 +24,10 @@ router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res) => 
   if (provider !== 'gforms' || !publicURL)
     return res.json(jsonResponse('failed', 'Access Denied.'))
 
-  const hideFields = Object.values(settings?.autofillFields || {}).map(field => String(field))
+  const hideFields = Object.entries(settings?.autofillFields || {})
+    .filter(([field, _]) => settings?.autofill?.[field] === true)
+    .map(([_, fieldId]) => String(fieldId))
+
   if (!cached?.data || Date.now() - cached?.updatedAt > 30 * 60) {
     const response = await axios.get(publicURL)
     if (response.status !== 200) throw new Error(`HTTP Status: ${response.status}`)
