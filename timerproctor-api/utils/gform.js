@@ -161,7 +161,7 @@ const toFieldData = field => {
     let rows = [], columns = []
     for (const row of field[4]) {
       const id = row[0]
-      columns = row[1]
+      columns = row[1].map(column => Array.isArray(column) ? column[0] : column)
       const isRequired = row[2] == 1
 
       const title = row[3][0]
