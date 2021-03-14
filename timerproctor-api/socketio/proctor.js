@@ -16,7 +16,7 @@ export default (socket, user = {}) => {
 
       const accepted = mode === 'accept'
       const rejectReason = !accepted ? (reason || 'ไม่ระบุเหตุผล') : ''
-      if (accepted) attempt.status = 'authenticated'
+      attempt.status = accepted ? 'authenticated' : 'loggedin'
       attempt.idCheck.accepted = accepted
       attempt.idCheck.reason = rejectReason
       attempt.idCheck.checker = user._id
