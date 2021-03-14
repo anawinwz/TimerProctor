@@ -1,4 +1,4 @@
-import { Form, Table } from 'antd'
+import { Checkbox, Form, Radio, Table } from 'antd'
 
 const GridField = ({ info }) => {
   const { rows = [], columns = [] } = info
@@ -9,16 +9,18 @@ const GridField = ({ info }) => {
       key: 'title',
       dataIndex: 'title'
     },
-    ...columns.map(column => {
-      return {
-        title: column,
-        key: column,
-        render: (_, record) => {
-          const type = record.type
-          return <Form.Item name={`answer_${record.id}:${type}`} noStyle><input type={type} name={`answer_${record.id}:${type}`} /></Form.Item>
-        }
+    {
+      title: '',
+      key: 'options',
+      render: (_, record) => {
+        const Input = record.type === 'checkbox' ? Checkbox : Radio
+        return (
+          <Form.Item name={`answer_${record.id}:${record.type}`} noStyle>
+            <Input.Group options={columns} />
+          </Form.Item>
+        )
       }
-    })
+    }
   ]
 
   return (
