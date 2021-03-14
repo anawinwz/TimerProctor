@@ -13,7 +13,13 @@ import { getLastAttempt } from '../../utils/attempt'
 const router = Router({ mergeParams: true })
 
 router.get('/', authenticate, populateExam, onlyDuringExam, async (req, res) => {
-  const { linked = {} } = req.exam
+  const { _id: userId } = user
+  const { _id: examId, linked = {} } = req.exam
+
+  const lastAttempt = await getLastAttempt(examId, userId)
+  if (!lastAttempt || !['started', 'authenticated'].includes(lastAttempt.status))
+    return res.json(jsonResponse('failed', 'คุณไม่สามารถเข้าถึงเนื้อหาการสอบได้'))
+
   const { provider, publicURL, cached, settings } = linked
   if (provider !== 'gforms' || !publicURL)
     return res.json(jsonResponse('failed', 'Access Denied.'))
