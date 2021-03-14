@@ -8,7 +8,7 @@ const fieldTypes = {
   13: 'fileUpload',
   5: 'linearScale',
   6: 'title',
-  7: 'gridChoice',
+  7: 'grid',
   8: 'section',
   9: 'date',
   10: 'time',
@@ -75,86 +75,104 @@ const toFieldData = field => {
     }
   }
 
-  const answerData = field[4]?.[0]
-  if (answerData) {
-    fieldData.id = answerData[0]
-    fieldData.rules = []
+  if (fieldType !== 'grid') {
+    const answerData = field[4]?.[0]
+    if (answerData) {
+      fieldData.id = answerData[0]
+      fieldData.rules = []
 
-    const isRequired = answerData[2] == 1
-    if (isRequired)
-      fieldData.rules.push({ required: answerData[2] == 1 })
+      const isRequired = answerData[2] == 1
+      if (isRequired)
+        fieldData.rules.push({ required: answerData[2] == 1 })
 
-    const options = answerData[1]
-    if (options && options.length > 0)
-      fieldData.answers = options.map(answer => answer[0])
+      const options = answerData[1]
+      if (options && options.length > 0)
+        fieldData.answers = options.map(answer => answer[0])
 
-    if (fieldType === 'date') {
-      fieldData.showTime = answerData[7][0] == 1
-      fieldData.showYear = answerData[7][1] == 1
-    } else if (fieldType === 'time') {
-      fieldData.isDuration = answerData[6][0] == 1
-    } else if (fieldType === 'linearScale') {
-      fieldData.labels = {
-        min: answerData[3][0],
-        max: answerData[3][1]
-      }
-    }
-
-    const validations = answerData[4]?.[0]
-    if (validations) {
-      let rule = {}
-      const type = validationTypes[validations[0]]
-      const mode = validationModes[validations[1]]
-      const values = validations[2]
-      const message = validations[3]
-      
-      rule.type = type
-      switch (type) {
-        case 'string':
-          if (['url', 'email'].includes(mode)) rule.type = mode
-          else {
-            rule.validator = {
-              name: mode,
-              values: values
-            }
-          }
-        break
-        case 'length':
-          rule.type = 'string'
-          rule[mode] = values[0]
-        break
-        case 'number':
-          if (mode === 'between') {
-            rule.min = values[0]
-            rule.max = values[1]
-          } else if (mode === 'integer') {
-            rule.type = 'integer'
-          } else if (['gt', 'gte', 'lt', 'lte'].includes(mode)) {
-            const ruleMode = ['gt', 'gte'].includes(mode) ? 'min' : 'max'
-            rule[ruleMode] = parseInt(values[0], 10) + (mode.endsWith('e') ? 0 : 1)
-          } else if (mode !== 'isNumber') {
-            rule.validator = {
-              name: mode,
-              values: values
-            }
-          }
-        break
-        case 'regExp':
-          delete rule.type
-          if (['contains', 'match'].includes(mode)) {
-            rule.pattern = values[0]
-          } else {
-            rule.validator = {
-              name: `regExp_${mode}`,
-              values: values
-            }
-          }
-        break
+      if (fieldType === 'date') {
+        fieldData.showTime = answerData[7][0] == 1
+        fieldData.showYear = answerData[7][1] == 1
+      } else if (fieldType === 'time') {
+        fieldData.isDuration = answerData[6][0] == 1
+      } else if (fieldType === 'linearScale') {
+        fieldData.labels = {
+          min: answerData[3][0],
+          max: answerData[3][1]
+        }
       }
 
-      rule.message = message
-      fieldData.rules.push(rule)
+      const validations = answerData[4]?.[0]
+      if (validations) {
+        let rule = {}
+        const type = validationTypes[validations[0]]
+        const mode = validationModes[validations[1]]
+        const values = validations[2]
+        const message = validations[3]
+        
+        rule.type = type
+        switch (type) {
+          case 'string':
+            if (['url', 'email'].includes(mode)) rule.type = mode
+            else {
+              rule.validator = {
+                name: mode,
+                values: values
+              }
+            }
+          break
+          case 'length':
+            rule.type = 'string'
+            rule[mode] = values[0]
+          break
+          case 'number':
+            if (mode === 'between') {
+              rule.min = values[0]
+              rule.max = values[1]
+            } else if (mode === 'integer') {
+              rule.type = 'integer'
+            } else if (['gt', 'gte', 'lt', 'lte'].includes(mode)) {
+              const ruleMode = ['gt', 'gte'].includes(mode) ? 'min' : 'max'
+              rule[ruleMode] = parseInt(values[0], 10) + (mode.endsWith('e') ? 0 : 1)
+            } else if (mode !== 'isNumber') {
+              rule.validator = {
+                name: mode,
+                values: values
+              }
+            }
+          break
+          case 'regExp':
+            delete rule.type
+            if (['contains', 'match'].includes(mode)) {
+              rule.pattern = values[0]
+            } else {
+              rule.validator = {
+                name: `regExp_${mode}`,
+                values: values
+              }
+            }
+          break
+        }
+
+        rule.message = message
+        fieldData.rules.push(rule)
+      }
     }
+  } else {
+    let rows = [], columns = []
+    for (const subRow of field[4]) {
+      const id = subRow[0]
+      columns = subRow[1]
+      const isRequired = subRow[2] == 1
+
+      const title = subRow[3][0]
+      rows.push({
+        id: id,
+        title: title,
+        rules: isRequired ? [{ required: true }] : []
+      })
+    }
+    fieldData.rows = rows
+    fieldData.columns = columns
   }
 
   return fieldData
