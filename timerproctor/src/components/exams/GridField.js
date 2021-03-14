@@ -31,6 +31,7 @@ const GridField = ({ info }) => {
 
   return (
     <Table
+      tableLayout="fixed"
       dataSource={rows}
       columns={renderedColumns}
       pagination={false}
