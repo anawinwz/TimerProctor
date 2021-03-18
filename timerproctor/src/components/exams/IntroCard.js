@@ -31,10 +31,11 @@ const IntroCard = () => {
           <Descriptions.Item label="เวลาในการสอบ">{ examInfo.timer?.duration } นาที</Descriptions.Item>
         </Descriptions>
 
-        <div className="text-center">
-          <Title level={4}>คำชี้แจงการสอบจากอาจารย์ผู้สอน</Title>
-          <p dangerouslySetInnerHTML={{ __html: nl2br(examInfo.desc) }}></p>
-        </div>
+        { examInfo.desc &&
+          <div className="text-center">
+            <Title level={4}>คำชี้แจงการสอบจากอาจารย์ผู้สอน</Title>
+            <p dangerouslySetInnerHTML={{ __html: nl2br(examInfo.desc) }}></p>
+          </div> }
       </Card>
     </Space>
   )
