@@ -2,6 +2,7 @@ import { StaticRouter } from 'react-router-dom'
 import App from './App'
 import React from 'react'
 import express from 'express'
+import cookieParser from 'cookie-parser'
 import { renderToString } from 'react-dom/server'
 
 import RootStore from './stores/index'
@@ -19,12 +20,13 @@ export const prepareStores = async (req) => {
   const url = req.url
   const isAdmin = url.startsWith('/admin')
   const currentStore = isAdmin ? adminStore : store
-  
+
   if (isAdmin) {
     const refreshToken = req.cookies?.[`tp__refreshToken${isAdmin ? '_admin':''}`]
     if (refreshToken) {
       try {
         await currentStore.AuthStore.token.renewToken(refreshToken)
+        currentStore.AuthStore.setUser({ firebaseUID: 'dummy' })
       } catch {}
     }
   }
@@ -73,6 +75,7 @@ const server = express()
 server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+  .use(cookieParser())
   .get('/*', (req, res) => {
     renderApp(req, res)
   })
