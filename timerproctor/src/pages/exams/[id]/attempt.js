@@ -38,7 +38,9 @@ const AttemptPage = () => {
     }
   }, [])
 
-  if (completed) return <Redirect to={`/exams/${exam.id}/completed`} />
+  
+  if (!socketStore.socket) return <Redirect to={`/exams/${exam.id}`} />
+  else if (completed) return <Redirect to={`/exams/${exam.id}/completed`} />
   else if (exam.status === 'stopped' || timer.isTimeout === true) return <Redirect to={`/exams/${exam.id}/failed`} />
   return (
     <>
