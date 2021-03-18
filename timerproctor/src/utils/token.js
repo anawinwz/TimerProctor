@@ -20,14 +20,17 @@ class TokenManager {
     } catch { return null }
   }
 
-  async renewToken() {
+  async renewToken(refreshToken = '') {
     try {
-      const res = await fetchAPI('/users/renew', { admin: this.isAdmin })
+      const res = await fetchAPI('/users/renew', { 
+        admin: this.isAdmin,
+        ...(refreshToken ? { refreshToken } : {})
+      })
       const { status, message, payload } = res
       if (status === 'ok') {
-        const { accessToken } = payload
+        const { accessToken, refreshToken = true } = payload
         this.accessToken = accessToken
-        return Promise.resolve(true)
+        return Promise.resolve(refreshToken)
       } else {
         const error = new Error(message || 'เกิดข้อผิดพลาดในการต่ออายุการเข้าสู่ระบบ')
         error.needRelogin = true

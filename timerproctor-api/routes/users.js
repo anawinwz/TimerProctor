@@ -62,10 +62,13 @@ router.post('/login', async (req, res) => {
 
 router.post('/renew', async (req, res) => {
   try {
-    const { admin = false } = req.body
+    const { refreshToken: ssrRefreshToken, admin = false } = req.body
 
     const refreshTokenName = cookieNames[`refreshToken${admin ? '_admin' : ''}`]
-    const refreshToken = req.cookies?.[refreshTokenName]
+    const refreshToken = req.cookies?.[refreshTokenName] || ssrRefreshToken
+    if (!refreshToken) return res.json(jsonResponse('failed'))
+
+    const isSSR = refreshToken === ssrRefreshToken
 
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)
     const newAccessToken = createAccessToken(_id, admin)
@@ -76,7 +79,8 @@ router.post('/renew', async (req, res) => {
         expires: new Date(Date.now() + 24 * 3600000)
       })
       .json(jsonResponse('ok', {
-        accessToken: newAccessToken
+        accessToken: newAccessToken,
+        ...(isSSR ? { refreshToken: newRefreshToken } : {})
       }))
   } catch (err) {
     if (err.name === 'TokenExpiredError')

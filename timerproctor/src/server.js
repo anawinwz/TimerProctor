@@ -12,21 +12,31 @@ const template = fs.readFileSync('src/_app.html', 'utf-8')
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
-export const getDataFromURL = async (url = '') => {
+export const prepareStores = async (req) => {
   const store = new RootStore()
   const adminStore = new AdminRootStore()
 
   const isAdmin = url.startsWith('/admin')
+  const currentStore = isAdmin ? adminStore : store
   
+  if (isAdmin) {
+    const refreshToken = req.cookies[`tp__refreshToken${isAdmin ? '_admin':''}`]
+    try {
+      await currentStore.AuthStore.token.renewToken(refreshToken)
+    } catch {}
+  }
+  
+  const url = req.url
   const examURL = url.match(/^(?:\/admin|\/)exams\/([a-z0-9]+)/) || []
   if (examURL.length === 2) {
-    await (isAdmin ? adminStore : store).ExamStore.getInfo({ id: examURL[1] })
+    await currentStore.ExamStore.getInfo({ id: examURL[1] })
   }
+
   return { store, adminStore }
 }
 
 export const renderApp = async (req, res) => {
-  const { store, adminStore } = await getDataFromURL(req.url)
+  const { store, adminStore } = await prepareStores(req)
 
   const context = {}
   const markup = renderToString(
