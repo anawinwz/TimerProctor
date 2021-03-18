@@ -3,6 +3,7 @@ import { Modal, Tabs, Button } from 'antd'
 import { NotificationOutlined, OrderedListOutlined, PlusOutlined } from '@ant-design/icons'
 
 import AnnouncementForm from './AnnouncementForm'
+import AnnouncementsList from './AnnouncementsList'
 
 const ExamAnnouncementsModal = () => {
   const [visible, setVisible] = useState(false)
@@ -29,6 +30,7 @@ const ExamAnnouncementsModal = () => {
             key="announcements"
             tab={<><OrderedListOutlined /> รายการย้อนหลัง</>}
           >
+            <AnnouncementsList />
           </Tabs.TabPane>
         </Tabs>
       </Modal>

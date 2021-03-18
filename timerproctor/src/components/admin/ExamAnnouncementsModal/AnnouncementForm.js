@@ -16,6 +16,7 @@ const AnnouncementForm = () => {
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)
+        exam.getAnnouncements()
         form.resetFields()
       } else {
         throw new Error(msg || 'เกิดข้อผิดพลาดในการประกาศถึงผู้เข้าสอบ')
