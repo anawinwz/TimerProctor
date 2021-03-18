@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import { JWT_ADMINAUTH_REFRESH_SECRET, JWT_AUTH_REFRESH_SECRET } from '../config'
 
 import User from '../models/user'
+import { cookieNames, defaultCookieOptions } from '../utils/const'
 import { decodeToken, getUserData } from '../utils/firebase'
 import { jsonResponse } from '../utils/helpers'
 import { createAccessToken, createRefreshToken } from '../utils/token'
@@ -44,9 +45,9 @@ router.post('/login', async (req, res) => {
     const refreshToken = createRefreshToken(user._id, admin)
 
     return res
-      .cookie('refreshToken', refreshToken, {
+      .cookie(cookieNames[`refreshToken${admin ? '_admin' : ''}`], refreshToken, {
+        ...defaultCookieOptions,
         expires: new Date(Date.now() + 24 * 3600000),
-        httpOnly: true
       })
       .json(jsonResponse('ok', {
         accessToken,
@@ -61,16 +62,22 @@ router.post('/login', async (req, res) => {
 
 router.post('/renew', async (req, res) => {
   try {
-    const { refreshToken = '' } = req.cookies
     const { admin = false } = req.body
+
+    const refreshTokenName = cookieNames[`refreshToken${admin ? '_admin' : ''}`]
+    const refreshToken = req.cookies[refreshTokenName]
 
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)
     const newAccessToken = createAccessToken(_id, admin)
     const newRefreshToken = createRefreshToken(_id, admin)
-    res.json(jsonResponse('ok', {
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken
-    }))
+    return res
+      .cookie(refreshTokenName, newRefreshToken, {
+        ...defaultCookieOptions,
+        expires: new Date(Date.now() + 24 * 3600000)
+      })
+      .json(jsonResponse('ok', {
+        accessToken: newAccessToken
+      }))
   } catch (err) {
     if (err.name === 'TokenExpiredError')
       return res.json(jsonResponse('relogin', 'การเข้าสู่ระบบหมดอายุ กรุณาเข้าสู่ระบบใหม่'))
