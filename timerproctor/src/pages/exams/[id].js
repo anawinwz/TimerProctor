@@ -23,7 +23,7 @@ import FailedPage from './[id]/failed'
 
 const ExamPage = ({ match }) => {
   const history = useHistory()
-  const { ExamStore: exam, SocketStore: socketStore, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
+  const { ExamStore: exam, SocketStore: socketStore, IDCheckStore: idCheck, AttemptStore: attempt, TimerStore: timer } = useStore()
   const [socketLoading, setSocketLoading] = useState(false)
   const [flushSocket, setFlushSocket] = useState(0)
 
@@ -53,6 +53,7 @@ const ExamPage = ({ match }) => {
           })
           .on('examAnnouncement', text => exam.updateAnnouncement(text))
           .on('terminated', () => {
+            timer.pause()
             Modal.error({
               title: 'คุณถูกเชิญออกจากการสอบ',
               content: 'กรรมการพิจารณาเชิญคุณออกจากการสอบแล้ว',
