@@ -43,12 +43,16 @@ router.post('/login', async (req, res) => {
     const accessToken = createAccessToken(user._id, admin)
     const refreshToken = createRefreshToken(user._id, admin)
 
-    return res.json(jsonResponse('ok', {
-      accessToken,
-      refreshToken,
-      email,
-      info: { displayName, photoURL }
-    }))
+    return res
+      .cookie('refreshToken', refreshToken, {
+        expires: new Date(Date.now() + 24 * 3600000),
+        httpOnly: true
+      })
+      .json(jsonResponse('ok', {
+        accessToken,
+        email,
+        info: { displayName, photoURL }
+      }))
   } catch (err) {
     console.log(err)
     res.json(jsonResponse('error', 'การเข้าสู่ระบบล้มเหลว โปรดลองใหม่ภายหลัง'))
@@ -57,7 +61,8 @@ router.post('/login', async (req, res) => {
 
 router.post('/renew', async (req, res) => {
   try {
-    const { refreshToken, admin = false } = req.body
+    const { refreshToken = '' } = req.cookies
+    const { admin = false } = req.body
 
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)
     const newAccessToken = createAccessToken(_id, admin)
