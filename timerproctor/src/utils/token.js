@@ -20,10 +20,6 @@ class TokenManager {
     } catch { return null }
   }
 
-  get refreshToken() { return '' }
-  set refreshToken() { }
-  removeRefreshToken() { }
-  
   async renewToken() {
     try {
       const res = await fetchAPI('/users/renew', { admin: this.isAdmin })
@@ -37,7 +33,6 @@ class TokenManager {
         error.needRelogin = true
 
         this.removeAccessToken()
-        this.removeRefreshToken()
 
         return Promise.reject(error)
       }

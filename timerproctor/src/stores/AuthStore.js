@@ -69,12 +69,11 @@ class AuthStore {
     
     const { status, payload, message } = response
     if (status && status === 'ok') {
-      const { accessToken, refreshToken, email, info } = payload
+      const { accessToken, email, info } = payload
       const { displayName, photoURL } = info
       this.setUser({ firebaseUID: user.uid, email, displayName, photoURL })
 
       this.token.accessToken = accessToken
-      this.token.refreshToken = refreshToken
       
       return true
     } else {
@@ -98,7 +97,6 @@ class AuthStore {
       this.setUser({ firebaseUID: '', email: '', displayName: '', photoURL: '' })
       
       this.token.removeAccessToken()
-      this.token.removeRefreshToken()
     }
   }
 }
