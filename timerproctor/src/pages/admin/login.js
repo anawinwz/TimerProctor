@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -9,6 +10,8 @@ import { getNextURL, removeNextURL } from '~/utils/redirect'
 const AdminLogin = () => {
   const { AuthStore: { isLoggedIn, token } } = useStore()
   useAppTitle('เข้าสู่ระบบ', { admin: true })
+
+  useEffect(() => token.renewToken().catch(() => {}), [])
 
   if (isLoggedIn && token.accessToken) {
     const nextURL = getNextURL()
