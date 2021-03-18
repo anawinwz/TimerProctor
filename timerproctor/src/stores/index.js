@@ -23,8 +23,8 @@ export class RootStore {
     this.ExamStore = new ExamStore(this)
     this.TimerStore = new TimerStore(this)
     this.SocketStore = new SocketStore(this)
-    this.AttemptStore = new AttemptStore(this)
     this.IDCheckStore = new IDCheckStore(this)
+    this.AttemptStore = new AttemptStore(this)
   }
 }
 

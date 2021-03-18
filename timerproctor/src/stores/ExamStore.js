@@ -113,6 +113,11 @@ class ExamStore {
   }
 
   @computed
+  get isIDCheck() {
+    return this.info?.authentication?.idCheckMode !== 'none'
+  }
+
+  @computed
   get isPromptIDCheck() {
     return this.info?.authentication?.idCheckMode === 'prompt'
   }

@@ -2,7 +2,7 @@ import { action, observable } from 'mobx'
 import { APIFailedError, fetchAPIwithToken } from '~/utils/api'
 import { storage } from '~/utils/firebase'
 class AttemptStore {
-  @observable status = 'login'
+  @observable status = 'loggedin'
   @observable socketToken = ''
 
   constructor(rootStore) {
@@ -10,6 +10,7 @@ class AttemptStore {
     this.authStore = this.rootStore.AuthStore
     this.examStore = this.rootStore.ExamStore
     this.socketStore = this.rootStore.SocketStore
+    this.idCheckStore = this.rootStore.IDCheckStore
   }
 
   @action
@@ -20,8 +21,12 @@ class AttemptStore {
     if (!resStatus || !['failed', 'ok'].includes(resStatus)) throw new Error(message || 'ไม่สามารถขอเริ่มการสอบได้')
     else if (resStatus === 'failed') throw new APIFailedError(message)
 
-    const { status, socketToken } = payload
+    const { status, socketToken, idCheck } = payload
     this.status = status
+    if (idCheck) {
+      const { accepted, reason } = idCheck
+      this.idCheckStore.setResult(accepted, reason)
+    }
     this.socketToken = socketToken
   }
 
