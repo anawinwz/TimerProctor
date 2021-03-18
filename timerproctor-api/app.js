@@ -23,6 +23,8 @@ mongoose.connection.on('error', err => {
 const app = express()
 app.use(express.json({ limit: '4mb' }))
 app.disable('etag')
-app.use(cors())
+app.use(cors({ 
+  origin: 'http://localhost:3000'
+}))
 
 export default app

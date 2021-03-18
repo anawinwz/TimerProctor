@@ -14,9 +14,11 @@ export const fetchAPI = async (endpoint, body = null, method = null) => {
   try {
     const url = `${baseUrl}${endpoint}`
     const res = await axios(url, !body ? {
-      method: method || 'GET'
+      method: method || 'GET',
+      withCredentials: true
     } : {
       method: method || 'POST',
+      withCredentials: true,
       data: body
     })
     
@@ -34,10 +36,12 @@ export const fetchAPIwithToken = async (endpoint, body = null, method = null, to
       !body ?
       {
         method: method || 'GET',
+        withCredentials: true,
         headers: { 'X-Access-Token': token.accessToken },
       } :
       {
         method: method || 'POST',
+        withCredentials: true,
         headers: {
           'X-Access-Token': token.accessToken,
         },
