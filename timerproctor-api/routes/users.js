@@ -65,7 +65,7 @@ router.post('/renew', async (req, res) => {
     const { admin = false } = req.body
 
     const refreshTokenName = cookieNames[`refreshToken${admin ? '_admin' : ''}`]
-    const refreshToken = req.cookies[refreshTokenName]
+    const refreshToken = req.cookies?.[refreshTokenName]
 
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)
     const newAccessToken = createAccessToken(_id, admin)
