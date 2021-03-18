@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 require('dotenv-flow').config()
 
@@ -21,11 +22,13 @@ mongoose.connection.on('error', err => {
 })
 
 const app = express()
-app.use(express.json({ limit: '4mb' }))
-app.disable('etag')
 app.use(cors({ 
   origin: 'http://localhost:3000',
   credentials: true
 }))
+app.use(cookieParser())
+app.use(express.json({ limit: '4mb' }))
+app.disable('etag')
+
 
 export default app
