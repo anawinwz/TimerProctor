@@ -24,7 +24,8 @@ const app = express()
 app.use(express.json({ limit: '4mb' }))
 app.disable('etag')
 app.use(cors({ 
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000',
+  credentials: true
 }))
 
 export default app
