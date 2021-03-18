@@ -17,7 +17,15 @@ export class RootStore {
     const hydrate = create()
     this.AuthStore = new AuthStore(this)
     if (typeof window !== 'undefined')
-      hydrate('auth', this.AuthStore).then(() => this.AppStore.hydrateFinish())
+      hydrate('auth', this.AuthStore)
+        .then(async () => {
+          try {
+            await this.AuthStore.token.renewToken()
+          } catch {
+          } finally {
+            this.AppStore.hydrateFinish()
+          }
+        })
     
     this.ExamStore = new ExamStore(this)
     this.TimerStore = new TimerStore(this)

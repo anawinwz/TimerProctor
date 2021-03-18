@@ -15,7 +15,15 @@ export class AdminRootStore {
     const hydrate = create()
     this.AuthStore = new AuthStore(this, true)
     if (typeof window !== 'undefined') 
-      hydrate('admin_auth', this.AuthStore).then(() => this.AppStore.hydrateFinish())
+      hydrate('admin_auth', this.AuthStore)
+        .then(async () => {
+          try {
+            await this.AuthStore.token.renewToken()
+          } catch {
+          } finally {
+            this.AppStore.hydrateFinish()
+          }
+        })
     
     this.ExamStore = new ExamStore(this, true)
     this.ExamAdminStore = new ExamAdminStore(this)
