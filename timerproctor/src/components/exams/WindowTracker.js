@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import useWindowFocus from '~/hooks/useWindowFocus'
 
 const WindowTracker = ({ signal }) => {
-  const [lastFocus, setLastFocus] = useState(null)
+  const [firstUnfocus, setFirstUnfocus] = useState(null)
   const windowFocused = useWindowFocus(true)
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const WindowTracker = ({ signal }) => {
       if (document.activeElement && document.activeElement instanceof HTMLIFrameElement && document.hasFocus()) {
         // iframe is selected, should not considered unfocus
       } else {
-        setLastFocus(timestamp)
+        setFirstUnfocus(timestamp)
         signal({
           timestamp: timestamp,
           type: 'window',
@@ -24,9 +24,9 @@ const WindowTracker = ({ signal }) => {
         timestamp: timestamp,
         type: 'window',
         event: 'focus',
-        diff: timestamp - lastFocus
+        diff: timestamp - firstUnfocus
       })
-      setLastFocus(null)
+      setFirstUnfocus(null)
     }
   }, [windowFocused])
 
