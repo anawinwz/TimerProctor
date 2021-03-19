@@ -52,11 +52,15 @@ const ExamTesterReport = ({ match }) => {
     testerName: tester?.name
   })
 
-  const checker = useMemo(() => ({
-    name: tester?.idCheck?.checker?.info?.displayName,
-    email: tester?.idCheck?.checker?.info?.email,
-    avatar: tester?.idCheck?.checker?.info?.photoURL
-  }), [tester])
+  const checker = useMemo(() => {
+    const checker = tester?.idCheck?.checker
+    
+    return checker ? null : { 
+      name: checker?.info?.displayName,
+      email: checker?.info?.email,
+      avatar: checker?.info?.photoURL
+    }
+  }, [tester?.idCheck?.checker])
 
   if (!tester) return <></>
   return (
@@ -83,18 +87,27 @@ const ExamTesterReport = ({ match }) => {
           </Row>
         </Col>
         <Col xs={24} md={10}>
-          <Row>
-            <Col span={12}>
-              <Subtitle type="secondary">ภาพที่ใช้ยืนยันตน</Subtitle>
-              <Image src={tester.idCheck.photoURL} width="90%" />
-              <SmallText type="secondary">{ dateStr(tester.idCheck.timestamp, 'shortS') }</SmallText>
-            </Col>
-            <Col span={12}>
-              <Subtitle type="secondary">ผู้อนุมัติการเข้าสอบ</Subtitle>
-              <div><UserTag user={checker} /></div>
-              <SmallText type="secondary">{ dateStr(tester.idCheck.checkedAt, 'shortS') }</SmallText>
-            </Col>
-          </Row>
+          { 
+            tester.idCheck.photoURL ?
+            <Row>
+              <Col span={12}>
+                <Subtitle type="secondary">ภาพที่ใช้ยืนยันตน</Subtitle>
+                <Image src={tester.idCheck.photoURL} width="90%" />
+                <SmallText type="secondary">{ dateStr(tester.idCheck.timestamp, 'shortS') }</SmallText>
+              </Col>
+              <Col span={12}>
+                <Subtitle type="secondary">ผู้อนุมัติการเข้าสอบ</Subtitle>
+                { tester.idCheck.accepted && checker ? 
+                  <>
+                    <div><UserTag user={checker} /></div>
+                    <SmallText type="secondary">{ dateStr(tester.idCheck.checkedAt, 'shortS') }</SmallText>
+                  </> :
+                  'ยังไม่มีผู้อนุมัติ'
+                }
+              </Col>
+            </Row> :
+            'ผู้เข้าสอบรายนี้ยังไม่เคยส่งภาพยืนยันตน'
+          }
         </Col>
       </TesterDescription>
       <Subtitle type="secondary">ภาพสุ่มบันทึกระหว่างการสอบ</Subtitle>
