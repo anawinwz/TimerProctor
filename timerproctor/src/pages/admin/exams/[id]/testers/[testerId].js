@@ -54,13 +54,12 @@ const ExamTesterReport = ({ match }) => {
 
   const checker = useMemo(() => {
     const checker = tester?.idCheck?.checker
-    
-    return checker ? null : { 
+    return { 
       name: checker?.info?.displayName,
       email: checker?.info?.email,
       avatar: checker?.info?.photoURL
     }
-  }, [tester?.idCheck?.checker])
+  }, [tester])
 
   if (!tester) return <></>
   return (
