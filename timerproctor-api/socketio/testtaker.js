@@ -152,7 +152,10 @@ export default (socket, user = {}) => {
         }
         break
       case 'face':
-        newEvent.info = { facesCount: data.facesCount }
+        newEvent.info = {
+          facesCount: data.facesCount,
+          timeDiff: data.diff
+        }
         break
     }
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import styled from 'styled-components'
 
 import { observer } from 'mobx-react-lite'
@@ -17,6 +17,8 @@ const Video = styled('video')`
 const FaceTracker = ({ signal = () => {} }) => {
   const { AttemptStore: attempt } = useStore()
   const camInput = useRef()
+  
+  const [firstAbnormal, setFirstAbnormal] = useState(null)
 
   useEffect(() => {
     let stream
@@ -49,12 +51,21 @@ const FaceTracker = ({ signal = () => {} }) => {
     detectAllFaces(video).then(detections => {
       const faces = detections.length
       if (faces === 0 || faces > 1) {
+        setFirstAbnormal(timestamp)
         signal({
           timestamp: timestamp,
           type: 'face',
           facesCount: faces,
           msg: faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
         })
+      } else if (firstAbnormal) {
+        signal({
+          timestamp: timestamp,
+          type: 'face',
+          facesCount: faces,
+          diff: timestamp - firstAbnormal
+        })
+        setFirstAbnormal(null)
       }
     })
   }, [camInput])

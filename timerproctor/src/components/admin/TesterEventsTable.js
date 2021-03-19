@@ -55,7 +55,11 @@ const columns = [
           }
         case 'snapshot': return `ภาพมี ${info.facesCount} ใบหน้า`
         case 'face':
-          return info.facesCount == 0 ? 'ไม่พบใบหน้า' : `พบหลายบุคคลบนภาพ (${info.facesCount} ใบหน้า)`
+          switch (info.facesCount) {
+            case 0: return 'ไม่พบใบหน้า'
+            case 1: return `กลับมาพบ 1 ใบหน้าอีกครั้ง (หายไป ${info.timeDiff/1000} วินาที)`
+            default: return `พบ ${info.facesCount} ใบหน้า`
+          }
         case 'socket':
           const { name, info: eventInfo } = info.socketEvent
           switch (name) {
