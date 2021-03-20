@@ -14,6 +14,12 @@ class AttemptStore {
   }
 
   @action
+  reset() {
+    this.status = 'loggedin'
+    this.socketToken = ''
+  }
+
+  @action
   async getAttempt() {
     const examId = this.examStore.id
     

@@ -29,6 +29,8 @@ const ExamPage = ({ match }) => {
 
   useEffect(async () => {
     exam.clearInfo()
+    idCheck.reset()
+    attempt.reset()
     await exam.getInfo({ id: match.params.id })
   }, [match.params.id])
 
@@ -55,6 +57,7 @@ const ExamPage = ({ match }) => {
           .on('examAnnouncement', text => exam.updateAnnouncement(text))
           .on('terminated', () => {
             attempt.setStatus('terminated')
+            
             timer.pause()
             Modal.error({
               title: 'คุณถูกเชิญออกจากการสอบ',
@@ -64,9 +67,11 @@ const ExamPage = ({ match }) => {
                 style: { display: 'none' }
               },
               maskClosable: false,
-              onOk: () => history.replace(`/exams/${exam.id}`),
-              onCancel: () => history.replace(`/exams/${exam.id}`)
+              onOk: () => {},
+              onCancel: () => {}
             })
+
+            history.replace(`/exams/${exam.id}`)
           })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: attempt.socketToken }))
           .connect()

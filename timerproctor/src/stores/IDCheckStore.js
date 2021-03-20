@@ -1,7 +1,10 @@
 import { action, computed, observable } from 'mobx'
 import { storage } from '~/utils/firebase'
+
+const initialSendState = ['IDLE', '']
+
 class IDCheckStore {
-  @observable sendState = ['IDLE', '']
+  @observable sendState = initialSendState
   @observable accepted = null
   @observable reason = ''
 
@@ -10,6 +13,13 @@ class IDCheckStore {
     this.authStore = this.rootStore?.AuthStore
     this.examStore = this.rootStore?.ExamStore
     this.socketStore = this.rootStore?.SocketStore
+  }
+
+  @action
+  reset() {
+    this.sendState = initialSendState
+    this.accepted = null
+    this.reason = ''
   }
 
   @action
