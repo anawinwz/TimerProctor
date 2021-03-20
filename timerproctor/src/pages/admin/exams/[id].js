@@ -65,7 +65,10 @@ const AdminExamPage = ({ match }) => {
                 message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} ส่งคำขอยืนยันตัวตนใหม่`,
                 description: 
                   location.pathname.includes('/overview') ?
-                  <a onClick={() => examAdmin.setCurrentStatus('authenticating')}>
+                  <a onClick={() => {
+                    examAdmin.setCurrentStatus('authenticating')
+                    notification.close(`authen_${id}`)
+                  }}>
                     ไปยังหน้า [รออนุมัติ]
                   </a>
                   : <>ดูคำขอได้ที่แถบ [รออนุมัติ] ของหน้า<a href={`/exams/${exam.id}/overview`}>ภาพรวมการสอบ</a></>
