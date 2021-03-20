@@ -15,7 +15,6 @@ import ExamTitle from '~/components/admin/ExamTitle'
 import ExamStatusControls from '~/components/admin/ExamStatusControls'
 import ExamDescription from '~/components/admin/ExamDescription'
 import { testerStatuses } from '~/utils/const'
-import WhiteBadge from '~/components/WhiteBadge'
 import ExamTesters from '~/components/admin/ExamTesters'
 import TesterCountsBadge from 'components/admin/TesterCountsBadge'
 
@@ -42,7 +41,7 @@ const ExamOverview = () => {
       <ExamTitle exam={exam} />
       <ExamStatusControls exam={exam} />
       <ExamDescription exam={exam} />
-      <Tabs centered>
+      <Tabs centered onChange={(status) => examAdmin?.setHasNoNewCount(status)}>
         { 
           Object.keys(statuses).map(key => {
             return (

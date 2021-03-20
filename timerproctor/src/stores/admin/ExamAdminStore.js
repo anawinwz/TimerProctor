@@ -100,6 +100,13 @@ class ExamAdminStore {
   }
 
   @action
+  setHasNoNewCount(status = '') {
+    if (typeof this.hasNewCounts[status] !== 'undefined') {
+      this.hasNewCounts[status] = false
+    }
+  }
+
+  @action
   addLocalTester(tester = {}) {
     const { _id } = tester
     if (this.updateLocalTester(_id, tester, true)) return true
