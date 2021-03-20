@@ -73,9 +73,7 @@ const ExamTesterReport = ({ match }) => {
       total: acc.total + event.info.timeDiff
     }), { total: 0 })
 
-  if (riskTimes?.face === 0 && !events.find(event => event.type === 'face' && event.info.facesCount == 1)) {
-    riskTimes.face = totalTime
-  }
+  const onceNormalFaceCount = events.find(event => event.type === 'face' && event.info.facesCount == 1)
 
   if (!tester) return <></>
   return (
@@ -89,15 +87,25 @@ const ExamTesterReport = ({ match }) => {
         <Col xs={24} md={14}>
           <Row>
             <Col xs={24} md={6} className="text-center">
-              <Progress type="circle" percent={100 - (riskTimes.total / totalTime * 100)} format={percent => `${percent.toFixed(2)}%`} />
+              <Progress type="circle" percent={100 - (!onceNormalFaceCount ? 100 : riskTimes.total / totalTime * 100)} format={percent => `${percent.toFixed(2)}%`} />
               <SmallText className="text-center"></SmallText>
             </Col>
             <Col xs={24} md={18} style={{ paddingLeft: '10px' }}>
               <Subtitle type="secondary">สถานะ</Subtitle>
               <Title level={4}>{ testerStatuses[tester.status] }</Title>
               
-              <CaptionedProgress percent={(riskTimes.face || 0) / totalTime * 100} strokeColor="#FFBE18">ไม่พบใบหน้า</CaptionedProgress>
-              <CaptionedProgress percent={(riskTimes.window || 0) / totalTime * 100} strokeColor="#FFBE18">สลับแท็บ/หน้าต่าง</CaptionedProgress>
+              <CaptionedProgress
+                percent={!onceNormalFaceCount ? 100 : (riskTimes.face || 0) / totalTime * 100}
+                strokeColor="#FFBE18"
+              >
+                ไม่พบใบหน้า
+              </CaptionedProgress>
+              <CaptionedProgress
+                percent={(riskTimes.window || 0) / totalTime * 100}
+                strokeColor="#FFBE18"
+              >
+                สลับแท็บ/หน้าต่าง
+              </CaptionedProgress>
             </Col>
           </Row>
         </Col>
