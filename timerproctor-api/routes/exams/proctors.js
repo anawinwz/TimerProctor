@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import { adminAuthen } from '../../middlewares/authentication'
-import { onlyExamOwner, populateExam } from '../../middlewares/exam'
+import { onlyExamOwner, onlyExamPersonnel, populateExam } from '../../middlewares/exam'
 
 import User from '../../models/user'
 import Proctoring from '../../models/proctoring'
@@ -10,9 +10,12 @@ import { jsonResponse } from '../../utils/helpers'
 
 const router = Router({ mergeParams: true })
 
-router.get('/', adminAuthen, populateExam, async (req, res) => {
-  const { qStatus } = req.query
-  if (qStatus && !['all', 'invited', 'accepted', 'rejected'].includes(qStatus))
+router.get('/', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) => {
+  const { status: qStatus, socketId } = req.query
+  if (
+    (qStatus && !['all', 'invited', 'accepted', 'rejected'].includes(qStatus)) ||
+    (typeof socketId !== 'undefined' && Number(socketId) !== 0 && Number(socketId) !== 1)
+  )
     return res.json(jsonResponse('error', 'Invalid request.'))
   
   const exam = req.exam
@@ -25,11 +28,18 @@ router.get('/', adminAuthen, populateExam, async (req, res) => {
         ...(qStatus && qStatus !== 'all' ? 
           { status: qStatus } :
           { status: { $nin: ['cancelled'] } }
+        ),
+        ...(Number(socketId) === 1 ?
+          { 
+            status: 'accepted',
+            socketId: { $exists: true }
+          } :
+          {}
         )
       }, 
       {
         exam: 0,
-        ...(isExamOwner ? {} : {
+        ...(isExamOwner && !socketId ? {} : {
           invitedAt: 0,
           respondedAt: 0
         })
