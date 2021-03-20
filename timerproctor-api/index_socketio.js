@@ -48,6 +48,7 @@ ioExam.on('connection', authorize({
       return onError({ message: 'ไม่พบข้อมูลผู้ใช้' }, 'user_notfound')
     }
     
+    const isExamOwner = String(userId) === String(exam.owner)
     if (!role || !['proctor', 'testtaker'].includes(role)) {
       console.log(`Role incorrect: ${role}`)
       return onError({ message: 'บทบาทผู้ใช้ไม่ถูกต้อง' }, 'invalid_role')
@@ -86,7 +87,7 @@ ioExam.on('connection', authorize({
         })
       })
     } else if (role === 'proctor') {
-      if (String(userId) === String(exam.owner)) {
+      if (isExamOwner) {
       } else {
         const proctoring = await Proctoring.findOne({
           user: userId,
@@ -103,6 +104,19 @@ ioExam.on('connection', authorize({
 
         proctoring.socketId = socket.id
         await proctoring.save()
+
+        getExamNsp(examId).to('proctor').emit('proctorUpdate', {
+          id: proctoring._id,
+          updates: {
+            online: true
+          }
+        })
+        getExamNsp(examId).to('owner').emit('proctorUpdate', {
+          id: proctoring._id,
+          updates: {
+            socketId: socket.id
+          }
+        })
       }
     }
     
@@ -110,6 +124,10 @@ ioExam.on('connection', authorize({
 
     socket.attempt = decoded
     socket.join(role)
+    if (isExamOwner) {
+      socket.join('owner')
+      console.log(`[socket.io] An owner ${userId} connected to ${examId}.`)
+    }
     
     bindSocketListener(socket, role, user)
     console.log(`[socket.io] A ${role} ${userId} connected to ${examId}.`)
