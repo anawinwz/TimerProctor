@@ -33,6 +33,10 @@ const ExamOverview = () => {
   }, [])
 
   const statuses = { all: 'ทั้งหมด', ...testerStatuses }
+  const onTabChange = status => {
+    examAdmin?.setCurrentStatus(status)
+    examAdmin?.setHasNoNewCount(status)
+  }
   
   if (loading || examAdmin?.loading) return <ExamOverviewLoading />
   else if (error) return <ErrorContentBox />
@@ -41,7 +45,7 @@ const ExamOverview = () => {
       <ExamTitle exam={exam} />
       <ExamStatusControls exam={exam} />
       <ExamDescription exam={exam} />
-      <Tabs centered onChange={(status) => examAdmin?.setHasNoNewCount(status)}>
+      <Tabs centered activeKey={examAdmin?.currentStatus} onChange={onTabChange}>
         { 
           Object.keys(statuses).map(key => {
             return (

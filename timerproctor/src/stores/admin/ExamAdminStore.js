@@ -25,6 +25,7 @@ class ExamAdminStore {
   @observable lastExamId = ''
 
   @observable socketToken = ''
+  @observable currentStatus = 'all'
   @observable counts = initialCounts
   @observable hasNewCounts = initialHasNewCounts
   @observable testers = {}
@@ -100,6 +101,11 @@ class ExamAdminStore {
   }
 
   @action
+  setCurrentStatus(status = 'all') {
+    this.currentStatus = status
+  }
+
+  @action
   setHasNoNewCount(status = '') {
     if (typeof this.hasNewCounts[status] !== 'undefined') {
       this.hasNewCounts[status] = false
@@ -114,7 +120,8 @@ class ExamAdminStore {
     Object.assign(this.testers, {}, { [_id]: tester })
     this.counts.all += 1
     this.counts[tester.status] += 1
-    this.hasNewCounts[tester.status] = true
+    if (this.currentStatus !== tester.status)
+      this.hasNewCounts[tester.status] = true
   }
 
   @action
@@ -126,7 +133,11 @@ class ExamAdminStore {
     if (oldStatus && changes?.status && oldStatus !== changes.status) {
       this.counts[oldStatus] -= 1
       this.counts[changes.status] += 1
-      if (fromSocket) this.hasNewCounts[changes.status] = true
+      if (fromSocket && this.currentStatus !== changes.status)
+        this.hasNewCounts[changes.status] = true
+
+      if (this.counts[oldStatus] === 0)
+        this.hasNewCounts[oldStatus] = false
     }
     return true
   }

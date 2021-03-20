@@ -56,10 +56,13 @@ const AdminExamPage = ({ match }) => {
                 timestamp: timestamp
               }
             }, true)
-            notification.info({
-              title: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} ส่งคำขอยืนยันตัวตนใหม่`,
-              description: 'เข้าไปอนุมัติ/ปฏิเสธได้ที่แถบ [รออนุมัติ]'
-            })
+
+            if (examAdmin.currentStatus !== 'authenticating') {
+              notification.info({
+                message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} ส่งคำขอยืนยันตัวตนใหม่`,
+                description: 'เข้าไปอนุมัติ/ปฏิเสธได้ที่แถบ [รออนุมัติ]'
+              })
+            }
           })
           .on('newSnapshot', payload => {
             const { id, url, timestamp } = payload
