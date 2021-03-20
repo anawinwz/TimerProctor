@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 import { message, notification } from 'antd'
 
 import { showModal } from '~/utils/modal'
+import { isEventRisk } from '~/utils/const'
 
 import Loading from '~/components/exams/Loading'
 import Error from '~/components/exams/Error'
@@ -17,6 +18,7 @@ import ExamTesterPage from './[id]/testers/[testerId]'
 
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
+  const location = useLocation()
 
   useEffect(async () => {
     exam.clearInfo()
@@ -59,8 +61,15 @@ const AdminExamPage = ({ match }) => {
 
             if (examAdmin.currentStatus !== 'authenticating') {
               notification.info({
+                key: `authen_${id}`,
                 message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} ส่งคำขอยืนยันตัวตนใหม่`,
-                description: 'เข้าไปอนุมัติ/ปฏิเสธได้ที่แถบ [รออนุมัติ]'
+                description: 
+                  <Link 
+                    to={`/exams/${exam.id}/overview`}
+                    onClick={() => examAdmin.setCurrentStatus('authenticating')}
+                  >
+                    ดูคำขอ
+                  </Link>
               })
             }
           })
@@ -75,6 +84,14 @@ const AdminExamPage = ({ match }) => {
           .on('newEvent', payload => {
             const { id, event } = payload
             examAdmin.addEventToLocalTester(id, event)
+
+            if (!location.pathname.includes(`/testers/${id}`) && isEventRisk(event)) {
+              notification.warning({
+                key: `risk_${id}`,
+                message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} แสดงพฤติกรรมเสี่ยงใหม่!`,
+                description: <Link to={`/exams/${exam.id}/testers/${id}`}>ดูรายงาน</Link>
+              })
+            }
           })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
           .connect()
