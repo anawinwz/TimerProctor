@@ -71,7 +71,7 @@ const AdminExamPage = ({ match }) => {
                   }}>
                     ไปยังหน้า [รออนุมัติ]
                   </a>
-                  : <>ดูคำขอได้ที่แถบ [รออนุมัติ] ของหน้า<a href={`/exams/${exam.id}/overview`}>ภาพรวมการสอบ</a></>
+                  : <>ดูคำขอได้ที่แถบ [รออนุมัติ] ของหน้า<a href={`/admin/exams/${exam.id}/overview`}>ภาพรวมการสอบ</a></>
               })
             }
           })
@@ -91,7 +91,7 @@ const AdminExamPage = ({ match }) => {
               notification.warning({
                 key: `risk_${id}`,
                 message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} แสดงพฤติกรรมเสี่ยงใหม่!`,
-                description: <a href={`/exams/${exam.id}/testers/${id}`}>ดูรายงาน</a>
+                description: <a href={`/admin/exams/${exam.id}/testers/${id}`}>ดูรายงาน</a>
               })
             }
           })
