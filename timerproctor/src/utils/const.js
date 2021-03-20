@@ -1,4 +1,6 @@
 export const nl2br = (str = '') => str.replace(/\n/g, `<br />`)
+export const truncateStr = (str = '', length = 10) =>
+  str.length <= length ? str : `${str.substr(0, length)}...`
 
 export const timeWindowModes = {
   realtime: 'ให้สัญญาณเริ่ม-สิ้นสุดด้วยตนเอง',
