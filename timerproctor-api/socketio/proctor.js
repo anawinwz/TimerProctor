@@ -1,9 +1,15 @@
 import Attempt from '../models/attempt'
+import Proctoring from '../models/proctoring'
 import { getExamIdFromSocket, getExamNsp } from '../utils/helpers'
 
 export default (socket, user = {}) => {
   const socketInfo = socket?.attempt
   const examId = getExamIdFromSocket(socket)
+
+  socket.on('disconnect', reason => {
+    Proctoring.findOneAndUpdate({ user: socketInfo.userId, exam: examId }, { socketId: undefined })
+  })
+
   socket.on('idCheckResponse', async (data, callback) => {
     const { id, mode, reason } = data
     if (!['accept', 'reject'].includes(mode))
