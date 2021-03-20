@@ -59,13 +59,13 @@ router.get('/count', adminAuthen, populateExam, onlyExamPersonnel, async (req, r
       }
     ])
 
-    let counts = {}
-    let total = 0
-    for (const group of results) {
-      counts[group._id] = group.count
-      total += group.count
-    }
-    counts.all = total
+    const counts = results.reduce((acc, group) => {
+      return {
+        ...acc,
+        total: acc.total + group.count,
+        [group._id]: group.count
+      }
+    }, { all: 0 })
 
     return res.json(jsonResponse('ok', { counts } ))
   } catch {
