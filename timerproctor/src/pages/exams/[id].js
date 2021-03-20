@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Switch, useHistory } from 'react-router-dom'
+import { Route, Switch, useHistory } from 'react-router-dom'
 import { useTitle } from 'react-use'
 import { Modal } from 'antd'
 
@@ -20,6 +20,7 @@ import WaitingPage from './[id]/waiting'
 import AttemptPage from './[id]/attempt'
 import CompletedPage from './[id]/completed'
 import FailedPage from './[id]/failed'
+import Error404Page from '~/pages/404'
 
 const ExamPage = ({ match }) => {
   const history = useHistory()
@@ -94,6 +95,19 @@ const ExamPage = ({ match }) => {
     }
   }, [attempt.socketToken, flushSocket])
 
+  if (
+    ![
+      '',
+      '/',
+      '/authenticate',
+      '/waiting',
+      '/attempt',
+      '/completed',
+      '/failed'
+    ].includes(history.location.pathname.replace(match.url, ''))
+  ) 
+    return <Error404Page />
+
   if (exam.loading || socketLoading) return <Loading />
   else if (exam.error) return <Error />
   else if (!exam.info.name) return <NotFound />
@@ -105,6 +119,7 @@ const ExamPage = ({ match }) => {
       <LayoutRoute exact path={match.url + '/attempt'} component={AttemptPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/completed'} component={CompletedPage} layout={ExamLayout} />
       <LayoutRoute exact path={match.url + '/failed'} component={FailedPage} layout={ExamLayout} />
+      <Route component={Error404Page} />
     </Switch>
   )
 }

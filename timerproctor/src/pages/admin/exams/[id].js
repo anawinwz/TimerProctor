@@ -15,6 +15,7 @@ import ExamPage from './[id]/index'
 import ExamSettingsPage from './[id]/settings'
 import ExamOverviewPage from './[id]/overview'
 import ExamTesterPage from './[id]/testers/[testerId]'
+import Error404Page from '~/pages/404'
 
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
@@ -120,6 +121,7 @@ const AdminExamPage = ({ match }) => {
       <Route exact path={match.url + '/settings'} component={ExamSettingsPage} />
       <Route exact path={match.url + '/overview'} component={ExamOverviewPage} />
       <Route exact path={match.url + '/testers/:testerId'} component={ExamTesterPage} />
+      <Route component={Error404Page} />
     </Switch>
   )
 }
