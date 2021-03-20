@@ -6,8 +6,29 @@ export default (socket, user = {}) => {
   const socketInfo = socket?.attempt
   const examId = getExamIdFromSocket(socket)
 
-  socket.on('disconnect', reason => {
-    Proctoring.findOneAndUpdate({ user: socketInfo.userId, exam: examId }, { socketId: undefined })
+  socket.on('disconnect', async reason => {
+    if (!socketInfo?.userId) return false
+
+    const proctoring = await Proctoring.findOne({ user: socketInfo.userId, exam: examId })
+    if (!proctoring) return false
+
+    proctoring.socketId = undefined
+    proctoring.save((err, proctoring) => {
+      if (err) return false
+
+      getExamNsp(examId).to('proctor').emit('proctorUpdate', {
+        id: proctoring._id,
+        updates: {
+          online: false
+        }
+      })
+      getExamNsp(examId).to('owner').emit('proctorUpdate', {
+        id: proctoring._id,
+        updates: {
+          socketId: undefined
+        }
+      })
+    })
   })
 
   socket.on('idCheckResponse', async (data, callback) => {

@@ -6,6 +6,8 @@ import { useStore } from '~/stores/admin'
 import { idCheckModes } from '~/utils/const'
 import { rangeStr, shortDateStr } from '~/utils/date'
 
+import ExamOnlineProctorsList from './ExamOnlineProctorsList'
+
 const { Item } = Descriptions
 
 const ExamDescription = () => {
@@ -23,7 +25,9 @@ const ExamDescription = () => {
         :
         <Item label="กำหนดการสอบ">{ rangeStr(timeWindow?.schedule?.startDate, timeWindow?.schedule?.endDate) }</Item>
       }
-      <Item label={`กรรมการคุมสอบขณะนี้ (${examAdmin.onlineProctors.length})`}></Item>
+      <Item label={`กรรมการคุมสอบขณะนี้ (${examAdmin.onlineProctors.length})`}>
+        <ExamOnlineProctorsList />
+      </Item>
     </Descriptions>
   )
 }
