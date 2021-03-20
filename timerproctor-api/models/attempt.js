@@ -17,7 +17,7 @@ const schema = new Schema(
     idCheck: {
       photoURL: { type: String, default: '' },
       timestamp: { type: Date },
-      accepted: { type: Boolean, default: false },
+      accepted: { type: Boolean },
       reason: { type: String, default: '' },
       checker: { type: Schema.Types.ObjectId, ref: 'User' },
       checkedAt: { type: Date }
