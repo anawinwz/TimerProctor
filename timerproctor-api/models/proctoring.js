@@ -19,6 +19,9 @@ const schema = new Schema(
       enum: ['invited', 'accepted', 'rejected', 'cancelled'],
       default: 'invited'
     },
+    
+    socketId: String,
+    
     invitedAt: { type: Date, default: Date.now },
     respondedAt: Date,
     cancelledAt: Date

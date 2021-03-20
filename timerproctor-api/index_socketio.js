@@ -7,6 +7,7 @@ import User from './models/user'
 import Exam from './models/exam'
 import Attempt from './models/attempt'
 import AttemptEvent from './models/attemptEvent'
+import Proctoring from './models/proctoring'
 
 import { ioNamespace } from './utils/const'
 
@@ -52,14 +53,15 @@ ioExam.on('connection', authorize({
       return onError({ message: 'บทบาทผู้ใช้ไม่ถูกต้อง' }, 'invalid_role')
     }
     
-    if (user.socketId) {
-      const oldSocketId = user.socketId
+    if (role === 'testtaker') {
+      const attempt = await Attempt.findById(id, { socketId: 1 })
+
+      const oldSocketId = attempt.socketId
       const oldSocket = socket.nsp?.sockets?.[oldSocketId]
       if (oldSocket) oldSocket.disconnect(true)
-    }
 
-    if (role === 'testtaker') {
-      await Attempt.findByIdAndUpdate(id, { socketId: socket.id })
+      attempt.socketId = socket.id
+      await attempt.save()
       
       const newEvent = new AttemptEvent({
         attempt: id,
@@ -83,6 +85,25 @@ ioExam.on('connection', authorize({
           event: toSend
         })
       })
+    } else if (role === 'proctor') {
+      if (String(userId) === String(exam.owner)) {
+      } else {
+        const proctoring = await Proctoring.findOne({
+          user: userId,
+          exam: examId,
+          status: 'accepted'
+        }, { socketId: 1 })
+
+        if (!proctoring) 
+          return onError({ message: 'ไม่พบสถานะการเป็นกรรมการคุมสอบของคุณ' }, 'no_proctoring')
+        
+        const oldSocketId = proctoring.socketId
+        const oldSocket = socket.nsp?.sockets?.[oldSocketId]
+        if (oldSocket) oldSocket.disconnect(true)
+
+        proctoring.socketId = socket.id
+        await proctoring.save()
+      }
     }
     
     onSuccess()
