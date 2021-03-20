@@ -19,7 +19,7 @@ const WindowTracker = ({ signal }) => {
           msg: 'พบการสลับหน้าต่าง/แท็บ'
         })
       }
-    } else if (lastFocus) {
+    } else if (firstUnfocus) {
       signal({
         timestamp: timestamp,
         type: 'window',
