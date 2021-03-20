@@ -92,7 +92,7 @@ const ExamProctorsList = ({ addable = true }) => {
         return (
           <List.Item
             key={_id}
-            actions={!examAdmin.isOwner ? [] : [
+            actions={!examAdmin.isExamOwner ? [] : [
               ...(['invited', 'accepted'].includes(status) ?
                 [<a onClick={() => cancelProctor(_id)}>ยกเลิก{status === 'accepted' ? 'สิทธิ์':'คำเชิญ'}</a>] :
                 []
