@@ -39,7 +39,7 @@ router.get('/', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) =
       }, 
       {
         exam: 0,
-        ...(isExamOwner && !socketId ? {} : {
+        ...(isExamOwner ? {} : {
           invitedAt: 0,
           respondedAt: 0
         })
