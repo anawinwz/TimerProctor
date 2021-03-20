@@ -73,6 +73,10 @@ const ExamTesterReport = ({ match }) => {
       total: acc.total + event.info.timeDiff
     }), { total: 0 })
 
+  if (riskTimes?.face === 0 && !events.find(event => event.type === 'face' && event.info.facesCount == 1)) {
+    riskTimes.face = totalTime
+  }
+
   if (!tester) return <></>
   return (
     <ContentBox>
