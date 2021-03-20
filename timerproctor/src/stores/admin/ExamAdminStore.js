@@ -114,7 +114,7 @@ class ExamAdminStore {
     Object.assign(this.testers, {}, { [_id]: tester })
     this.counts.all += 1
     this.counts[tester.status] += 1
-    this.hasNewCounts[changes.status] = true
+    this.hasNewCounts[tester.status] = true
   }
 
   @action
