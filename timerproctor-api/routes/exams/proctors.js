@@ -49,13 +49,18 @@ router.get('/', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) =
     .populate('user', '_id info email')
 
     const proctors = results.reduce((acc, proctor) => {
-      const { _id, user = {}, status } = proctor
+      const { _id, user = {}, status, socketId } = proctor
       if (status !== 'accepted')
         delete user.info
       
       return {
         ...acc,
-        [_id]: { ...user, status }
+        [_id]: {
+          ...user,
+          status,
+          online: !!socketId,
+          ...(isExamOwner ? { socketId } : {})
+        }
       }
     }, {})
 
