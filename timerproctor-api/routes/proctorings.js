@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import Proctoring from '../models/proctoring'
 import { adminAuthen } from '../middlewares/authentication'
-import { jsonResponse, getFirstValidationErrMessage } from '../utils/helpers'
+import { jsonResponse, getFirstValidationErrMessage, determineExamStatus } from '../utils/helpers'
 
 const router = Router()
 
