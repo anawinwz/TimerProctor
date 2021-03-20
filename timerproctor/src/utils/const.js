@@ -45,3 +45,19 @@ export const proctorStatuses = {
   accepted: 'ตอบรับแล้ว',
   rejected: 'ปฏิเสธแล้ว'
 }
+
+export const isEventRisk = (event = {}) => {
+  const { type, info } = event
+  switch (type) {
+    case 'window':
+      if (info.windowEvent === 'unfocus') return true
+      return false
+    case 'snapshot':
+      if (info.facesCount == 0) return true
+      return false
+    case 'face':
+      if (info.facesCount != 1) return true
+      return false
+    default: return false
+  }
+}

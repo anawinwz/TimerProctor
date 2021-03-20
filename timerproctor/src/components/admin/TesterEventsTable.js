@@ -1,22 +1,9 @@
 import { Table } from 'antd'
 import { observer } from 'mobx-react-lite'
+import { isEventRisk } from 'utils/const'
 
 import { testerEventsType } from '~/utils/const'
 import { dateStr, dateSorter } from '~/utils/date'
-
-const riskEventMarker = event => {
-  const { type, info } = event
-  switch (type) {
-    case 'window':
-      if (info.windowEvent === 'unfocus') return 'risk'
-      break
-    case 'snapshot':
-      if (info.facesCount == 0) return 'risk'
-      break
-    case 'face': return 'risk'
-    default: return ''
-  }
-}
 
 const typeFilters = Object.entries(testerEventsType)
   .map(([value, text]) => ({ text, value }))
@@ -84,7 +71,7 @@ const TesterEventsTable = ({ events }) => {
   return (
     <Table
       size="small"
-      rowClassName={riskEventMarker}
+      rowClassName={event => isEventRisk(event) ? 'risk' : ''}
       columns={columns}
       dataSource={events}
       rowKey="_id"
