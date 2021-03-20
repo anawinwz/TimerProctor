@@ -1,15 +1,16 @@
-import { useEffect } from 'react' 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 import CompletedCard from '~/components/exams/CompletedCard'
+import { Redirect } from 'react-router'
 
 const CompletedPage = () => {
-  const { SocketStore: socketStore } = useStore()
-  useEffect(() => socketStore?.socket?.emit('complete'), [])
+  const { ExamStore: exam, AttemptStore: attempt } = useStore()
+
+  if (attempt.status !== 'completed')
+    return <Redirect to={`/exams/${exam.id}`} />
+
   return (
-    <>
-      <CompletedCard />
-    </>
+    <CompletedCard />
   )
 }
 

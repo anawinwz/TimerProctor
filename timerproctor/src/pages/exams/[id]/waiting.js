@@ -7,14 +7,15 @@ import { useStore } from '~/stores/index'
 import WaitingCard from '~/components/exams/WaitingCard'
 
 const WaitingPage = () => {
-  const { ExamStore: exam } = useStore()
+  const { ExamStore: exam, SocketStore: socketStore } = useStore()
   useEffect(() => exam.getAnnouncements(), [])
 
-  if (exam.status === 'started') return <Redirect to={`/exams/${exam.id}/attempt`} />
+  if (!socketStore.socket)
+    return <Redirect to={`/exams/${exam.id}`} />
+  else if (exam.status === 'started') 
+    return <Redirect to={`/exams/${exam.id}/attempt`} />
   return (
-    <>
-      <WaitingCard />
-    </>
+    <WaitingCard />
   )
 }
 

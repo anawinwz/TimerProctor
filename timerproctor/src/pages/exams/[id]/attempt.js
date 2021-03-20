@@ -10,8 +10,7 @@ import { fetchAPIwithToken } from '~/utils/api'
 import { showModal } from '~/utils/modal'
 
 const AttemptPage = () => {
-  const { ExamStore: exam, TimerStore: timer, SocketStore: socketStore } = useStore()
-  const [completed, setCompleted] = useState(false)
+  const { ExamStore: exam, AttemptStore: attempt, TimerStore: timer, SocketStore: socketStore } = useStore()
   const [form, setForm] = useState(null)
 
   useEffect(async () => {
@@ -32,16 +31,19 @@ const AttemptPage = () => {
     const res = await fetchAPIwithToken(`/exams/${exam.id}/form/responses`, values)
     const { status, message } = res
     if (status === 'ok') {
-      setCompleted(true)
+      attempt.setCompleted()
     } else {
       showModal('error', 'ไม่สามารถส่งคำตอบได้', message || 'กรุณาลองใหม่อีกครั้ง')
     }
   }, [])
 
   
-  if (!socketStore.socket) return <Redirect to={`/exams/${exam.id}`} />
-  else if (completed) return <Redirect to={`/exams/${exam.id}/completed`} />
-  else if (exam.status === 'stopped' || timer.isTimeout === true) return <Redirect to={`/exams/${exam.id}/failed`} />
+  if (!socketStore.socket || !['authenticated', 'started'].includes(attempt.status))
+    return <Redirect to={`/exams/${exam.id}`} />
+  else if (attempt.status === 'completed')
+    return <Redirect to={`/exams/${exam.id}/completed`} />
+  else if (exam.status === 'stopped' || timer.isTimeout === true)
+    return <Redirect to={`/exams/${exam.id}/failed`} />
   return (
     <>
       <Trackers />

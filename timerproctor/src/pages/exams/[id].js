@@ -44,7 +44,8 @@ const ExamPage = ({ match }) => {
             throw error
           })
           .on('examStatus', payload => exam.updateStatus(payload))
-          .on('idCheckResponse', ({ accepted, reason }) => {
+          .on('idCheckResponse', ({ accepted = false, reason = '' }) => {
+            attempt.setStatus(accepted ? 'authenticated' : 'loggedin')
             idCheck.setResult(accepted, reason)
             if (accepted === false) {
               idCheck.setSendState(['IDLE', ''])

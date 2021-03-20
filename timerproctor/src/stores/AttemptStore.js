@@ -50,6 +50,23 @@ class AttemptStore {
       }
     })
   }
+
+  @action
+  setStatus(status = '') {
+    if (!status) return false
+    if (['completed'].includes(status) && !['started'].includes(this.status))
+      return false
+    this.status = status
+  }
+
+  @action
+  setCompleted() {
+    const socket = this.socketStore?.socket
+    if (this.status === 'started') {
+      socket?.emit('complete')
+      this.status = 'completed'
+    }
+  }
 }
 
 export default AttemptStore
