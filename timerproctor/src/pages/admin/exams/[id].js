@@ -95,6 +95,10 @@ const AdminExamPage = ({ match }) => {
               })
             }
           })
+          .on('proctorUpdate', payload => {
+            const { id, updates } = payload
+            examAdmin.updateLocalProctor(id, updates)
+          })
           .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
           .connect()
       } catch {

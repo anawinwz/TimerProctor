@@ -271,6 +271,14 @@ class ExamAdminStore {
   }
 
   @action
+  updateLocalProctor(_id, changes = {}) {
+    if (!_id || !this.proctors[_id]) return false
+
+    this.proctors[_id] = Object.assign({}, this.proctors[_id], changes)
+    return true
+  }
+
+  @action
   async getTesterIdMappings() {
     try {
       const examId = this.examStore.id
