@@ -25,7 +25,7 @@ export default (socket, user = {}) => {
       
       getExamNsp(examId).to(socketId).emit('idCheckResponse', { accepted, reason: rejectReason })
       getExamNsp(examId).to('proctor').emit('testerUpdate', {
-        id: socketId,
+        id: id,
         updates: {
           status: attempt.status,
           idCheck: attempt.idCheck
