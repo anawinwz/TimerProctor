@@ -54,6 +54,7 @@ const ExamPage = ({ match }) => {
           })
           .on('examAnnouncement', text => exam.updateAnnouncement(text))
           .on('terminated', () => {
+            attempt.setStatus('terminated')
             timer.pause()
             Modal.error({
               title: 'คุณถูกเชิญออกจากการสอบ',
