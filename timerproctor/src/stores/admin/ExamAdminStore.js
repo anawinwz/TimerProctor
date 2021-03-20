@@ -10,6 +10,15 @@ const initialCounts = {
   completed: 0
 }
 
+const initialHasNewCounts = {
+  all: false,
+  loggedin: false,
+  authenticating: false,
+  authenticated: false,
+  started: false,
+  completed: false
+}
+
 class ExamAdminStore {
   @observable loading = false
 
@@ -17,6 +26,7 @@ class ExamAdminStore {
 
   @observable socketToken = ''
   @observable counts = initialCounts
+  @observable hasNewCounts = initialHasNewCounts
   @observable testers = {}
   @observable proctors = {}
   @observable testerIdMappings = []
@@ -35,6 +45,7 @@ class ExamAdminStore {
     if (examId !== this.lastExamId) {
       this.lastExamId = examId
       this.counts = initialCounts
+      this.hasNewCounts = initialHasNewCounts
       this.testers = {}
       this.proctors = {}
       this.testerIdMappings = []
@@ -91,22 +102,24 @@ class ExamAdminStore {
   @action
   addLocalTester(tester = {}) {
     const { _id } = tester
-    if (this.updateLocalTester(_id, tester)) return true
+    if (this.updateLocalTester(_id, tester, true)) return true
 
     Object.assign(this.testers, {}, { [_id]: tester })
     this.counts.all += 1
     this.counts[tester.status] += 1
+    this.hasNewCounts[changes.status] = true
   }
 
   @action
-  updateLocalTester(_id, changes = {}) {
+  updateLocalTester(_id, changes = {}, fromSocket = false) {
     if (!_id || !this.testers[_id]) return false
 
     const oldStatus = this.testers[_id].status
     this.testers[_id] = Object.assign({}, this.testers[_id], changes)
-    if (oldStatus && changes?.status) {
+    if (oldStatus && changes?.status && oldStatus !== changes.status) {
       this.counts[oldStatus] -= 1
       this.counts[changes.status] += 1
+      if (fromSocket) this.hasNewCounts[changes.status] = true
     }
     return true
   }

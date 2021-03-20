@@ -44,7 +44,7 @@ const AdminExamPage = ({ match }) => {
           .on('newTester', tester => examAdmin.addLocalTester(tester))
           .on('testerUpdate', payload => {
             const { id, updates } = payload
-            examAdmin.updateLocalTester(id, updates)
+            examAdmin.updateLocalTester(id, updates, true)
           })
           .on('idCheckRequest', payload => {
             const { id, socketId, photoURL, timestamp } = payload
@@ -55,14 +55,14 @@ const AdminExamPage = ({ match }) => {
                 photoURL: photoURL,
                 timestamp: timestamp
               }
-            })
+            }, true)
           })
           .on('newSnapshot', payload => {
             const { id, url, timestamp } = payload
             const snapshot = { url: url, timestamp: timestamp }
             examAdmin.updateLocalTester(id, {
               lastSnapshot: snapshot
-            })
+            }, true)
             examAdmin.addSnapshotToLocalTester(id, snapshot)
           })
           .on('newEvent', payload => {

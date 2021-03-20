@@ -17,6 +17,7 @@ import ExamDescription from '~/components/admin/ExamDescription'
 import { testerStatuses } from '~/utils/const'
 import WhiteBadge from '~/components/WhiteBadge'
 import ExamTesters from '~/components/admin/ExamTesters'
+import TesterCountsBadge from 'components/admin/TesterCountsBadge'
 
 const { TabPane } = Tabs
 
@@ -47,7 +48,13 @@ const ExamOverview = () => {
             return (
               <TabPane
                 key={key}
-                tab={<>{ statuses[key] } <WhiteBadge count={examAdmin.counts?.[key] || 0} showZero /></>}
+                tab={<>
+                  { statuses[key] }{' '}
+                  <TesterCountsBadge
+                    count={examAdmin.counts?.[key] || 0}
+                    isNew={examAdmin.hasNewCounts?.[key] || false}
+                  />
+                </>}
               >
                 <ExamTesters status={key} />
               </TabPane>
