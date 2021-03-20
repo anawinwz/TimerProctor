@@ -141,7 +141,7 @@ router.get('/:testerId', adminAuthen, populateExam, onlyExamPersonnel, populateA
     const attempt = await req.attempt
       .populate('user')
       .populate('lastSnapshot')
-      .populate('idCheck.checker')
+      .populate('idCheck.checker', 'email info.displayName info.photoURL')
       .execPopulate()
 
     const tester = convertAttemptToTester(attempt.toJSON())

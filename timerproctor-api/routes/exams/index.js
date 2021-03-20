@@ -245,7 +245,7 @@ router.get('/:id/announcements', roleBasedAuthen({ guest: false }), populateExam
   
     res.json(jsonResponse('ok', { announcements: ret }))
   } else {
-    exam.populate('announcements.creator', (err, exam) => {
+    exam.populate('announcements.creator', 'info.displayName info.photoURL _id', (err, exam) => {
       if (err) res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการโหลดข้อมูลประกาศ'))
       res.json(jsonResponse('ok', { announcements: exam.announcements }))
     })
