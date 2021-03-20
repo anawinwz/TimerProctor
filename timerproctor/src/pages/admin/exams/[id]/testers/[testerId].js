@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useEffect, useMemo } from 'react'
 import { Typography, Button, Row, Col, Progress, Image } from 'antd'
-import { StopOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, StopOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -17,6 +17,7 @@ import UserTag from '~/components/admin/UserTag'
 import CaptionedProgress from '~/components/admin/CaptionedProgress'
 import SnapshotSequence from '~/components/admin/SnapshotSequence'
 import TesterEventsTable from '~/components/admin/TesterEventsTable'
+import { Link } from 'react-router-dom'
 
 const Title = styled(Typography.Title)`
   margin-top: 0 !important;
@@ -75,7 +76,7 @@ const ExamTesterReport = ({ match }) => {
   if (!tester) return <></>
   return (
     <ContentBox>
-      <Title level={3}>{ tester.name }</Title>
+      <Title level={3}><Link to="../"><ArrowLeftOutlined /></Link> { tester.name }</Title>
       <Button type="danger" icon={<StopOutlined />} onClick={show} disabled={!testerTerminatableStatuses.includes(tester.status)}>
         เชิญออก
       </Button>
