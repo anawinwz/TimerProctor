@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
-import { message } from 'antd'
+import { message, notification } from 'antd'
 
 import { showModal } from '~/utils/modal'
 
@@ -56,6 +56,10 @@ const AdminExamPage = ({ match }) => {
                 timestamp: timestamp
               }
             }, true)
+            notification.info({
+              title: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} ส่งคำขอยืนยันตัวตนใหม่`,
+              description: 'เข้าไปอนุมัติ/ปฏิเสธได้ที่แถบ [รออนุมัติ]'
+            })
           })
           .on('newSnapshot', payload => {
             const { id, url, timestamp } = payload
