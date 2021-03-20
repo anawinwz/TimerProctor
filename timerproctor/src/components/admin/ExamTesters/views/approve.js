@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Empty, Space, Typography, Button, Popconfirm, Radio, Image } from 'antd'
+import { Empty, Space, Typography, Button, Popconfirm, Radio, Image, message } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
@@ -33,13 +33,17 @@ const ApproveView = ({ testers = [] }) => {
   const [reason, setReason] = useState('รูปไม่ชัดเจน')
   const responseUser = useCallback((userId, mode, reason) => {
     socketStore.socket.emit('idCheckResponse', { id: userId, mode, reason }, data => {
-      if (data?.err) return false
+      if (data?.err) {
+        message.error(data?.errMessage || 'เกิดข้อผิดพลาดในการแจ้งผลกับผู้เข้าสอบ')
+        return false
+      }
+
+      examAdmin.updateLocalTester(userId, 
+        mode === 'accept' ? 
+        { status: 'authenticated' } :
+        { status: 'loggedin' }
+      )
     })
-    examAdmin.updateLocalTester(userId, 
-      mode === 'accept' ? 
-      { status: 'authenticated' } :
-      { status: 'loggedin' }
-    )
   }, [socketStore.socket])
 
   const queue = testers

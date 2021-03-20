@@ -11,8 +11,13 @@ export default (socket, user = {}) => {
     
     try {
       let attempt = await Attempt.findById(id)
+      if (!attempt) return callback({ err: true, errMessage: 'ไม่พบข้อมูลผู้เข้าสอบที่ต้องการ' })
+
       const socketId = attempt.socketId
       if (!socketId) return callback({ err: true })
+
+      if (attempt.idCheck.accepted === true) 
+        return callback({ err: true, errMessage: 'ผู้เข้าสอบดังกล่าวได้รับการอนุมัติไปก่อนหน้านี้แล้ว' })
 
       const accepted = mode === 'accept'
       const rejectReason = !accepted ? (reason || 'ไม่ระบุเหตุผล') : ''
@@ -31,7 +36,7 @@ export default (socket, user = {}) => {
           idCheck: attempt.idCheck
         }
       })
-      callback({ err: false, update: {} })
+      callback({ err: false })
     } catch (err) {
       console.log(err)
       callback({ err: true })
