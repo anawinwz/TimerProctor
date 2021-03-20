@@ -31,18 +31,17 @@ class AttemptStore {
   }
 
   @action
-  submitSnapshot(image) {
+  submitSnapshot(image, facesCount = undefined, timestamp = Date.now()) {
     const socket = this.socketStore?.socket
     return new Promise(async (resolve, reject) => {
       try {
         const ext = image.includes('/png') ? 'png' : 'jpeg'
-        const timestamp = Date.now()
         const ref = `testtakers/${this.authStore.firebaseUID}/${this.examStore.id}/snaps/${timestamp}.${ext}`
       
         await storage.ref(ref).putString(image, 'data_url')
 
         const url = await storage.ref(ref).getDownloadURL()
-        socket?.emit('snapshot', { image: url, facesCount: 1, timestamp: timestamp }, data => {
+        socket?.emit('snapshot', { image: url, facesCount: facesCount, timestamp: timestamp }, data => {
           if (data?.err) return reject(new Error(data.err))
           resolve()
         })

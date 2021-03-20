@@ -39,10 +39,16 @@ const FaceTracker = ({ signal = () => {} }) => {
     }
   }, [])
 
-  const takeSnapshot = useCallback(() => {
+  const takeSnapshot = useCallback(async () => {
     const video = camInput.current
+    const timestamp = Date.now()
+
     const image = getSnapshot(video, { maxWidthOrHeight: 360, quality: 0.6 })
-    attempt.submitSnapshot(image)
+    
+    const input = await getInputCanvas(image)
+    const facesCount = (await detectAllFaces(input)).length
+    
+    attempt.submitSnapshot(image, facesCount, timestamp)
   })
 
   const tracker = useCallback(() => {
