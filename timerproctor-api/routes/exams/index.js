@@ -15,7 +15,7 @@ import Exam from '../../models/exam'
 import User from '../../models/user'
 
 import dayjs from '../../utils/dayjs'
-import { jsonResponse, getExamNsp, getFirstValidationErrMessage, isExamProctor, determineExamStatus } from '../../utils/helpers'
+import { jsonResponse, getExamNsp, getFirstValidationErrMessage, isExamProctor, determineExamStatus, isEmail } from '../../utils/helpers'
 import { createSocketToken } from '../../utils/token'
 import { ValidationError } from '../../utils/error'
 
@@ -376,11 +376,13 @@ router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, as
   ))
     return res.json(jsonResponse('failed', 'รูปแบบข้อมูลนำเข้าไม่ถูกต้อง'))
 
+  const filteredMappings = mappings.filter(mapping => isEmail(mapping.email))
+
   try {
-    exam.testerIdMappings = mappings
+    exam.testerIdMappings = filteredMappings
     await exam.save()
 
-    return res.json(jsonResponse('ok', `นำเข้า ${mappings.length} รายการเรียบร้อยแล้ว`))
+    return res.json(jsonResponse('ok', `นำเข้า ${filteredMappings.length} รายชื่อที่ใช้ได้จากทั้งหมด ${mappings.length} เรียบร้อยแล้ว`))
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดขณะนำเข้ารายชื่อ'))
   }

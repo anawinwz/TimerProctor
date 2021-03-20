@@ -48,3 +48,5 @@ export const isExamProctor = async (examId, userId) => {
 
   return proctoring ? true : false
 }
+
+export const isEmail = (str = '') => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str)
