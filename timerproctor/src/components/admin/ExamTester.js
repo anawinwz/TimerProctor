@@ -67,7 +67,7 @@ const ExamTester = ({ tester, noStatus = false }) => {
     <>
       { modal }
       <ImageBox style={{ backgroundImage: `url(${tester.lastSnapshot?.url || tester.avatar})` }}>
-        {!noStatus && <span class="status-label">{ testerStatuses[tester.status] }</span> }
+        {!noStatus && <span className="status-label">{ testerStatuses[tester.status] }</span> }
         <div className="hover-box">
           <Row justify="center" align="middle" className="text-center" style={{ height: '100%' }}>
             <ButtonCol xs={24} md={6} onClick={terminatable ? show : () => {}} disabled={!terminatable}>

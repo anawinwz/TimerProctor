@@ -64,12 +64,11 @@ const AdminExamPage = ({ match }) => {
                 key: `authen_${id}`,
                 message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} ส่งคำขอยืนยันตัวตนใหม่`,
                 description: 
-                  <Link 
-                    to={`/exams/${exam.id}/overview`}
-                    onClick={() => examAdmin.setCurrentStatus('authenticating')}
-                  >
-                    ดูคำขอ
-                  </Link>
+                  location.pathname.includes('/overview') ?
+                  <a onClick={() => examAdmin.setCurrentStatus('authenticating')}>
+                    ไปยังหน้า [รออนุมัติ]
+                  </a>
+                  : <>ดูคำขอได้ที่แถบ [รออนุมัติ] ของหน้า<a href={`/exams/${exam.id}/overview`}>ภาพรวมการสอบ</a></>
               })
             }
           })
@@ -89,7 +88,7 @@ const AdminExamPage = ({ match }) => {
               notification.warning({
                 key: `risk_${id}`,
                 message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} แสดงพฤติกรรมเสี่ยงใหม่!`,
-                description: <Link to={`/exams/${exam.id}/testers/${id}`}>ดูรายงาน</Link>
+                description: <a href={`/exams/${exam.id}/testers/${id}`}>ดูรายงาน</a>
               })
             }
           })
