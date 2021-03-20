@@ -57,7 +57,7 @@ const ExamTesterReport = ({ match }) => {
     const checker = tester?.idCheck?.checker
     return { 
       name: checker?.info?.displayName,
-      email: checker?.info?.email,
+      email: checker?.email,
       avatar: checker?.info?.photoURL
     }
   }, [tester])
