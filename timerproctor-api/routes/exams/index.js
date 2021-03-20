@@ -195,6 +195,11 @@ router.patch('/:id', adminAuthen, populateExam, onlyExamOwner, async (req, res) 
       throw new ValidationError(key, 'คุณไม่ได้รับอนุญาตให้แก้ไขข้อมูลส่วนนี้')
     }
 
+    const examStatus = determineExamStatus(exam)
+    if (exam.timeWindow.mode === 'realtime' && examStatus === 'started') {
+      return res.json(jsonResponse('failed', 'ไม่สามารถอัปเดตการสอบขณะที่การสอบดำเนินอยู่ได้'))
+    }
+
     const { mode: timeWindowMode, schedule } = updates?.timeWindow || {}
     if (timeWindowMode) {
       if (timeWindowMode === 'schedule') {
