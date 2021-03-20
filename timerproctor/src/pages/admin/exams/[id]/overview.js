@@ -44,7 +44,7 @@ const ExamOverview = () => {
     <ContentBox>
       <ExamTitle exam={exam} />
       <ExamStatusControls exam={exam} />
-      <ExamDescription exam={exam} />
+      <ExamDescription />
       <Tabs centered activeKey={examAdmin?.currentStatus} onChange={onTabChange}>
         { 
           Object.keys(statuses).map(key => {

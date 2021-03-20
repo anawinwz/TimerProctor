@@ -1,11 +1,16 @@
-import { observer } from 'mobx-react-lite'
 import { Descriptions } from 'antd'
+
+import { observer } from 'mobx-react-lite'
+import { useStore } from '~/stores/admin'
+
 import { idCheckModes } from '~/utils/const'
 import { rangeStr, shortDateStr } from '~/utils/date'
 
 const { Item } = Descriptions
 
-const ExamDescription = ({ exam = {} }) => {
+const ExamDescription = () => {
+  const { ExamStore: { info: exam }, ExamAdminStore: examAdmin } = useStore()
+
   const { timeWindow, timer, authentication } = exam
   return (
     <Descriptions style={{ marginTop: '10px' }}>
@@ -18,7 +23,7 @@ const ExamDescription = ({ exam = {} }) => {
         :
         <Item label="กำหนดการสอบ">{ rangeStr(timeWindow?.schedule?.startDate, timeWindow?.schedule?.endDate) }</Item>
       }
-      <Item label="กรรมการคุมสอบขณะนี้ (0)"></Item>
+      <Item label={`กรรมการคุมสอบขณะนี้ (${examAdmin.onlineProctors.length})`}></Item>
     </Descriptions>
   )
 }

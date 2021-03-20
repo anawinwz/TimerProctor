@@ -236,6 +236,12 @@ class ExamAdminStore {
     }
   }
 
+  @computed
+  get onlineProctors() {
+    const proctors = Object.entries(this.proctors)
+    return proctors.filter(([_, proctor = {}]) => proctor.online === true)
+  }
+
   @action
   async inviteProctor(email = '', notify = false) {
     if (!email) return false
