@@ -377,6 +377,8 @@ router.put('/:id/testerIdMappings', adminAuthen, populateExam, onlyExamOwner, as
     return res.json(jsonResponse('failed', 'รูปแบบข้อมูลนำเข้าไม่ถูกต้อง'))
 
   const filteredMappings = mappings.filter(mapping => isEmail(mapping.email))
+  if (filteredMappings.length === 0)
+    return res.json(jsonResponse('failed', 'ไม่มีข้อมูลที่ใช้นำเข้าได้ (เช่น อีเมลไม่ถูกรูปแบบ)'))
 
   try {
     exam.testerIdMappings = filteredMappings
