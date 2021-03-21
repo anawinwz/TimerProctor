@@ -16,5 +16,9 @@
     <noscript>คุณต้องเปิดใช้งาน JavaScript จึงจะใช้งานเว็บนี้ได้</noscript>
     <div id="root"><!--%MARKUP%--></div>
     <script src="%ASSETS_CLIENT_JS%" defer crossorigin></script>
+    <script>
+      window.__PRELOAD_STATE__ = $$STORE$$;
+      window.__PRELOAD_ADMSTATE__ = $$ADMINSTORE$$;
+    </script>
   </body>
 </html>

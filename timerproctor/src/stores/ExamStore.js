@@ -12,10 +12,16 @@ class ExamStore {
   @observable info = {}
   @observable announcements = []
 
-  constructor(rootStore, fromAdmin = false) {
+  constructor(rootStore, initialState = {}, fromAdmin = false) {
     this.rootStore = rootStore
     this.fromAdmin = fromAdmin
     this.token = this.fromAdmin ? adminToken : userToken
+
+    this.lastFetch = initialState.lastFetch || 0
+
+    this.id = initialState.id || ''
+    this.name = initialState.name || ''
+    this.info = initialState.info || {}
   }
 
   @action

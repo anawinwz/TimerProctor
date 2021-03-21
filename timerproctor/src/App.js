@@ -18,7 +18,10 @@ notification.config({
   duration: 8
 })
 
-function App({ store = new RootStore(), adminStore = new AdminRootStore() }) {
+const preloadStore = typeof window !== 'undefined' ? window.__PRELOAD_STATE__ : null
+const preloadAdminStore = typeof window !== 'undefined' ? window.__PRELOAD_ADMSTATE__ : null
+
+function App({ store = new RootStore(preloadStore), adminStore = new AdminRootStore(preloadAdminStore) }) {
   return (
     <StoreContext.Provider value={store}>
       <AdminStoreContext.Provider value={adminStore}>

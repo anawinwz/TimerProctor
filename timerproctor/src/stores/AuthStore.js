@@ -13,10 +13,19 @@ class AuthStore {
   @observable displayName = ''
   @observable photoURL = ''
 
-  constructor(rootStore, fromAdmin = false) {
+  constructor(rootStore, initialState = {}, fromAdmin = false) {
     this.rootStore = rootStore
     this.fromAdmin = fromAdmin
     this.token = this.fromAdmin ? adminToken : userToken
+
+    this.loggingIn = initialState.loggingIn || false
+    
+    this.firebaseUID = initialState.firebaseUID || ''
+    this.email = initialState.email || ''
+    this.displayName = initialState.displayName || ''
+    this.photoURL = initialState.photoURL || ''
+
+    this.token.accessToken = initialState?.token?.accessToken || ''
   }
 
   @computed

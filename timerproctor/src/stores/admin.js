@@ -9,11 +9,11 @@ import ExamAdminStore from './admin/ExamAdminStore'
 import SocketStore from './SocketStore'
 
 export class AdminRootStore {
-  constructor() {
+  constructor(initialState = {}) {
     this.AppStore = new AppStore()
 
     const hydrate = create()
-    this.AuthStore = new AuthStore(this, true)
+    this.AuthStore = new AuthStore(this, initialState.AuthStore, true)
     if (typeof window !== 'undefined') 
       hydrate('admin_auth', this.AuthStore)
         .then(async () => {
@@ -25,9 +25,9 @@ export class AdminRootStore {
           }
         })
     
-    this.ExamStore = new ExamStore(this, true)
-    this.ExamAdminStore = new ExamAdminStore(this)
-    this.SocketStore = new SocketStore(this)
+    this.ExamStore = new ExamStore(this, initialState.ExamStore, true)
+    this.ExamAdminStore = new ExamAdminStore(this, initialState.ExamAdminStore)
+    this.SocketStore = new SocketStore(this, initialState.SocketStore)
   }
 }
 
