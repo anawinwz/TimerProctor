@@ -25,14 +25,16 @@ export const prepareStores = async (req) => {
 
   if (isAdmin) {
     const refreshToken = req.cookies?.[`tp__refreshToken${isAdmin ? '_admin':''}`]
-    if (refreshToken) {
+
+    if (!!apiKey && !!oobCode && !!mode) {
+      currentStore.AuthStore.loggingIn = true
+    } else if (refreshToken) {
       try {
         await currentStore.AuthStore.token.renewToken(refreshToken)
         currentStore.AuthStore.setUser({ firebaseUID: 'dummy' })
       } catch {}
     }
   } else {
-    console.log(apiKey, oobCode, mode)
     if (!!apiKey && !!oobCode && !!mode) {
       currentStore.AuthStore.loggingIn = true
     }
