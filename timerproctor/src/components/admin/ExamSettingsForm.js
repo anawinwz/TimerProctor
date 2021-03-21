@@ -102,9 +102,9 @@ const ExamSettingsForm = ({ disabled = false }) => {
       <Form.Item label="จำกัดเวลาทำ (นาที)" name={['timer', 'duration']} initialValue={50}>
         <InputNumber min={1} disabled={disabled} />
       </Form.Item>
-      <Form.Item label="แสดงนาฬิกาจับเวลา" name={['timer', 'isShow']} valuePropName="checked">
+      {/* <Form.Item label="แสดงนาฬิกาจับเวลา" name={['timer', 'isShow']} valuePropName="checked">
         <Switch disabled={disabled} />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item label="คำชี้แจง" name={['desc']}>
         <Input.TextArea rows={3} disabled={disabled} />
       </Form.Item>

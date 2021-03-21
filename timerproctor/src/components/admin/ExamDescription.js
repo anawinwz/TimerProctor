@@ -17,7 +17,7 @@ const ExamDescription = () => {
   return (
     <Descriptions style={{ marginTop: '10px' }}>
       <Item label="จำกัดเวลาทำ">{ timer?.duration } นาที</Item>
-      <Item label="แสดงนาฬิกาจับเวลา">{ timer?.isShow ? 'ใช่' : 'ไม่ใช่' }</Item>
+      {/* <Item label="แสดงนาฬิกาจับเวลา">{ timer?.isShow ? 'ใช่' : 'ไม่ใช่' }</Item> */}
       <Item label="ตรวจสอบบัตรประจำตัว">{ idCheckModes[authentication?.idCheckMode ] }</Item>
       { 
         timeWindow?.mode === 'realtime' ?

@@ -4,7 +4,7 @@ export const truncateStr = (str = '', length = 10) =>
 
 export const timeWindowModes = {
   realtime: 'ให้สัญญาณเริ่ม-สิ้นสุดด้วยตนเอง',
-  schedule: 'กำหนดล่วงหน้า',
+  // schedule: 'กำหนดล่วงหน้า',
 }
 
 export const loginMethods = {
@@ -15,7 +15,7 @@ export const loginMethods = {
 export const idCheckModes = {
   off: 'ปิด',
   prompt: 'อนุมัติก่อนเข้าสอบ',
-  post: 'ตรวจภายหลัง',
+  // post: 'ตรวจภายหลัง',
 }
 
 export const testerStatuses = {
