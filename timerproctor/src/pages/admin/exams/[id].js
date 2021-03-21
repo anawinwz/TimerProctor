@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Switch, Route, useLocation } from 'react-router-dom'
+import { Switch, Route, useHistory } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 import { message, notification } from 'antd'
@@ -19,7 +19,8 @@ import Error404Page from '~/pages/404'
 
 const AdminExamPage = ({ match }) => {
   const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
-  const location = useLocation()
+  const history = useHistory()
+  const { location } = history
 
   useEffect(async () => {
     exam.clearInfo()
@@ -71,8 +72,20 @@ const AdminExamPage = ({ match }) => {
                     notification.close(`authen_${id}`)
                   }}>
                     ไปยังหน้า [รออนุมัติ]
-                  </a>
-                  : <>ดูคำขอได้ที่แถบ [รออนุมัติ] ของหน้า<a href={`/admin/exams/${exam.id}/overview`}>ภาพรวมการสอบ</a></>
+                  </a> :
+                  <>
+                    ดูคำขอได้ที่แถบ [รออนุมัติ] ของหน้า
+                    <a
+                      href={`/admin/exams/${exam.id}/overview`}
+                      onClick={e => {
+                        e?.preventDefault()
+
+                        examAdmin.setCurrentStatus('authenticating')
+                        history.replace(`/admin/exams/${exam.id}/overview`)
+                        notification.close(`authen_${id}`)
+                      }}
+                    >ภาพรวมการสอบ</a>
+                  </>
               })
             }
           })
@@ -92,7 +105,16 @@ const AdminExamPage = ({ match }) => {
               notification.warning({
                 key: `risk_${id}`,
                 message: `${(examAdmin.testers?.[id]?.name || 'มีผู้เข้าสอบ').split(' ')[0]} แสดงพฤติกรรมเสี่ยงใหม่!`,
-                description: <a href={`/admin/exams/${exam.id}/testers/${id}`}>ดูรายงาน</a>
+                description: 
+                  <a
+                    href={`/admin/exams/${exam.id}/testers/${id}`}
+                    onClick={e => {
+                      e?.preventDefault()
+
+                      history.replace(`/admin/exams/${exam.id}/testers/${id}`)
+                      notification.close(`risk_${id}`)
+                    }}
+                  >ดูรายงาน</a>
               })
             }
           })
