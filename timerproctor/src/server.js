@@ -74,8 +74,8 @@ export const renderApp = async (req, res) => {
         `<script src="${assets.client.js}" defer crossorigin></script>`
       )
       .replace(/%ASSETS_CLIENT_JS%/g, assets.client.js)
-      .replace(/\$\$STORE\$\$/g, JSON.stringify(store))
-      .replace(/\$\$ADMINSTORE\$\$/g, JSON.stringify(adminStore))
+      .replace(/\$\$STORE\$\$/g, store.toJSON())
+      .replace(/\$\$ADMINSTORE\$\$/g, adminStore.toJSON())
     
     res.status(context.status || 200).send(html)
   }
