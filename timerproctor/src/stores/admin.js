@@ -29,6 +29,13 @@ export class AdminRootStore {
     this.ExamAdminStore = new ExamAdminStore(this, initialState.ExamAdminStore)
     this.SocketStore = new SocketStore(this, initialState.SocketStore)
   }
+
+  toJSON() {
+    return {
+      AuthStore: this.AuthStore.toJSON(),
+      ExamStore: this.ExamStore.toJSON()
+    }
+  }
 }
 
 export const AdminStoreContext = createContext(AdminRootStore)

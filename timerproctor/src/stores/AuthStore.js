@@ -175,6 +175,21 @@ class AuthStore {
       this.token.removeAccessToken()
     }
   }
+
+  toJSON() {
+    return {
+      token: {
+        accessToken: this.token?.accessToken
+      },
+
+      loggingIn: this.loggingIn,
+      
+      firebaseUID: this.firebaseUID,
+      email: this.email,
+      displayName: this.displayName,
+      photoURL: this.photoURL
+    }
+  }
 }
 
 export default AuthStore

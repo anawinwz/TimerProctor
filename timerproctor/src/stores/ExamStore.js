@@ -127,6 +127,16 @@ class ExamStore {
   get isPromptIDCheck() {
     return this.info?.authentication?.idCheckMode === 'prompt'
   }
+
+  toJSON() {
+    return {
+      lastFetch: this.lastFetch,
+      
+      id: this.id,
+      name: this.name,
+      info: this.info
+    }
+  }
 }
 
 export default ExamStore

@@ -26,6 +26,13 @@ export class RootStore {
     this.IDCheckStore = new IDCheckStore(this, initialState.IDCheckStore)
     this.AttemptStore = new AttemptStore(this, initialState.AttemptStore)
   }
+
+  toJSON() {
+    return {
+      AuthStore: this.AuthStore.toJSON(),
+      ExamStore: this.ExamStore.toJSON()
+    }
+  }
 }
 
 export const StoreContext = createContext(RootStore)
