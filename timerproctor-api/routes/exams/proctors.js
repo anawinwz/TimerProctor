@@ -6,7 +6,7 @@ import { onlyExamOwner, onlyExamPersonnel, populateExam } from '../../middleware
 import User from '../../models/user'
 import Proctoring from '../../models/proctoring'
 
-import { jsonResponse } from '../../utils/helpers'
+import { isEmail, jsonResponse } from '../../utils/helpers'
 
 const router = Router({ mergeParams: true })
 
@@ -71,7 +71,10 @@ router.get('/', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) =
 })
 router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   const exam = req.exam
-  const { email, notify = false } = req.body
+  const { email = '', notify = false } = req.body
+
+  if (!email || !isEmail(email))
+    return res.json(jsonResponse('failed', 'คุณยังไม่ได้กรอกอีเมล หรืออีเมลไม่ถูกรูปแบบ'))
 
   try {
     const results = await Proctoring.aggregate([
