@@ -69,6 +69,7 @@ router.post('/renew', async (req, res) => {
     if (!refreshToken) return res.json(jsonResponse('failed'))
 
     const isSSR = refreshToken === ssrRefreshToken
+    //TODO: Revoke refreshToken
 
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)
     const newAccessToken = createAccessToken(_id, admin)
@@ -88,6 +89,18 @@ router.post('/renew', async (req, res) => {
     
     return res.json(jsonResponse('failed'))
   }
+})
+
+router.post('/logout', async (req, res) => {
+  const { admin = false } = req.body
+
+  const refreshTokenName = cookieNames[`refreshToken${admin ? '_admin' : ''}`]
+  const refreshToken = req.cookies?.[refreshTokenName]
+
+  //TODO: Revoke refreshToken
+
+  res.clearCookie(cookieNames[`refreshToken${admin ? '_admin' : ''}`], defaultCookieOptions)
+  res.json(jsonResponse('ok'))
 })
 
 export default router

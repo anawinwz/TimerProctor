@@ -166,6 +166,7 @@ class AuthStore {
   @action
   async logout() {
     try {
+      await fetchAPI(`/users/logout`, { admin: this.fromAdmin })
       await auth.signOut()
     } finally {
       this.loggingIn = false
