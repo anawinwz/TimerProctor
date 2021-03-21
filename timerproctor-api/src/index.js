@@ -1,3 +1,6 @@
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+
 import server from './index_http'
 import io from './index_socketio'
 
