@@ -83,7 +83,7 @@ const server = express()
 
 server
   .disable('x-powered-by')
-  .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+  .use(express.static('public'))
   .use(cookieParser())
   .get('/*', (req, res) => {
     renderApp(req, res)
