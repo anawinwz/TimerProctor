@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
     }
 
     const accessToken = createAccessToken(user._id, admin)
-    const refreshToken = createRefreshToken(user._id, admin, true)
+    const refreshToken = await createRefreshToken(user._id, admin, true)
 
     return res
       .cookie(cookieNames[`refreshToken${admin ? '_admin' : ''}`], refreshToken, {
@@ -78,7 +78,7 @@ router.post('/renew', async (req, res) => {
 
     const refreshTokenExpires = Date.now() + 24 * 3600000
     const newAccessToken = createAccessToken(_id, admin)
-    const newRefreshToken = createRefreshToken(_id, admin)
+    const newRefreshToken = await createRefreshToken(_id, admin)
 
     await replaceRefreshToken(_id, refreshTokenData, newRefreshToken, refreshTokenExpires)
 
