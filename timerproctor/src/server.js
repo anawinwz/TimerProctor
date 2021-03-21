@@ -81,7 +81,7 @@ export const renderApp = async (req, res) => {
       .replace(/\$\$STORE\$\$/g, JSON.stringify(store.toJSON()))
       .replace(/\$\$ADMINSTORE\$\$/g, JSON.stringify(adminStore.toJSON()))
     
-    for (const [name, value] of cookies) {
+    for (const [name, value] of Object.entries(cookies)) {
       res.cookie(name, value, { httpOnly: true, domain: '.anawinwz.me' })
     }
 
