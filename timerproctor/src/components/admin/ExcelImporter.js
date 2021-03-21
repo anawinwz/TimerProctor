@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from 'react'
 import XLSX from 'xlsx'
-import { Upload, Select, Table, Button, Checkbox } from 'antd'
+import { Upload, Select, Table, Button, Checkbox, message } from 'antd'
 import { FileExcelOutlined, TableOutlined } from '@ant-design/icons'
 import Alert from '~/components/admin/Alert'
 
@@ -20,8 +20,12 @@ const ExcelImporter = ({ onImport = () => {} }) => {
     const type = !!reader.readAsBinaryString ? 'binary' : 'array'
     reader.onload = e => {
       const fileInput = e.target.result
-      const wb = XLSX.read(fileInput, { type: type })
-      setWb(wb)
+      try {
+        const wb = XLSX.read(fileInput, { type: type })
+        setWb(wb)
+      } catch {
+        message.error('ไม่สามารถอ่านไฟล์ดังกล่าวได้ กรุณาเลือกไฟล์อื่น')
+      }
     }
 
     if (type === 'binary') reader.readAsBinaryString(file)
@@ -44,6 +48,9 @@ const ExcelImporter = ({ onImport = () => {} }) => {
         if (sheet.length === 1) setHasHeader(false)
         setEmailField(0)
         setTesterIdField(sheet[0].length >= 2 ? 1 : 0)
+      } else {
+        setEmailField(null)
+        setTesterIdField(null)
       }
       return sheet
     }
