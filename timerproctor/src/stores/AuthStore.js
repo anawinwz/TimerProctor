@@ -136,9 +136,9 @@ class AuthStore {
       const { accessToken, email, info } = payload
       const { displayName, photoURL } = info
       this.setUser({ firebaseUID: user.uid, email, displayName, photoURL })
-
-      this.token.accessToken = accessToken
       
+      this.token.accessToken = accessToken
+      this.loggingIn = false
       return true
     } else {
       this.logout()
@@ -159,6 +159,7 @@ class AuthStore {
     try {
       await auth.signOut()
     } finally {
+      this.loggingIn = false
       this.emailLoggingIn = ''
       this.setUser({ firebaseUID: '', email: '', displayName: '', photoURL: '' })
       
