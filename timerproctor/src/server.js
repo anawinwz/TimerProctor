@@ -9,7 +9,7 @@ import RootStore from './stores/index'
 import AdminRootStore from './stores/admin'
 
 const fs = require('fs')
-const template = fs.readFileSync('src/_app.html', 'utf-8')
+const template = fs.readFileSync(__dirname + '/../src/_app.html', 'utf-8')
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
@@ -74,8 +74,8 @@ export const renderApp = async (req, res) => {
         `<script src="${assets.client.js}" defer crossorigin></script>`
       )
       .replace(/%ASSETS_CLIENT_JS%/g, assets.client.js)
-      .replace(/\$\$STORE\$\$/g, store.toJSON())
-      .replace(/\$\$ADMINSTORE\$\$/g, adminStore.toJSON())
+      .replace(/\$\$STORE\$\$/g, JSON.stringify(store.toJSON()))
+      .replace(/\$\$ADMINSTORE\$\$/g, JSON.stringify(adminStore.toJSON()))
     
     res.status(context.status || 200).send(html)
   }
