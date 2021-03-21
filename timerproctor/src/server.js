@@ -14,6 +14,8 @@ const template = fs.readFileSync(__dirname + '/../src/_app.html', 'utf-8')
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST)
 
 export const prepareStores = async (req) => {
+  let cookies = {}
+
   const store = new RootStore()
   const adminStore = new AdminRootStore()
 
@@ -24,13 +26,14 @@ export const prepareStores = async (req) => {
   const { apiKey, oobCode, mode } = req.query
 
   if (isAdmin) {
-    const refreshToken = req.cookies?.[`tp__refreshToken${isAdmin ? '_admin':''}`]
+    const refreshTokenName = `tp__refreshToken${isAdmin ? '_admin':''}`
+    const refreshToken = req.cookies?.[refreshTokenName]
 
     if (!!apiKey && !!oobCode && !!mode) {
       currentStore.AuthStore.loggingIn = true
     } else if (refreshToken) {
       try {
-        await currentStore.AuthStore.token.renewToken(refreshToken)
+        cookies[refreshTokenName] = await currentStore.AuthStore.token.renewToken(refreshToken)
         currentStore.AuthStore.setUser({ firebaseUID: 'dummy' })
       } catch {}
     }
@@ -45,11 +48,12 @@ export const prepareStores = async (req) => {
     await currentStore.ExamStore.getInfo({ id: examURL[1] })
   }
 
-  return { store, adminStore }
+  return { store, adminStore, cookies }
 }
 
 export const renderApp = async (req, res) => {
-  const { store, adminStore } = await prepareStores(req)
+  const { store, adminStore, cookies = {} } = await prepareStores(req)
+
 
   const context = {}
   const markup = renderToString(
@@ -77,7 +81,13 @@ export const renderApp = async (req, res) => {
       .replace(/\$\$STORE\$\$/g, JSON.stringify(store.toJSON()))
       .replace(/\$\$ADMINSTORE\$\$/g, JSON.stringify(adminStore.toJSON()))
     
-    res.status(context.status || 200).send(html)
+    for (const [name, value] of cookies) {
+      res.cookie(name, value, { httpOnly: true, domain: '.anawinwz.me' })
+    }
+
+    res
+      .status(context.status || 200)
+      .send(html)
   }
 }
 
