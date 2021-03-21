@@ -73,7 +73,7 @@ const ExamTesterReport = ({ match }) => {
       total: acc.total + event.info.timeDiff
     }), { total: 0 })
 
-  const onceNormalFaceCount = events.find(event => event.type === 'face' && event.info.facesCount == 1)
+  const onceNormalFaceCount = !['started', 'completed', 'terminated'].includes(tester?.status) || events.find(event => event.type === 'face' && event.info.facesCount == 1)
 
   if (!tester) return <></>
   return (
