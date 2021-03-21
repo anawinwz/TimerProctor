@@ -90,6 +90,7 @@ class AuthStore {
           throw e
         })
       } else {
+        this.loggingIn = false
         return false
       }
     }
