@@ -43,8 +43,8 @@ export const createSocketToken = (id, userId, role) =>
 export const getRefreshTokenData = async (token = '') => {
   if (!token) return null
 
-  const data = await RefreshToken.findOne({ token: token, active: true })
-  return data
+  const data = await RefreshToken.findOne({ token: token })
+  return data && data.active ? data : null
 }
 
 export const revokeRefreshToken = async token => {
