@@ -3,6 +3,8 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 
+import { corsOrigin } from './utils/const'
+
 require('dotenv-flow').config()
 
 const MONGODB_URI = process.env.MONGODB_URI
@@ -22,8 +24,9 @@ mongoose.connection.on('error', err => {
 })
 
 const app = express()
+app.disable('x-powered-by')
 app.use(cors({ 
-  origin: 'http://localhost:3000',
+  origin: corsOrigin,
   credentials: true
 }))
 app.use(cookieParser())

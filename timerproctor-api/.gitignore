@@ -29,8 +29,5 @@ yarn-error.log*
 # specific deployment setup
 Dockerfile
 
-# uploads
-idphotos/
-
 # credentials
 serviceAccountKey.json

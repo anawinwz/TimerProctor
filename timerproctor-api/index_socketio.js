@@ -9,7 +9,7 @@ import Attempt from './models/attempt'
 import AttemptEvent from './models/attemptEvent'
 import Proctoring from './models/proctoring'
 
-import { ioNamespace } from './utils/const'
+import { corsOrigin, ioNamespace } from './utils/const'
 
 import { authorize } from './utils/socketio-jwt'
 import { getExamIdFromSocket, getExamNsp } from './utils/helpers'
@@ -17,7 +17,7 @@ import bindSocketListener from './socketio'
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: corsOrigin,
     methods: ["GET", "POST"]
   }
 })
