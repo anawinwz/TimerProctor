@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { message, Table } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
 
 import { useStore } from '~/stores/admin'
 import { observer } from 'mobx-react-lite'
@@ -33,7 +32,7 @@ const ExamTesterIdMappings = () => {
       <DeleteButton disabled={!examAdmin.isExamOwner} />
       <Table
         size="small"
-        loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
+        loading={loading}
         columns={columns}
         dataSource={examAdmin.testerIdMappings}
       />

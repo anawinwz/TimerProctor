@@ -1,7 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Card, Space, Button, message, Spin } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
+import { Card, Space, message, Spin } from 'antd'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
@@ -75,7 +74,6 @@ const IntroLogin = () => {
           <Spin
             spinning={auth.loggingIn}
             tip={auth.emailLoggingIn ? `กำลังเข้าสู่ระบบด้วยอีเมล ${auth.emailLoggingIn}...` : 'กำลังเข้าสู่ระบบ...'}
-            indicator={<LoadingOutlined />}
           >
             <Space direction="vertical">
               {loginMethods?.map(method => {

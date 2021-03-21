@@ -92,7 +92,6 @@ const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
     <Space direction="vertical">
       <Spin
         spinning={loading}
-        indicator={<LoadingOutlined />}
         tip={sendState[1]}
       >
         <Video ref={camInput} onPlay={onPlay} autoPlay muted playsInline preload="none" />

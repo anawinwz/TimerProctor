@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { List } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
 import ExamsListItem from './ExamsListItem'
@@ -23,7 +22,7 @@ const ExamsList = ({
 
   return (
     <List
-      loading={{ spinning: loading, indicator: <LoadingOutlined /> }}
+      loading={loading}
       size="small"
       itemLayout="horizontal"
       bordered

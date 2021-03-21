@@ -2,8 +2,9 @@ import 'antd/dist/antd.less'
 import './styles/App.less'
 
 import { Switch, Route } from 'react-router-dom'
-import { ConfigProvider, notification } from 'antd'
+import { ConfigProvider, notification, Spin } from 'antd'
 import thTH from 'antd/lib/locale/th_TH'
+import { LoadingOutlined } from '@ant-design/icons'
 
 import RootStore, { StoreContext } from './stores/index'
 import AdminRootStore, { AdminStoreContext } from './stores/admin'
@@ -11,6 +12,7 @@ import AdminRootStore, { AdminStoreContext } from './stores/admin'
 import AdminPage from './pages/admin'
 import MainPage from './pages/index'
 
+Spin.setDefaultIndicator(<LoadingOutlined />)
 notification.config({
   placement: 'bottomRight',
   duration: 8
