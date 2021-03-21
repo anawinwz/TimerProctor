@@ -3,7 +3,11 @@ import styled from 'styled-components'
 import { Typography, Tooltip } from 'antd'
 import { GoogleOutlined, ExportOutlined } from '@ant-design/icons'
 
-const { Title, Text } = Typography
+const { Title, Paragraph, Text } = Typography
+
+const ExamLink = styled(Paragraph)`
+  margin-bottom: 0 !important;
+`
 
 const Subtitle = styled(Text)`
   display: block;
@@ -11,7 +15,7 @@ const Subtitle = styled(Text)`
 `
 
 const ExamTitle = ({ exam, editable = false, onEdit = () => {} }) => {
-  const { name, linked } = exam
+  const { _id, name, linked } = exam
   const publicURL = linked?.publicURL
   const editConfig = !editable ? false : {
     tooltip: 'แก้ไขชื่อการสอบ',
@@ -29,6 +33,7 @@ const ExamTitle = ({ exam, editable = false, onEdit = () => {} }) => {
       >
         { name }
       </Title>
+      <ExamLink copyable>{ `${window?.location?.protocol}://${window?.location?.host}/exams/${_id}` }</ExamLink>
       <Subtitle type="secondary">
         <GoogleOutlined /> สร้างจาก Google Forms:{' '}
         <Tooltip title={publicURL}>
