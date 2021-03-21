@@ -1,6 +1,8 @@
 import { useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Card, Space, Button, message, Spin } from 'antd'
+import { LoadingOutlined, MailOutlined } from '@ant-design/icons'
+
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
@@ -69,7 +71,11 @@ const IntroLogin = () => {
         loginMethods.length > 0 ?
         <>
           <p>โปรดเข้าสู่ระบบเพื่อดำเนินการต่อ</p>
-          <Spin spinning={auth.loggingIn} tip={auth.emailLoggingIn ? `กำลังเข้าสู่ระบบด้วยอีเมล ${auth.emailLoggingIn}...` : 'กำลังเข้าสู่ระบบ...'}>
+          <Spin
+            spinning={auth.loggingIn}
+            tip={auth.emailLoggingIn ? `กำลังเข้าสู่ระบบด้วยอีเมล ${auth.emailLoggingIn}...` : 'กำลังเข้าสู่ระบบ...'}
+            indicator={<LoadingOutlined />}
+          >
             <Space direction="vertical">
               {loginMethods?.map(method => {
                 const key = `login-${method}`
@@ -79,7 +85,6 @@ const IntroLogin = () => {
                       <GoogleLoginButton
                         key={key}
                         onClick={() => login('google')}
-                        disabled={auth.loggingIn}
                       />
                     )
                   case 'email':
@@ -87,9 +92,9 @@ const IntroLogin = () => {
                       <Button
                         key={key}
                         onClick={() => login('email')}
-                        disabled={auth.loggingIn}
+                        icon={<MailOutlined />}
                       >
-                        เข้าสู่ระบบด้วยอีเมล
+                        เข้าสู่ระบบโดยรับลิงก์ทางอีเมล
                       </Button>
                     )
                 }
