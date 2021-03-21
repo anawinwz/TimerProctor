@@ -9,6 +9,7 @@ export const timeWindowModes = {
 
 export const loginMethods = {
   google: 'บัญชี Google',
+  email: 'อีเมล'
 }
 
 export const idCheckModes = {
