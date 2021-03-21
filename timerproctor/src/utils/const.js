@@ -13,7 +13,7 @@ export const loginMethods = {
 }
 
 export const idCheckModes = {
-  off: 'ปิด',
+  none: 'ปิด',
   prompt: 'อนุมัติก่อนเข้าสอบ',
   // post: 'ตรวจภายหลัง',
 }
