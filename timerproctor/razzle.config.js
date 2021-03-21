@@ -13,6 +13,10 @@ module.exports = {
       }
     }
   }],
+  modify(config) {
+    config.devtool = process.env.GENERATE_SOURCEMAP ? 'source-map' : false;
+    return config;
+  },
   modifyWebpackConfig({
     env: {
       target, // the target 'node' or 'web'
