@@ -8,10 +8,10 @@ import { fetchAPI } from '~/utils/api'
 class AuthStore {
   @observable loggingIn = false
 
-  @persist @observable firebaseUID = ''
-  @persist @observable email = ''
-  @persist @observable displayName = ''
-  @persist @observable photoURL = ''
+  @observable firebaseUID = ''
+  @observable email = ''
+  @observable displayName = ''
+  @observable photoURL = ''
 
   constructor(rootStore, fromAdmin = false) {
     this.rootStore = rootStore
