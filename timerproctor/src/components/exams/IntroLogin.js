@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Card, Space, Button, message, Spin } from 'antd'
-import { LoadingOutlined, MailOutlined } from '@ant-design/icons'
+import { LoadingOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
@@ -10,6 +10,7 @@ import { APIFailedError } from '~/utils/api'
 import { showModal } from '~/utils/modal'
 
 import GoogleLoginButton from '~/components/buttons/GoogleLoginButton'
+import EmailLinkLoginButton from '~/components/buttons/EmailLinkLoginButton'
 
 const IntroLogin = () => {
   const { ExamStore: exam, AuthStore: auth, AttemptStore: attempt } = useStore()
@@ -89,13 +90,10 @@ const IntroLogin = () => {
                     )
                   case 'email':
                     return (
-                      <Button
+                      <EmailLinkLoginButton
                         key={key}
                         onClick={() => login('email')}
-                        icon={<MailOutlined />}
-                      >
-                        เข้าสู่ระบบโดยรับลิงก์ทางอีเมล
-                      </Button>
+                      />
                     )
                 }
               })}
