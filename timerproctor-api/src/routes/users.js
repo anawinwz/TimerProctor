@@ -103,11 +103,11 @@ router.post('/logout', async (req, res) => {
   const { admin = false } = req.body
 
   const refreshTokenName = cookieNames[`refreshToken${admin ? '_admin' : ''}`]
-  const refreshToken = req.cookies?.[refreshTokenName]
+  const refreshToken = String(req.cookies?.[refreshTokenName] || '')
 
   await revokeRefreshToken(refreshToken)
 
-  res.clearCookie(cookieNames[`refreshToken${admin ? '_admin' : ''}`], defaultCookieOptions)
+  res.clearCookie(refreshTokenName, defaultCookieOptions)
   res.json(jsonResponse('ok'))
 })
 

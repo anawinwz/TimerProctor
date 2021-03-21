@@ -49,10 +49,12 @@ export const getRefreshTokenData = async (token = '') => {
 
 export const revokeRefreshToken = async token => {
   if (!token) return false
-  
-  await RefreshToken.findOneAndUpdate({ token: token }, {
-    revoked: Date.now()
-  }) 
+
+  try {
+    await RefreshToken.findOneAndUpdate({ token: token }, {
+      revoked: Date.now()
+    })
+  } catch {}
 }
 
 export const replaceRefreshToken = async (userId, oldToken, newToken, expires) => {
