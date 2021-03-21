@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react'
-import { message, Skeleton, Tabs } from 'antd'
+import { message, Skeleton, Tabs, Typography } from 'antd'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -34,6 +34,7 @@ const ExamSettings = () => {
   }, [examAdmin])
 
   const isExamOwner = examAdmin.isExamOwner
+  const isAutofillTesterId = exam?.linked?.settings?.autofill?.testerId || false
   
   if (loading) return <ContentBox><Skeleton /></ContentBox>
   else if (error) return <ErrorContentBox />
@@ -59,6 +60,24 @@ const ExamSettings = () => {
           tab="ผู้เข้าสอบ"
           key="testtakers"
         >
+          <Typography.Title level={5}>
+            รายชื่อผู้เข้าสอบที่รู้จัก
+          </Typography.Title>
+          <Typography.Paragraph>
+            รายชื่อนี้สามารถใช้เพื่อจับคู่ [อีเมล] ของผู้เข้าสอบกับ [รหัสประจำตัวผู้เข้าสอบ] หรือข้อมูลอื่นใด<br />
+            เพื่อให้ระบบเติมลงไปในชุดคำตอบของผู้เข้าสอบโดยอัตโนมัติได้
+          </Typography.Paragraph>
+          <Alert
+            showIcon
+            type={isAutofillTesterId ? 'success' : 'error'}
+            message={<>
+              [เติมรหัสประจำตัวผู้เข้าสอบอัตโนมัติ] <b>{isAutofillTesterId ? 'เปิดอยู่' : 'ปิดอยู่'}</b>
+              { 
+                isExamOwner &&
+                <><br />สามารถเปิด/ปิดได้ที่ <b>ส่วนเสริม TimerProctor &gt; กำหนดค่าเพิ่มเติม</b> บนฟอร์มข้อสอบ</>
+              }
+            </>}
+          />
           { !isExamOwner && <Alert showIcon type="info" message="มีเพียงอาจารย์เจ้าของการสอบเท่านั้นที่นำเข้า/ลบรายชื่อได้" /> }
           <ExamTesterIdMappings />
         </Tabs.TabPane>
