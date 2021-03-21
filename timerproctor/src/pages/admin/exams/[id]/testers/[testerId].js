@@ -36,7 +36,7 @@ const SmallText = styled(Typography.Text)`
 `
 
 const ExamTesterReport = ({ match }) => {
-  const { ExamAdminStore: examAdmin, ExamStore: { info: exam } } = useStore()
+  const { ExamAdminStore: examAdmin, ExamStore: { isIDCheck, info: exam } } = useStore()
 
   const testerId = match.params?.testerId
 
@@ -129,7 +129,7 @@ const ExamTesterReport = ({ match }) => {
                 }
               </Col>
             </Row> :
-            exam.isIDCheck ? 'ผู้เข้าสอบรายนี้ยังไม่เคยส่งภาพยืนยันตน' : 'การสอบนี้ไม่ต้องยืนยันตัวตน'
+            isIDCheck ? 'ผู้เข้าสอบรายนี้ยังไม่เคยส่งภาพยืนยันตน' : 'การสอบนี้ไม่ต้องยืนยันตัวตน'
           }
         </Col>
       </TesterDescription>
