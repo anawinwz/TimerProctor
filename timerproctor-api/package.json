@@ -22,6 +22,7 @@
     "firebase-admin": "^9.4.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.11",
+    "rimraf": "^3.0.2",
     "socket.io": "^3.0.5"
   }
 }
