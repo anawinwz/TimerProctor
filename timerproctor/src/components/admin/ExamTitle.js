@@ -33,7 +33,7 @@ const ExamTitle = ({ exam, editable = false, onEdit = () => {} }) => {
       >
         { name }
       </Title>
-      <ExamLink copyable>{ `${window?.location?.protocol}://${window?.location?.host}/exams/${_id}` }</ExamLink>
+      <ExamLink copyable>{ `${window?.location?.protocol}//${window?.location?.host}/exams/${_id}` }</ExamLink>
       <Subtitle type="secondary">
         <GoogleOutlined /> สร้างจาก Google Forms:{' '}
         <Tooltip title={publicURL}>
