@@ -37,10 +37,10 @@ const AdminExamPage = ({ match }) => {
       hideSocketLoading = message.loading('กำลังเชื่อมต่อเซิร์ฟเวอร์คุมสอบ...')
       try {
         socketStore.init(`/exams/${exam.id}`)
-          .on('authenticated', () => {
+          .on('connect', () => {
             if (typeof hideSocketLoading === 'function') hideSocketLoading()
           })
-          .on('unauthorized', error => {
+          .on('connect_error', error => {
             throw error
           })
           .on('examStatus', payload => exam.updateStatus(payload))
@@ -122,8 +122,10 @@ const AdminExamPage = ({ match }) => {
             const { id, updates } = payload
             examAdmin.updateLocalProctor(id, updates)
           })
-          .on('connect', () => socketStore.socket.emit('authenticate', { token: examAdmin.socketToken }))
-          .connect()
+
+          socketStore
+            .setToken(examAdmin.socketToken)
+            .connect()
       } catch {
         showModal('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คุมสอบได้', 'กรุณาลองใหม่อีกครั้ง')
       }

@@ -42,8 +42,8 @@ const ExamPage = ({ match }) => {
       try {
         setSocketLoading(true)
         socketStore.init(`/exams/${exam.id}`)
-          .on('authenticated', () => setSocketLoading(false))
-          .on('unauthorized', error => {
+          .on('connect', () => setSocketLoading(false))
+          .on('connect_error', error => {
             throw error
           })
           .on('examStatus', payload => exam.updateStatus(payload))
@@ -74,7 +74,9 @@ const ExamPage = ({ match }) => {
 
             history.replace(`/exams/${exam.id}`)
           })
-          .on('connect', () => socketStore.socket.emit('authenticate', { token: attempt.socketToken }))
+        
+        socketStore
+          .setToken(attempt.socketToken)
           .connect()
       } catch {
         Modal.error({

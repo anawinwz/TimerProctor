@@ -15,7 +15,18 @@ class SocketStore {
       opts.autoConnect = false
 
     if (!url.includes('http')) url = `${baseUrl}${url}`
-    this.socket = io(url, opts)
+    this.socket = io(url, {
+      ...opts,
+      auth: {}
+    })
+    return this.socket
+  }
+
+  @action
+  setToken(token = '') {
+    if (!this.socket) return null
+
+    this.socket.auth.token = token
     return this.socket
   }
 
