@@ -51,6 +51,7 @@ export const validateRole = async (socket, next) => {
   if (!user) {
     return next(new Error('ไม่พบข้อมูลผู้ใช้'))
   }
+  socket.request.userId = userId
   
   const isExamOwner = String(userId) === String(exam.owner)
   socket.request.isExamOwner = isExamOwner
