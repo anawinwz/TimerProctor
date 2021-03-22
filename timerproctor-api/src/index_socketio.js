@@ -3,16 +3,12 @@ import server from './index_http'
 
 import { JWT_SOCKET_SECRET } from './config'
 
-import User from './models/user'
-import Exam from './models/exam'
-import Attempt from './models/attempt'
 import AttemptEvent from './models/attemptEvent'
-import Proctoring from './models/proctoring'
 
 import { corsOrigin, ioNamespace } from './utils/const'
 
-import { authorize } from './utils/socketio-jwt'
-import { getExamIdFromSocket, getExamNsp } from './utils/helpers'
+import { jwtAuthorize, validateRole } from './socketio/middlewares/authentication'
+import { getExamNsp } from './utils/helpers'
 import bindSocketListener from './socketio'
 
 const io = new Server(server, {
@@ -26,110 +22,79 @@ export default io
 
 export const ioExam = io.of(ioNamespace)
 
-ioExam.on('connection', authorize({
-  required: true,
+ioExam.use(jwtAuthorize({
   secret: JWT_SOCKET_SECRET,
-  timeout: 15000,
-  decodedPropertyName: 'attempt',
-  additional_auth: async (decoded, onSuccess, onError, socket) => {
-    console.log('[socket.io] try to execute additional_auth')
-    
-    const examId = getExamIdFromSocket(socket)
-    const exam = await Exam.findById(examId)
-    if (!exam) {
-      console.log(`Exam not found: ${examId}`)
-      return onError({ message: 'ไม่พบห้องสอบ' }, 'exam_notfound')
-    }
+  decodedPropertyName: 'decoded_token',
+}))
+ioExam.use(validateRole)
 
-    const { id, userId, role } = decoded
-    let user = await User.findById(userId)
-    if (!user) {
-      console.log(`User not found: ${userId}`)
-      return onError({ message: 'ไม่พบข้อมูลผู้ใช้' }, 'user_notfound')
-    }
-    
-    const isExamOwner = String(userId) === String(exam.owner)
-    if (!role || !['proctor', 'testtaker'].includes(role)) {
-      console.log(`Role incorrect: ${role}`)
-      return onError({ message: 'บทบาทผู้ใช้ไม่ถูกต้อง' }, 'invalid_role')
-    }
-    
-    if (role === 'testtaker') {
-      const attempt = await Attempt.findById(id, { socketId: 1 })
+ioExam.on('connection', async socket => {
+  const { examId = '', userId = '', role = '', isExamOwner = false } = socket.request 
+  if (role === 'testtaker') {
+    const { attempt = {} } = socket.request
 
-      const oldSocketId = attempt.socketId
+    const oldSocketId = attempt.socketId
+    const oldSocket = socket.nsp?.sockets?.[oldSocketId]
+    if (oldSocket) oldSocket.disconnect(true)
+
+    attempt.socketId = socket.id
+    await attempt.save()
+    
+    const newEvent = new AttemptEvent({
+      attempt: id,
+      timestamp: Date.now(),
+      type: 'socket',
+      info: {
+        socketEvent: {
+          name: 'authorized'
+        }
+      }
+    })
+    newEvent.save((err, newEvent) => {
+      if (err) return false
+      
+      let toSend = newEvent.toJSON()
+      delete toSend._id
+      delete toSend.attempt
+
+      getExamNsp(examId).to('proctor').emit('newEvent', {
+        id: id,
+        event: toSend
+      })
+    })
+  } else if (role === 'proctor') {
+    if (isExamOwner) {
+    } else {
+      const { proctoring } = socket.request
+      
+      const oldSocketId = proctoring.socketId
       const oldSocket = socket.nsp?.sockets?.[oldSocketId]
       if (oldSocket) oldSocket.disconnect(true)
 
-      attempt.socketId = socket.id
-      await attempt.save()
-      
-      const newEvent = new AttemptEvent({
-        attempt: id,
-        timestamp: Date.now(),
-        type: 'socket',
-        info: {
-          socketEvent: {
-            name: 'authorized'
-          }
+      proctoring.socketId = socket.id
+      await proctoring.save()
+
+      getExamNsp(examId).to('proctor').emit('proctorUpdate', {
+        id: proctoring._id,
+        updates: {
+          online: true
         }
       })
-      newEvent.save((err, newEvent) => {
-        if (err) return false
-        
-        let toSend = newEvent.toJSON()
-        delete toSend._id
-        delete toSend.attempt
-  
-        getExamNsp(examId).to('proctor').emit('newEvent', {
-          id: id,
-          event: toSend
-        })
+      getExamNsp(examId).to('owner').emit('proctorUpdate', {
+        id: proctoring._id,
+        updates: {
+          socketId: socket.id
+        }
       })
-    } else if (role === 'proctor') {
-      if (isExamOwner) {
-      } else {
-        const proctoring = await Proctoring.findOne({
-          user: userId,
-          exam: examId,
-          status: 'accepted'
-        }, { socketId: 1 })
-
-        if (!proctoring) 
-          return onError({ message: 'ไม่พบสถานะการเป็นกรรมการคุมสอบของคุณ' }, 'no_proctoring')
-        
-        const oldSocketId = proctoring.socketId
-        const oldSocket = socket.nsp?.sockets?.[oldSocketId]
-        if (oldSocket) oldSocket.disconnect(true)
-
-        proctoring.socketId = socket.id
-        await proctoring.save()
-
-        getExamNsp(examId).to('proctor').emit('proctorUpdate', {
-          id: proctoring._id,
-          updates: {
-            online: true
-          }
-        })
-        getExamNsp(examId).to('owner').emit('proctorUpdate', {
-          id: proctoring._id,
-          updates: {
-            socketId: socket.id
-          }
-        })
-      }
     }
-    
-    onSuccess()
-
-    socket.attempt = decoded
-    socket.join(role)
-    if (isExamOwner) {
-      socket.join('owner')
-      console.log(`[socket.io] An owner ${userId} connected to ${examId}.`)
-    }
-    
-    bindSocketListener(socket, role, user)
-    console.log(`[socket.io] A ${role} ${userId} connected to ${examId}.`)
   }
-}))
+  
+  socket.join(role)
+  if (isExamOwner) {
+    socket.join('owner')
+    console.log(`[socket.io] An owner ${userId} connected to ${examId}.`)
+  }
+  
+  bindSocketListener(socket, role)
+  console.log(`[socket.io] A ${role} ${userId} connected to ${examId}.`)
+})

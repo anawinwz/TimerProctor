@@ -3,7 +3,7 @@ import AttemptEvent from '../models/attemptEvent'
 import { getExamIdFromSocket, getExamNsp } from '../utils/helpers'
 
 export default (socket, user = {}) => {
-  const socketInfo = socket?.attempt
+  const socketInfo = socket?.request?.decoded_token
   const examId = getExamIdFromSocket(socket)
 
   socket.on('disconnect', reason => {
