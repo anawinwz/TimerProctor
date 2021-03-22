@@ -62,6 +62,14 @@ export const renderApp = async (req, res) => {
     </StaticRouter>
   )
 
+  for (const [name, value] of Object.entries(cookies)) {
+    res.cookie(name, value, {
+      httpOnly: true,
+      domain: '.anawinwz.me',
+      expires: new Date(Date.now() + 24 * 3600000)
+    })
+  }
+
   if (context.url) {
     res.redirect(context.status || 302, context.url)
   } else {
@@ -80,14 +88,6 @@ export const renderApp = async (req, res) => {
       .replace(/%ASSETS_CLIENT_JS%/g, assets.client.js)
       .replace(/\$\$STORE\$\$/g, JSON.stringify(store.toJSON()))
       .replace(/\$\$ADMINSTORE\$\$/g, JSON.stringify(adminStore.toJSON()))
-    
-    for (const [name, value] of Object.entries(cookies)) {
-      res.cookie(name, value, {
-        httpOnly: true,
-        domain: '.anawinwz.me',
-        expires: new Date(Date.now() + 24 * 3600000)
-      })
-    }
 
     res
       .status(context.status || 200)
