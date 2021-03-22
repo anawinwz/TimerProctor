@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
 import { getSnapshot, getStream } from '~/utils/camera'
-import { detectAllFaces } from '~/utils/faceDetection'
+import { getInputCanvas, detectAllFaces } from '~/utils/faceDetection'
 import { showModal } from '~/utils/modal'
 
 const Video = styled('video')`

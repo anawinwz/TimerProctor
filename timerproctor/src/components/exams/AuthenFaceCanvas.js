@@ -1,10 +1,12 @@
 import styled from 'styled-components'
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Alert, Button, Space, Spin } from 'antd'
-import { CameraOutlined, LoadingOutlined } from '@ant-design/icons'
+import { CameraOutlined } from '@ant-design/icons'
+
+import { detectSingleFace } from 'face-api.js'
+
 import { getInputCanvas, loadModel } from '~/utils/faceDetection'
 import { getStream, getSnapshot } from '~/utils/camera'
-import { detectSingleFace } from 'face-api.js'
 import { showModal } from '~/utils/modal'
 
 const Video = styled('video')`
