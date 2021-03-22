@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
+import { isModelLoaded, loadModel } from '~/utils/faceDetection'
+
 import WaitingCard from '~/components/exams/WaitingCard'
 
 const WaitingPage = () => {
@@ -12,7 +14,7 @@ const WaitingPage = () => {
 
   if (!socketStore.socket)
     return <Redirect to={`/exams/${exam.id}`} />
-  else if (exam.status === 'started') 
+  else if (isModelLoaded && exam.status === 'started')
     return <Redirect to={`/exams/${exam.id}/attempt`} />
   return (
     <WaitingCard />
