@@ -73,15 +73,15 @@ router.get('/me', roleBasedAuthen({ guest: false }), async (req, res) => {
 })
 
 router.post('/renew', async (req, res) => {
+  const { refreshToken: ssrRefreshToken, admin = false } = req.body
+  
+  const refreshTokenName = cookieNames[`refreshToken${admin ? '_admin' : ''}`]
+  const refreshToken = req.cookies?.[refreshTokenName] || ssrRefreshToken
+  if (!refreshToken)
+    return res.json(jsonResponse('failed', 'ไม่พบ Refresh Token'))
+
+  const isSSR = refreshToken === ssrRefreshToken
   try {
-    const { refreshToken: ssrRefreshToken, admin = false } = req.body
-
-    const refreshTokenName = cookieNames[`refreshToken${admin ? '_admin' : ''}`]
-    const refreshToken = req.cookies?.[refreshTokenName] || ssrRefreshToken
-    if (!refreshToken) return res.json(jsonResponse('failed'))
-
-    const isSSR = refreshToken === ssrRefreshToken
-
     const { _id } = jwt.verify(refreshToken, admin ? JWT_ADMINAUTH_REFRESH_SECRET : JWT_AUTH_REFRESH_SECRET)
     const refreshTokenData = await getRefreshTokenData(refreshToken)
     if (!refreshTokenData) {
@@ -94,18 +94,23 @@ router.post('/renew', async (req, res) => {
 
     await replaceRefreshToken(_id, refreshTokenData, newRefreshToken, refreshTokenExpires)
 
-    return res
-      .cookie(refreshTokenName, newRefreshToken, {
+    if (!isSSR) {
+      res.cookie(refreshTokenName, newRefreshToken, {
         ...defaultCookieOptions,
         expires: new Date(refreshTokenExpires)
       })
-      .json(jsonResponse('ok', {
-        accessToken: newAccessToken,
-        ...(isSSR ? { refreshToken: newRefreshToken } : {})
-      }))
+    }
+
+    return res.json(jsonResponse('ok', {
+      accessToken: newAccessToken,
+      ...(isSSR ? { refreshToken: newRefreshToken } : {})
+    }))
   } catch (err) {
-    if (err.name === 'TokenExpiredError' || err.message === 'TokenRevoked')
+    if (err.name === 'TokenExpiredError' || err.message === 'TokenRevoked') {
+      if (!isSSR) res.clearCookie(refreshTokenName, defaultCookieOptions)
+
       return res.json(jsonResponse('relogin', 'การเข้าสู่ระบบหมดอายุ กรุณาเข้าสู่ระบบใหม่'))
+    }
     
     return res.json(jsonResponse('failed'))
   }
