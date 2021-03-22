@@ -35,6 +35,7 @@ export const prepareStores = async (req) => {
       try {
         cookies[refreshTokenName] = await currentStore.AuthStore.token.renewToken(refreshToken)
         currentStore.AuthStore.setUser({ firebaseUID: 'dummy' })
+        await currentStore.AuthStore.getUserData()
       } catch {}
     }
   } else {
