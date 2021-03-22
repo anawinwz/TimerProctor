@@ -120,12 +120,13 @@ router.post('/', authenticate, populateExam, async (req, res) => {
       idCheck: lastAttempt.idCheck
     })
 
-    const { status, idCheck } = lastAttempt
+    const { status, startedAt, idCheck } = lastAttempt
     const socketToken = createSocketToken(lastAttempt._id, userId, 'testtaker')
     
     return res.json(jsonResponse('ok', {
       socketToken,
       status,
+      startedAt,
       idCheck: {
         accepted: idCheck.accepted,
         reason: idCheck.reason

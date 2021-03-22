@@ -3,6 +3,7 @@ import { APIFailedError, fetchAPIwithToken } from '~/utils/api'
 import { storage } from '~/utils/firebase'
 class AttemptStore {
   @observable status = 'loggedin'
+  @observable startedAt = ''
   @observable socketToken = ''
 
   constructor(rootStore) {
@@ -27,12 +28,13 @@ class AttemptStore {
     if (!resStatus || !['failed', 'ok'].includes(resStatus)) throw new Error(message || 'ไม่สามารถขอเริ่มการสอบได้')
     else if (resStatus === 'failed') throw new APIFailedError(message)
 
-    const { status, socketToken, idCheck } = payload
+    const { status, startedAt, socketToken, idCheck } = payload
     this.status = status
     if (idCheck) {
       const { accepted, reason } = idCheck
       this.idCheckStore.setResult(accepted, reason)
     }
+    this.startedAt = startedAt
     this.socketToken = socketToken
   }
 

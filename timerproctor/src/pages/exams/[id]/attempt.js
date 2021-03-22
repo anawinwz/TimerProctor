@@ -1,4 +1,4 @@
-
+import moment from 'moment'
 import { useCallback, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Redirect } from 'react-router-dom'
@@ -14,14 +14,27 @@ const AttemptPage = () => {
   const [form, setForm] = useState(null)
 
   useEffect(async () => {
+    const examDuration = exam.info?.timer?.duration
+    const startedAt = attempt?.startedAt
+
     const res = await fetchAPIwithToken(`/exams/${exam.id}/form`)
     const { status, payload } = res
     if (status === 'ok' && payload) {
-      setForm(payload)
+      let endTime = examDuration * 60
+      if (startedAt) {
+        const now = moment()
+        const start = moment(startedAt)
+        endTime = (endTime * 1000 - now.diff(start)) / 1000
+      }
 
-      timer.set({ endTime: exam.info?.timer?.duration * 60  })
-      timer.start()
-      socketStore?.socket?.emit('start')
+      if (endTime > 0) {
+        setForm(payload)
+        timer.set({ endTime: endTime })
+        timer.start()
+        socketStore?.socket?.emit('start')
+      } else {
+        showModal('error', `คุณไม่เหลือเวลาในการทำข้อสอบแล้ว (ครบ ${examDuration} นาที)`)
+      }
     } else {
       showModal('error', 'ไม่สามารถโหลดเนื้อหาการสอบได้')
     }
