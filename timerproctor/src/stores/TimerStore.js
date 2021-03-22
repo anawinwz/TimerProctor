@@ -48,7 +48,7 @@ class TimerStore {
 
   @computed
   get remainingTime() {
-    return this.endTime - this.currentTime
+    return this.currentTime > this.endTime ? 0 : this.endTime - this.currentTime
   }
 
   @computed 
