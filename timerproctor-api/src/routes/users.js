@@ -8,6 +8,8 @@ import { decodeToken, getUserData } from '../utils/firebase'
 import { jsonResponse } from '../utils/helpers'
 import { createAccessToken, createRefreshToken, getRefreshTokenData, replaceRefreshToken, revokeRefreshToken } from '../utils/token'
 
+import { roleBasedAuthen } from '../middlewares/authentication'
+
 const router = Router()
 
 router.post('/login', async (req, res) => {
@@ -58,6 +60,16 @@ router.post('/login', async (req, res) => {
     console.log(err)
     res.json(jsonResponse('error', 'การเข้าสู่ระบบล้มเหลว โปรดลองใหม่ภายหลัง'))
   }
+})
+
+router.get('/me', roleBasedAuthen({ guest: false }), async (req, res) => {
+  const { firebaseUID = '', email = '', info: { displayName = '', photoURL = '' } } = req.user
+  return res.json(jsonResponse('ok', {
+    firebaseUID,
+    email,
+    displayName,
+    photoURL
+  }))
 })
 
 router.post('/renew', async (req, res) => {
