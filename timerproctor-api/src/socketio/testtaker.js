@@ -110,6 +110,8 @@ export default (socket, user = {}) => {
     try {
       let attempt = await Attempt.findById(socketInfo.id)
       attempt.status = 'started'
+      if (!attempt.startedAt)
+        attempt.startedAt = Date.now()
       attempt = await attempt.save()
 
       getExamNsp(examId).to('proctor').emit('testerUpdate', { id: socketInfo.id, updates: { status: 'started' } })
@@ -117,16 +119,6 @@ export default (socket, user = {}) => {
   })
 
   socket.on('fail', async (callback) => {
-    try {
-      let attempt = await Attempt.findById(socketInfo.id)
-      attempt.status = 'completed'
-      attempt = await attempt.save()
-
-      getExamNsp(examId).to('proctor').emit('testerUpdate', { id: socketInfo.id, updates: { status: 'completed' } })
-    } catch {}
-  })
-
-  socket.on('complete', async (callback) => {
     try {
       let attempt = await Attempt.findById(socketInfo.id)
       attempt.status = 'completed'

@@ -122,6 +122,7 @@ router.post('/responses', authenticate, populateExam, async (req, res) => {
     const { status } = result
     if (status == 200) {
       lastAttempt.status = 'completed'
+      lastAttempt.completedAt = Date.now()
       await lastAttempt.save()
 
       getExamNsp(examId).to('proctor').emit('testerUpdate', { id: lastAttempt._id, updates: { status: 'completed' } })

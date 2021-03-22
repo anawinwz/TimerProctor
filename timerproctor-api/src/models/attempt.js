@@ -21,7 +21,10 @@ const schema = new Schema(
       reason: { type: String, default: '' },
       checker: { type: Schema.Types.ObjectId, ref: 'User' },
       checkedAt: { type: Date }
-    }
+    },
+    createdAt: { type: Date, default: Date.now },
+    startedAt: Date,
+    completedAt: Date
   }
 )
 
