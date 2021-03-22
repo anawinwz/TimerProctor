@@ -11,17 +11,37 @@ const GridField = ({ info }) => {
     {
       title: '',
       key: 'title',
-      dataIndex: 'title'
+      dataIndex: 'title',
+      render: (text, record) => {
+        const isRequired = record.rules?.[0]?.required === true
+        return (
+          <span className="ant-form-item-label">
+            <label className={isRequired ? 'ant-form-item-required' : ''}>{ text }</label>
+          </span>
+        )
+      }
     },
     {
-      title: <table style={customGroupStyles}><tr>{ columns.map(column => <td>{ column }</td>) }</tr></table>,
+      title: <table style={customGroupStyles}>
+        <tbody>
+          <tr>{ columns.map(column => <td key={`th_${column}`}>{ column }</td>) }</tr>
+        </tbody>
+      </table>,
       key: 'options',
       render: (_, record) => {
         const Input = record.type === 'checkbox' ? Checkbox : Radio
         return (
           <Form.Item name={`answer_${record.id}:${record.type}`} noStyle rules={record.rules}>
             <Input.Group>
-              <table style={customGroupStyles}><tr>{ columns.map(column => <td><Input value={column} /></td>) }</tr></table>
+              <table style={customGroupStyles}>
+                <tbody>
+                  <tr>
+                    { columns.map(column => <td key={`inp_${record.id}_${column}`}>
+                        <Input value={column} />
+                      </td>) }
+                  </tr>
+                </tbody>
+              </table>
             </Input.Group>
           </Form.Item>
         )
@@ -32,6 +52,7 @@ const GridField = ({ info }) => {
   return (
     <Table
       tableLayout="fixed"
+      rowKey="id"
       dataSource={rows}
       columns={renderedColumns}
       pagination={false}
