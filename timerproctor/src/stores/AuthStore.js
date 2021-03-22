@@ -3,6 +3,7 @@ import firebase from 'firebase/app'
 import { auth } from '~/utils/firebase'
 import { userToken, adminToken } from '~/utils/token'
 import { fetchAPI } from '~/utils/api'
+import { fetchAPIwithToken } from 'utils/api'
 
 class AuthStore {
   @observable loggingIn = false
@@ -161,6 +162,17 @@ class AuthStore {
     this.email = email
     this.displayName = displayName
     this.photoURL = photoURL
+  }
+
+  @action
+  async getUserData() {
+    try {
+      const res = await fetchAPIwithToken('/users/me', null, 'GET', this.token)
+      const { status, payload } = res
+      if (status === 'ok') {
+        this.setUser(payload)
+      }
+    } catch {}
   }
 
   @action
