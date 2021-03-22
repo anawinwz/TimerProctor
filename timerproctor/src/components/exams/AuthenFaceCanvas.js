@@ -5,7 +5,7 @@ import { CameraOutlined } from '@ant-design/icons'
 
 import { detectSingleFace } from 'face-api.js'
 
-import { getInputCanvas, loadModel } from '~/utils/faceDetection'
+import { getInputCanvas } from '~/utils/faceDetection'
 import { getStream, getSnapshot } from '~/utils/camera'
 import { showModal } from '~/utils/modal'
 
@@ -16,7 +16,12 @@ const Video = styled('video')`
   pointer-events: none;
 `
 
-const AuthenFaceCanvas = ({ onSubmitPhoto, sendState, setSendState }) => {
+const AuthenFaceCanvas = ({
+  loadModel = () => {},
+  onSubmitPhoto = () => {},
+  sendState = ['IDLE', ''],
+  setSendState = () => {}
+}) => {
   const [camState, setCamState] = useState(['LOADING', ''])
   const camInput = useRef()
 

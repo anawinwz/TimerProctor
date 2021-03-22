@@ -8,7 +8,7 @@ import AuthenFaceCanvas from './AuthenFaceCanvas'
 const { Title } = Typography
 
 const AuthenCard = () => {
-  const { ExamStore: exam, IDCheckStore: idCheck } = useStore()
+  const { AppStore: app, ExamStore: exam, IDCheckStore: idCheck } = useStore()
   const history = useHistory()
 
   useEffect(() => {
@@ -36,6 +36,7 @@ const AuthenCard = () => {
         เพื่อให้กรรมการคุมสอบตรวจและอนุมัติคุณเข้าสู่ห้องสอบ
       </p>
       <AuthenFaceCanvas
+        loadModel={app.loadFaceModel}
         sendState={idCheck.sendState}
         setSendState={(state) => idCheck.setSendState(state)}
         onSubmitPhoto={(img) => idCheck.submit(img)}

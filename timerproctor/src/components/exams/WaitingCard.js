@@ -3,8 +3,6 @@ import { Card, Result, Alert } from 'antd'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
-import { loadModel } from '~/utils/faceDetection'
-
 const WaitingAnnouncement = observer(() => {
   const { ExamStore: { announcements } } = useStore()
   return announcements.length === 0 ? null : (
@@ -18,13 +16,14 @@ const WaitingAnnouncement = observer(() => {
 })
 
 const WaitingCard = () => {
-  const { ExamStore: { status } } = useStore()
+  const { AppStore: app, ExamStore: { status } } = useStore()
   const [error, setError] = useState('')
 
   useEffect(() => {
-    loadModel()
-      .catch(() => {
+    app.loadFaceModel()
+      .catch(err => {
         setError('ไม่สามารถดาวน์โหลดข้อมูลที่จำเป็นได้')
+        console.log(err)
       })
   }, [])
 
