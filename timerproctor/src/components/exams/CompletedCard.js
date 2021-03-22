@@ -1,8 +1,11 @@
 
 import { useEffect } from 'react'
-import { Card, Result, Button } from 'antd'
+import { Card, Result } from 'antd'
+
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
+
+import LogoutButton from '~/components/exams/LogoutButton'
 
 const CompletedCard = () => {
   const { TimerStore: timer } = useStore()
@@ -17,11 +20,7 @@ const CompletedCard = () => {
         status="success"
         title="ส่งคำตอบแล้ว"
         subTitle={`คุณใช้เวลาในการทำข้อสอบไป ${timer.currentTime} วินาที`}
-        extra={
-          <Button type="primary">
-            ออกจากระบบ
-          </Button>
-        }
+        extra={<LogoutButton />}
       />
     </Card>
   )

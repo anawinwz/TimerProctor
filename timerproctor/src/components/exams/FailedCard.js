@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Card, Result, Button } from 'antd'
+import { Card, Result } from 'antd'
+
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
+
+import LogoutButton from '~/components/exams/LogoutButton'
 
 const FailedCard = () => {
   const [msg, setMsg] = useState(['การสอบล้มเหลว', 'คุณใช้เวลาในการทำข้อสอบนานเกินกว่าเวลาที่กำหนดไว้'])
@@ -20,11 +23,7 @@ const FailedCard = () => {
         status="error"
         title={msg[0]}
         subTitle={msg[1]}
-        extra={
-          <Button type="primary">
-            ออกจากระบบ
-          </Button>
-        }
+        extra={<LogoutButton />}
       />
     </Card>
   )
