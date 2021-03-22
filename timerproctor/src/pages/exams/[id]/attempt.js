@@ -20,16 +20,17 @@ const AttemptPage = () => {
     const res = await fetchAPIwithToken(`/exams/${exam.id}/form`)
     const { status, payload } = res
     if (status === 'ok' && payload) {
+      let startTime = 0
       let endTime = examDuration * 60
       if (startedAt) {
         const now = moment()
         const start = moment(startedAt)
-        endTime = (endTime * 1000 - now.diff(start)) / 1000
+        startTime = Math.floor(now.diff(start) / 1000)
       }
 
-      if (endTime > 0) {
+      if (startTime < endTime) {
         setForm(payload)
-        timer.set({ endTime: endTime })
+        timer.set({ startTime: startTime, endTime: endTime })
         timer.start()
         socketStore?.socket?.emit('start')
       } else {
