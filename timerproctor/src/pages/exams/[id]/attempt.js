@@ -1,8 +1,10 @@
 import moment from 'moment'
 import { useCallback, useEffect, useState } from 'react'
-import { observer } from 'mobx-react-lite'
 import { Redirect } from 'react-router-dom'
+
+import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
+
 import Form from '~/components/exams/Form'
 import Trackers from '~/components/exams/Trackers'
 
@@ -28,9 +30,9 @@ const AttemptPage = () => {
         startTime = Math.floor(now.diff(start) / 1000)
       }
 
+      timer.set({ startTime: startTime, endTime: endTime })
       if (startTime < endTime) {
         setForm(payload)
-        timer.set({ startTime: startTime, endTime: endTime })
         timer.start()
         socketStore?.socket?.emit('start')
       } else {
