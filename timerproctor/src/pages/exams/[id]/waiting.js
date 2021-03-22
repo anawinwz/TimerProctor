@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
-import { isModelLoaded, loadModel } from '~/utils/faceDetection'
+import { isModelLoaded } from '~/utils/faceDetection'
 
 import WaitingCard from '~/components/exams/WaitingCard'
 

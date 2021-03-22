@@ -1,9 +1,9 @@
 import * as faceapi from 'face-api.js'
 
-export const isModelLoaded = () => !!faceapi.nets.ssdMobilenetv1.params
+export const isModelLoaded = faceapi.nets.ssdMobilenetv1.params
 
 export const loadModel = () => new Promise(async (resolve, reject) => {
-  if (isModelLoaded()) return resolve()
+  if (isModelLoaded) return resolve()
   try {
     await faceapi.nets.ssdMobilenetv1.load('/models/')
     resolve()
