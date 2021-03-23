@@ -51,34 +51,33 @@ const FaceTracker = ({ signal = () => {} }) => {
     setTimeout(takeSnapshot, 7000)
   }
 
-  const tracker = () => {
+  const tracker = async () => {
     const video = camInput.current
     const timestamp = Date.now()
-    detectAllFaces(video).then(detections => {
-      const faces = detections.length
+    const detections = await detectAllFaces(video)
+    const faces = detections.length
       
-      if (faces === 1 && (firstAbnormal === null || firstAbnormal > 0)) {
-        signal({
-          timestamp: timestamp,
-          type: 'face',
-          facesCount: faces,
-          ...(firstAbnormal > 0 ? { diff: timestamp - firstAbnormal } : {})
-        })
-        setFirstAbnormal(0)
-      } else if (faces === 0 || faces > 1) {
-        setFirstAbnormal(timestamp)
-        const msg = faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
+    if (faces === 1 && (firstAbnormal === null || firstAbnormal > 0)) {
+      signal({
+        timestamp: timestamp,
+        type: 'face',
+        facesCount: faces,
+        ...(firstAbnormal > 0 ? { diff: timestamp - firstAbnormal } : {})
+      })
+      setFirstAbnormal(0)
+    } else if (faces === 0 || faces > 1) {
+      setFirstAbnormal(timestamp)
+      const msg = faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
 
-        signal({
-          timestamp: timestamp,
-          type: 'face',
-          facesCount: faces,
-          msg: msg
-        })
-      }
+      signal({
+        timestamp: timestamp,
+        type: 'face',
+        facesCount: faces,
+        msg: msg
+      })
+    }
 
-      setTimeout(tracker, 3000)
-    })
+    setTimeout(tracker, 3000)
   }
 
   useEffect(() => {
