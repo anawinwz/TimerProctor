@@ -15,7 +15,7 @@ import { Spin } from 'antd'
 const AttemptPage = () => {
   const { ExamStore: exam, AttemptStore: attempt, TimerStore: timer, SocketStore: socketStore } = useStore()
   const history = useHistory()
-  const [sending, setSending] = useState(false)
+  const [state, setState] = useState(attempt.status === 'completed' ? 'completed' : 'idle')
   const [form, setForm] = useState(null)
 
   useEffect(async () => {
@@ -47,26 +47,27 @@ const AttemptPage = () => {
   }, [])
 
   const onCompleted = useCallback(async values => {
-    setSending(true)
+    setState('sending')
     try {
       const res = await fetchAPIwithToken(`/exams/${exam.id}/form/responses`, values)
       const { status, message } = res
       if (status === 'ok') {
         attempt.setCompleted()
+        setState('completed')
       } else {
+        setState('idle')
         showModal('error', 'ไม่สามารถส่งคำตอบได้', message || 'กรุณาลองใหม่อีกครั้ง')
       }
     } catch {
+      setState('idle')
       showModal('error', 'ไม่สามารถส่งคำตอบได้', 'เกิดข้อผิดพลาดที่ไม่คาดคิด กรุณาลองใหม่อีกครั้ง')
-    } finally {
-      setSending(false)
     }
   }, [])
 
   useEffect(() => {
-    if (attempt.status === 'completed')
+    if (state === 'completed')
       history.replace(`/exams/${exam.id}/completed`)
-  }, [attempt.status])
+  }, [state])
   
   if (!socketStore.socket || ['loggedin', 'authenticating'].includes(attempt.status))
     return <Redirect to={`/exams/${exam.id}`} />
