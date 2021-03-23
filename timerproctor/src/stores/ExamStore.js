@@ -80,7 +80,7 @@ class ExamStore {
   }
   
   @action
-  updateStatus(status) {
+  updateLocalStatus(status) {
     if (this.timeWindow?.mode === 'realtime') {
       this.info.timeWindow.realtime = {
         ...this.info.timeWindow.realtime,

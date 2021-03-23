@@ -39,7 +39,7 @@ const ExamStatusControls = () => {
       const { status, message: msg } = res
       if (status === 'ok') {
         message.success(msg)
-        exam?.updateStatus(mode)
+        exam?.updateLocalStatus(mode)
         exam.timeWindow.realtime.allowLogin = mode === 'started' ? true : false
       } else {
         throw new Error(msg || 'เกิดข้อผิดพลาดในการตั้งค่าสถานะการสอบ')

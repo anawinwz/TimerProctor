@@ -48,7 +48,7 @@ const AdminExamPage = ({ match }) => {
             throw error
           })
           .on('examStatus', payload => {
-            exam.updateStatus(payload)
+            exam.updateLocalStatus(payload)
             examAdmin.startTimer()
           })
           .on('examAllowLogin', payload => examAdmin.updateAllowLogin(payload))
