@@ -54,7 +54,7 @@ const AttemptPage = () => {
   }, [])
 
   
-  if (!socketStore.socket || !['authenticated', 'started'].includes(attempt.status))
+  if (!socketStore.socket || ['loggedin', 'authenticating'].includes(attempt.status))
     return <Redirect to={`/exams/${exam.id}`} />
   else if (attempt.status === 'completed')
     return <Redirect to={`/exams/${exam.id}/completed`} />
