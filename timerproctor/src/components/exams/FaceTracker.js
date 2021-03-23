@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 import { observer } from 'mobx-react-lite'
@@ -17,8 +17,11 @@ const Video = styled('video')`
 const FaceTracker = ({ signal = () => {} }) => {
   const { AttemptStore: attempt } = useStore()
   const camInput = useRef()
+
+  const intervalRef = useRef()
+  const snapshotIntervalRef = useRef()
   
-  const [firstAbnormal, setFirstAbnormal] = useState(null)
+  const firstAbnormal = useRef(null)
 
   useEffect(() => {
     let stream
@@ -48,7 +51,7 @@ const FaceTracker = ({ signal = () => {} }) => {
     
     await attempt.submitSnapshot(image, facesCount, timestamp)
 
-    setTimeout(takeSnapshot, 7000)
+    snapshotIntervalRef.current = setTimeout(takeSnapshot, 7000)
   }
 
   const tracker = async () => {
@@ -57,16 +60,16 @@ const FaceTracker = ({ signal = () => {} }) => {
     const detections = await detectAllFaces(video)
     const faces = detections.length
       
-    if (faces === 1 && (firstAbnormal === null || firstAbnormal > 0)) {
+    if (faces === 1 && (firstAbnormal.current === null || firstAbnormal.current > 0)) {
       signal({
         timestamp: timestamp,
         type: 'face',
         facesCount: faces,
-        ...(firstAbnormal > 0 ? { diff: timestamp - firstAbnormal } : {})
+        ...(firstAbnormal.current > 0 ? { diff: timestamp - firstAbnormal.current } : {})
       })
-      setFirstAbnormal(0)
+      firstAbnormal.current = 0
     } else if (faces === 0 || faces > 1) {
-      setFirstAbnormal(timestamp)
+      firstAbnormal.current = timestamp
       const msg = faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
 
       signal({
@@ -77,15 +80,15 @@ const FaceTracker = ({ signal = () => {} }) => {
       })
     }
 
-    setTimeout(tracker, 3000)
+    intervalRef.current = setTimeout(tracker, 3000)
   }
 
   useEffect(() => {
-    const interval = setTimeout(tracker, 3000)
-    const snapshotInterval = setTimeout(takeSnapshot, 7000)
+    intervalRef.current = setTimeout(tracker, 3000)
+    snapshotIntervalRef.current = setTimeout(takeSnapshot, 7000)
     return () => {
-      clearTimeout(interval)
-      clearTimeout(snapshotInterval)
+      clearTimeout(intervalRef.current)
+      clearTimeout(snapshotIntervalRef.current)
     }
   }, [])
 
