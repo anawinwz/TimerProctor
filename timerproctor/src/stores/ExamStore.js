@@ -78,6 +78,22 @@ class ExamStore {
     this.info = Object.assign({}, this.info, info)
     if (info?.name) this.name = info.name
   }
+
+  @action
+  async getStatus() {
+    try {
+      const { status, payload } = await fetchAPIwithToken(`/exams/${this.id}/status`, null, null, this.token)
+      
+      if (status === 'ok') {
+        const { status: _, ...updates } = payload
+        this.info = Object.assign({}, this.info, updates)
+      }
+
+      return status === 'ok' ? payload.status : this.status
+    } catch {
+      return this.status
+    }
+  }
   
   @action
   updateLocalStatus(status) {
