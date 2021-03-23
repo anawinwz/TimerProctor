@@ -32,7 +32,8 @@ router.post('/login', async (req, res) => {
         info: {
           displayName,
           photoURL
-        }
+        },
+        lastLoginAt: Date.now()
       })
       user = await newUser.save()
     } else {
@@ -40,6 +41,7 @@ router.post('/login', async (req, res) => {
       user.info.displayName = displayName
       user.info.photoURL = photoURL
       user.info.lastUpdated = Date.now()
+      user.lastLoginAt = Date.now()
       user = await user.save()
     }
 
