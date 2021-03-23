@@ -36,7 +36,7 @@ export default (socket, user = {}) => {
     const { image, timestamp } = data
     if (!socketInfo || !image || !timestamp) {
       console.log('[idCheck] data incomplete:', socketInfo, image, timestamp)
-      return callback({ err: true })
+      return callback({ err: true, code: 'invalid_data' })
     }
     try {
       let attempt = await Attempt.findById(socketInfo.id)
@@ -58,14 +58,14 @@ export default (socket, user = {}) => {
       callback({ err: false })
     } catch (err) {
       console.log('[idCheck] unhandled err:', err)
-      callback({ err: true })
+      callback({ err: true, code: 'server_error' })
     }
   })
 
   socket.on('snapshot', async (data, callback) => {
     const { image, facesCount, timestamp } = data
-    if (!socketInfo || !image || !facesCount || !timestamp) {
-      return callback({ err: true })
+    if (!socketInfo || typeof image !== 'string' || !['number', 'string'].includes(typeof timestamp)) {
+      return callback({ err: true, code: 'invalid_data' })
     }
 
     const newEvent = new AttemptEvent({
@@ -80,7 +80,7 @@ export default (socket, user = {}) => {
     })
 
     newEvent.save(async (err, newEvent) => {
-      if (err) return callback({ err: true })
+      if (err) return callback({ err: true, code: 'save_failed' })
 
       getExamNsp(examId).to('proctor').emit('newSnapshot', {
         id: socketInfo.id,
@@ -152,7 +152,7 @@ export default (socket, user = {}) => {
     }
 
     newEvent.save((err, newEvent) => {
-      if (err) return callback({ err: true })
+      if (err) return callback({ err: true, code: 'save_failed' })
 
       let toSend = newEvent.toJSON()
       delete toSend._id
