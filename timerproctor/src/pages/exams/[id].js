@@ -55,7 +55,7 @@ const ExamPage = ({ match }) => {
               idCheck.setResult(null, '')
             }
           })
-          .on('examAnnouncement', text => exam.updateAnnouncement(text))
+          .on('examAnnouncement', text => exam.addLocalAnnouncement(text))
           .on('terminated', () => {
             attempt.setStatus('terminated')
             

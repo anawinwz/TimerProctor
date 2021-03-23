@@ -51,7 +51,7 @@ const AdminExamPage = ({ match }) => {
             exam.updateLocalStatus(payload)
             examAdmin.startTimer()
           })
-          .on('examAllowLogin', payload => examAdmin.updateAllowLogin(payload))
+          .on('examAllowLogin', payload => examAdmin.updateLocalAllowLogin(payload))
           .on('newTester', tester => examAdmin.addLocalTester(tester))
           .on('testerUpdate', payload => {
             const { id, updates } = payload

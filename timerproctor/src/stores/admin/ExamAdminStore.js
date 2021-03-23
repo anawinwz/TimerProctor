@@ -226,14 +226,14 @@ class ExamAdminStore {
     const res = await fetchAPIwithAdminToken(`/exams/${examId}`, { name }, 'PATCH')
     const { status, message } = res
     if (status === 'ok')  {
-      this.examStore?.updateInfo({ name })
+      this.examStore?.updateLocalInfo({ name })
     } else {
       throw new Error(message || 'เกิดข้อผิดพลาดในการเปลี่ยนชื่อ')
     }
   }
 
   @action
-  updateAllowLogin(allow) {
+  updateLocalAllowLogin(allow) {
     try {
       this.examStore.timeWindow.realtime.allowLogin = allow
     } catch {}

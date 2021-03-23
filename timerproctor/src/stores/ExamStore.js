@@ -74,7 +74,7 @@ class ExamStore {
   }
 
   @action
-  updateInfo(info = {}) {
+  updateLocalInfo(info = {}) {
     this.info = Object.assign({}, this.info, info)
     if (info?.name) this.name = info.name
   }
@@ -101,7 +101,7 @@ class ExamStore {
   }
 
   @action
-  updateAnnouncement(text) {
+  addLocalAnnouncement(text) {
     this.announcements.push(text)
   }
 
