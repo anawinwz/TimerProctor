@@ -170,6 +170,8 @@ router.get('/:id', roleBasedAuthen({ guest: true }), populateExam, async (req, r
     delete ret.updatedAt
     
     delete ret.timeWindow?.realtime?.allowLogin
+    delete ret.timeWindow?.realtime?.startedAt
+    delete ret.timeWindow?.realtime?.stoppedAt
     delete ret.authentication?.login?.email?.allowedDomains
   } else if (!isThisExamPersonnel) {
     return res.json(jsonResponse('failed', 'คุณไม่มีสิทธิ์เข้าถึงการสอบนี้'))
@@ -301,6 +303,24 @@ router.post('/:id/startProctor', adminAuthen, populateExam, onlyExamPersonnel, a
   }
 })
 
+router.get('/:id/status', async (req, res) => {
+  const exam = req.exam
+  
+  const status = determineExamStatus(exam)
+  const { mode, realtime, schedule } = exam.timeWindow.toJSON()
+  return res.json(jsonResponse('ok', {
+    status,
+
+    timeWindow: {
+      mode,
+      ...(
+        mode === 'realtime' ? 
+        { status: realtime.status } :
+        schedule
+      )
+    }
+  }))
+})
 router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
     const { status } = req.body
