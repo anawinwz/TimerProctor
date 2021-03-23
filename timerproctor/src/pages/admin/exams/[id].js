@@ -23,14 +23,14 @@ const AdminExamPage = ({ match }) => {
   const { location } = history
 
   useEffect(async () => {
+    exam.clearInfo()
     try {
       await exam.getInfo({ id: match.params.id })
+      examAdmin.clearInfo()
       await examAdmin.startProctor()
       await examAdmin.startTimer()
     } catch {}
     return () => {
-      exam.clearInfo()
-      examAdmin.clearInfo()
       timer.reset()
     }
   }, [match.params.id])
