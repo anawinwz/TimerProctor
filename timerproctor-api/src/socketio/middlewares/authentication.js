@@ -7,6 +7,7 @@ import Attempt from '../../models/attempt'
 import Proctoring from '../../models/proctoring'
 
 export const jwtAuthorize = (options = {}) => {
+  console.log('[socket.io] jwtAuthorize: execute start')
   options = Object.assign({}, options, {
     decodedPropertyName: 'decoded_token',
     encodedPropertyName: 'encoded_token'

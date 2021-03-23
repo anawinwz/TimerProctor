@@ -22,7 +22,10 @@ export default io
 
 export const ioExam = io.of(ioNamespace)
 
-io.use((_, next) => next(new Error('Access Denied.')))
+io.use((_, next) => {
+  console.log('[socket.io] /: execute start')
+  next(new Error('Access Denied.'))
+})
 
 ioExam.use(jwtAuthorize({
   secret: JWT_SOCKET_SECRET,
