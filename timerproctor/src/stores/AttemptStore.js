@@ -71,7 +71,6 @@ class AttemptStore {
   setCompleted() {
     const socket = this.socketStore?.socket
     if (this.status === 'started') {
-      socket?.emit('complete')
       this.status = 'completed'
     }
   }

@@ -101,8 +101,7 @@ const schema = new Schema(
           ref: 'User',
           required: true
         },
-        createdAt: { type: Date, default: Date.now },
-        seen: { type: Number, default: 0 }
+        createdAt: { type: Date, default: Date.now }
       }],
       default: []
     },
