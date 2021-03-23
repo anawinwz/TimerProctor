@@ -262,7 +262,7 @@ class ExamAdminStore {
 
   @action
   async inviteProctor(email = '', notify = false) {
-    if (!email) return false
+    if (!email) return 'กรุณากรอกอีเมลที่ต้องการเชิญก่อน'
     
     const examId = this.examStore?.id 
     const res = await fetchAPIwithAdminToken(`/exams/${examId}/proctors`, { email, notify })
