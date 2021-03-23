@@ -68,8 +68,14 @@ const ExamPage = ({ match }) => {
                 style: { display: 'none' }
               },
               maskClosable: false,
-              onOk: () => {},
-              onCancel: () => {}
+              onOk: () => {
+                idCheck.reset()
+                attempt.reset()
+              },
+              onCancel: () => {
+                idCheck.reset()
+                attempt.reset()
+              }
             })
 
             history.replace(`/exams/${exam.id}`)
