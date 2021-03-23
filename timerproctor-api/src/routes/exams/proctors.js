@@ -104,7 +104,7 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
         
         <ul>
           <li>หากต้องการตอบรับ/ปฏิเสธ สามารถทำได้ที่ <a href="https://timerproctor.anawinwz.me/admin">https://timerproctor.anawinwz.me/admin</a></li>
-          <li>หากคุณได้รับอีเมลนี้อย่างไม่ถูกต้อง สามารถเพิกเฉยอีเมลนี้ได้ทันที (ผู้เชิญจะไม่สามารถส่งอีเมลซ้ำ้ได้อีก)</li>
+          <li>หากคุณได้รับอีเมลนี้อย่างไม่ถูกต้อง สามารถเพิกเฉยอีเมลนี้ได้ทันที</li>
         </ul>
       `
     }, (err, info) => {
@@ -151,6 +151,9 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
         const limitDate = status === 'rejected' ? respondedAt : cancelledAt
         if (limitDate && dayjs().diff(dayjs(limitDate), 'minutes') < 5)
           return res.json(jsonResponse('failed', 'กรุณาทิ้งระยะการเชิญบุคคลเดิมหลังจากยกเลิก/ถูกปฏิเสธ'))
+        
+        if (notify && limitDate && dayjs().diff(dayjs(limitDate), 'days') < 3)
+          return res.json(jsonResponse('failed', 'ส่งแจ้งเตือนหาบุคคลเดิมได้เพียง 1 ครั้ง ต่อช่วง 3 วันเท่านั้น'))
 
         await Proctoring.updateOne({ _id: proctor._id }, {
           $set: {
