@@ -24,6 +24,7 @@ export const testerStatuses = {
   loggedin: 'ล็อกอินแล้ว',
   authenticated: 'รอเข้าสอบ',
   completed: 'ส่งคำตอบแล้ว',
+  terminated: 'ถูกเชิญออก'
 }
 
 export const testerTerminatableStatuses = [
