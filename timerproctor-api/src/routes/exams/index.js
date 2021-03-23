@@ -303,7 +303,7 @@ router.post('/:id/startProctor', adminAuthen, populateExam, onlyExamPersonnel, a
   }
 })
 
-router.get('/:id/status', async (req, res) => {
+router.get('/:id/status', populateExam, async (req, res) => {
   const exam = req.exam
   
   const status = determineExamStatus(exam)
