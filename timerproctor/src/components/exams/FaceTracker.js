@@ -39,25 +39,25 @@ const FaceTracker = ({ signal = () => {} }) => {
     }
   }, [])
 
-  const takeSnapshot = useCallback(async () => {
+  const takeSnapshot = async () => {
     const video = camInput.current
     const timestamp = Date.now()
 
     const image = getSnapshot(video, { maxWidthOrHeight: 360, quality: 0.6 })
-    
-    const input = await getInputCanvas(image)
-    const facesCount = (await detectAllFaces(input)).length
+    const facesCount = 0
     
     attempt.submitSnapshot(image, facesCount, timestamp)
-  })
 
-  const tracker = useCallback(() => {
+    setTimeout(takeSnapshot, 7000)
+  }
+
+  const tracker = () => {
     const video = camInput.current
     const timestamp = Date.now()
     detectAllFaces(video).then(detections => {
       const faces = detections.length
       
-      if (firstAbnormal && faces === 1) {
+      if (faces === 1 && firstAbnormal) {
         signal({
           timestamp: timestamp,
           type: 'face',
@@ -65,12 +65,9 @@ const FaceTracker = ({ signal = () => {} }) => {
           diff: timestamp - firstAbnormal
         })
         setFirstAbnormal(null)
-      } else {
-        let msg = ''
-        if (faces === 0 || faces > 1) {
-          setFirstAbnormal(timestamp)
-          msg = faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
-        }
+      } else if (faces === 0 || faces > 1) {
+        setFirstAbnormal(timestamp)
+        const msg = faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
 
         signal({
           timestamp: timestamp,
@@ -79,15 +76,17 @@ const FaceTracker = ({ signal = () => {} }) => {
           msg: msg
         })
       }
+
+      setTimeout(tracker, 3000)
     })
-  }, [camInput])
+  }
 
   useEffect(() => {
-    const interval = setInterval(tracker, 3000)
-    const snapshotInterval = setInterval(takeSnapshot, 7000)
+    const interval = setTimeout(tracker, 3000)
+    const snapshotInterval = setTimeout(takeSnapshot, 7000)
     return () => {
-      clearInterval(interval)
-      clearInterval(snapshotInterval)
+      clearTimeout(interval)
+      clearTimeout(snapshotInterval)
     }
   }, [])
 

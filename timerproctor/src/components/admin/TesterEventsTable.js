@@ -40,7 +40,7 @@ const columns = [
             case 'unfocus': return `มีการสลับแท็บ/หน้าต่างเกิดขึ้น`
             default: return `ไม่ทราบรายละเอียด`
           }
-        case 'snapshot': return `ภาพมี ${info.facesCount} ใบหน้า`
+        case 'snapshot': return <a href={evidence.url} target="_blank">ดูรูปภาพ</a>
         case 'face':
           switch (info.facesCount) {
             case 0: return 'ไม่พบใบหน้า'
