@@ -34,9 +34,10 @@ ioExam.use(jwtAuthorize({
 ioExam.use(validateRole)
 
 ioExam.on('connection', async socket => {
-  const { examId = '', userId = '', role = '', isExamOwner = false } = socket.request 
+  const { examId = '', userId = '', role = '', isExamOwner = false } = socket.request
   if (role === 'testtaker') {
     const { attempt = {} } = socket.request
+    const id = attempt._id
 
     const oldSocketId = attempt.socketId
     const oldSocket = socket.nsp?.sockets?.[oldSocketId]
