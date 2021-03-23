@@ -7,6 +7,7 @@ import User from '../../models/user'
 import Proctoring from '../../models/proctoring'
 
 import { isEmail, jsonResponse } from '../../utils/helpers'
+import { defaultMailOptions, sendMail } from '../../utils/mail'
 
 const router = Router({ mergeParams: true })
 
@@ -76,6 +77,46 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   if (!email || !isEmail(email))
     return res.json(jsonResponse('failed', 'คุณยังไม่ได้กรอกอีเมล หรืออีเมลไม่ถูกรูปแบบ'))
 
+  const sendProctorEmail = (callback = () => {}) => new Promise((resolve, reject) => {
+    const { email: inviterEmail, info: { displayName } } = req.user
+          
+    const inviterEmailDomain = inviterEmail.split('@')[1].toLowerCase()
+    const emailDomain = email.split('@')[1].toLowerCase()
+    
+    if (emailDomain !== inviterEmailDomain) {
+      res.json(jsonResponse('ok', `เชิญโดยไม่มีเมลสำเร็จ (เพื่อความน่าเชื่อถือของระบบ อนุญาตให้ส่งแจ้งเตือนได้เฉพาะโดเมน ${inviterEmailDomain} เท่านั้น)`))
+
+      callback()
+      return resolve()
+    }
+
+    sendMail({
+      ...defaultMailOptions,
+      to: email,
+      subject: '[TimerProctor] คำเชิญเป็นกรรมการคุมสอบ',
+      html: `
+        <p><i>- ข้อความนี้มาจากระบบที่เป็นส่วนหนึ่งของโครงงานฯ หากท่านได้รับความไม่สะดวก ต้องขออภัยมา ณ ที่นี้ -</i></p>
+
+        <p>
+          <b>${displayName ? `คุณ ${displayName}` : ''} [${inviterEmail}]</b> เชิญคุณมาร่วมเป็นกรรมการคุมสอบ <b>[${exam.name}]</b>
+        </p>
+        
+        <ul>
+          <li>หากต้องการตอบรับ/ปฏิเสธ สามารถทำได้ที่ <a href="https://timerproctor.anawinwz.me/admin">https://timerproctor.anawinwz.me/admin</a></li>
+          <li>หากคุณได้รับอีเมลนี้อย่างไม่ถูกต้อง สามารถเพิกเฉยอีเมลนี้ได้ทันที (ผู้เชิญจะไม่สามารถส่งอีเมลซ้ำ้ได้อีก)</li>
+        </ul>
+      `
+    }, (err, info) => {
+      if (err) {
+        callback(err)
+        return reject(err)
+      }
+
+      callback(err, info)
+      resolve(info)
+    })
+  })
+  
   try {
     const results = await Proctoring.aggregate([
       { '$match': { exam: exam._id } },
@@ -116,9 +157,16 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
         })
 
         if (notify) {
+          return sendProctorEmail()
+            .then(() => {
+              res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] พร้อมอีเมลแจ้งเตือนอีกครั้งเรียบร้อยแล้ว`))
+            })
+            .catch(() => {
+              res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] อีกครั้งเรียบร้อยแล้ว (การส่งเมลล้มเหลว)`))
+            })
+        } else {
+          return res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] อีกครั้งเรียบร้อยแล้ว`))
         }
-        
-        return res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] ${notify ? 'พร้อมอีเมลแจ้งเตือน' : ''}อีกครั้งเรียบร้อยแล้ว`))
       }
     }
   } catch {
@@ -141,9 +189,16 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
     await proctor.save()
 
     if (notify) {
+      return sendProctorEmail()
+        .then(() => {
+          res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] พร้อมอีเมลแจ้งเตือนเรียบร้อยแล้ว`))
+        })
+        .catch(() => {
+          res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] เรียบร้อยแล้ว (การส่งเมลล้มเหลว)`))
+        })
+    } else {
+      return res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] ${notify ? 'พร้อมอีเมลแจ้งเตือน' : ''}เรียบร้อยแล้ว`))
     }
-
-    return res.json(jsonResponse('ok', `ส่งคำเชิญไปยัง [${email}] ${notify ? 'พร้อมอีเมลแจ้งเตือน' : ''}เรียบร้อยแล้ว`))
   } catch {
     return res.json(jsonResponse('failed', 'เกิดข้อผิดพลาดในการเชิญบุคคลนี้'))
   }
