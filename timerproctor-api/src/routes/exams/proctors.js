@@ -8,6 +8,7 @@ import Proctoring from '../../models/proctoring'
 
 import { isEmail, jsonResponse } from '../../utils/helpers'
 import { defaultMailOptions, sendMail } from '../../utils/mail'
+import dayjs from 'dayjs'
 
 const router = Router({ mergeParams: true })
 
@@ -137,7 +138,7 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
 
     if (results.length > 0) {
       const proctor = results[0]
-      const { status } = proctor
+      const { status, cancelledAt, respondedAt } = proctor
 
       if (['invited', 'accepted'].includes(status)) {
         return res.json(jsonResponse(
@@ -147,6 +148,10 @@ router.post('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
             'บุคคลนี้กำลังเป็นกรรมการคุมสอบอยู่แล้ว'
         ))
       } else {
+        const limitDate = status === 'rejected' ? respondedAt : cancelledAt
+        if (limitDate && dayjs().diff(dayjs(limitDate), 'minutes') < 5)
+          return res.json(jsonResponse('failed', 'กรุณาทิ้งระยะการเชิญบุคคลเดิมหลังจากยกเลิก/ถูกปฏิเสธ'))
+
         await Proctoring.updateOne({ _id: proctor._id }, {
           $set: {
             status: 'invited',
