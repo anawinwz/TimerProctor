@@ -268,7 +268,8 @@ class ExamAdminStore {
     const res = await fetchAPIwithAdminToken(`/exams/${examId}/proctors`, { email, notify })
     const { status, message } = res
     if (status === 'ok')  {
-      return this.getProctors()
+      this.getProctors()
+      return message
     } else {
       throw new Error(message || 'เกิดข้อผิดพลาดในการเชิญบุคคลนี้เป็นกรรมการ')
     }

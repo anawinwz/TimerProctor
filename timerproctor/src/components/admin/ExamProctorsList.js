@@ -39,7 +39,8 @@ const ExamProctorsList = ({ addable = true }) => {
   const inviteProctor = useCallback(async ({ email, notify = false }) => {
     setInviting(true)
     try {
-      await examAdmin?.inviteProctor(email, notify)
+      const result = await examAdmin?.inviteProctor(email, notify)
+      message.info(result)
       form.resetFields()
     } catch (err) {
       message.error(err.message)
