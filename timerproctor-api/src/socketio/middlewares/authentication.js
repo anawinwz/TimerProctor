@@ -3,6 +3,7 @@ import { getExamIdFromSocket } from '../../utils/helpers'
 
 import User from '../../models/user'
 import Exam from '../../models/exam'
+import Attempt from '../../models/attempt'
 import Proctoring from '../../models/proctoring'
 
 export const jwtAuthorize = (options = {}) => {
