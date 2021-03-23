@@ -44,7 +44,7 @@ const columns = [
         case 'face':
           switch (info.facesCount) {
             case 0: return 'ไม่พบใบหน้า'
-            case 1: return `กลับมาพบ 1 ใบหน้าอีกครั้ง (หายไป ${info.timeDiff/1000} วินาที)`
+            case 1: return info.timeDiff ? `กลับมาพบ 1 ใบหน้าอีกครั้ง (หายไป ${info.timeDiff/1000} วินาที)` : 'พบ 1 ใบหน้า'
             default: return `พบ ${info.facesCount} ใบหน้า`
           }
         case 'socket':

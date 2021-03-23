@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
 import { getSnapshot, getStream } from '~/utils/camera'
-import { getInputCanvas, detectAllFaces } from '~/utils/faceDetection'
+import { detectAllFaces } from '~/utils/faceDetection'
 import { showModal } from '~/utils/modal'
 
 const Video = styled('video')`
@@ -46,7 +46,7 @@ const FaceTracker = ({ signal = () => {} }) => {
     const image = getSnapshot(video, { maxWidthOrHeight: 360, quality: 0.6 })
     const facesCount = 0
     
-    attempt.submitSnapshot(image, facesCount, timestamp)
+    await attempt.submitSnapshot(image, facesCount, timestamp)
 
     setTimeout(takeSnapshot, 7000)
   }
@@ -57,14 +57,14 @@ const FaceTracker = ({ signal = () => {} }) => {
     detectAllFaces(video).then(detections => {
       const faces = detections.length
       
-      if (faces === 1 && firstAbnormal) {
+      if (faces === 1 && (firstAbnormal === null || firstAbnormal > 0)) {
         signal({
           timestamp: timestamp,
           type: 'face',
           facesCount: faces,
-          diff: timestamp - firstAbnormal
+          ...(firstAbnormal > 0 ? { diff: timestamp - firstAbnormal } : {})
         })
-        setFirstAbnormal(null)
+        setFirstAbnormal(0)
       } else if (faces === 0 || faces > 1) {
         setFirstAbnormal(timestamp)
         const msg = faces === 0 ? 'ไม่พบใบหน้า' : 'พบหลายบุคคลที่หน้าจอ'
