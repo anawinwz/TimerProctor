@@ -1,4 +1,6 @@
 import { Card } from 'antd'
+import { observer } from 'mobx-react-lite'
+
 import Loading from './Loading'
 import GoogleForm from './GoogleForm'
 
@@ -11,4 +13,4 @@ const Form = ({ form, onCompleted }) => {
   )
 }
 
-export default Form
+export default observer(Form)

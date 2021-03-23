@@ -2,9 +2,12 @@ import { useState, useCallback } from 'react'
 import { Form, Typography, Space, Input, InputNumber, Select, Radio, Checkbox, DatePicker, Button, TimePicker } from 'antd'
 import YouTube from 'react-youtube'
 import styled from 'styled-components'
+import { observer } from 'mobx-react-lite'
+
 import { validateMessages, validators } from '~/utils/form'
 import { getVW } from '~/utils/dom'
 import { isMoment } from '~/utils/date'
+
 import GridField from './GridField'
 
 const StyledForm = styled(Form)`
@@ -176,4 +179,4 @@ const GoogleForm = ({ form, onCompleted }) => {
   )
 }
 
-export default GoogleForm
+export default observer(GoogleForm)
