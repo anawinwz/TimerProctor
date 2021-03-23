@@ -6,6 +6,7 @@ import AuthStore from './AuthStore'
 import ExamStore from './ExamStore'
 import ExamAdminStore from './admin/ExamAdminStore'
 import SocketStore from './SocketStore'
+import TimerStore from './TimerStore'
 
 export class AdminRootStore {
   constructor(initialState = {}) {
@@ -13,8 +14,9 @@ export class AdminRootStore {
 
     this.AuthStore = new AuthStore(this, initialState.AuthStore, true)    
     this.ExamStore = new ExamStore(this, initialState.ExamStore, true)
-    this.ExamAdminStore = new ExamAdminStore(this, initialState.ExamAdminStore)
     this.SocketStore = new SocketStore(this, initialState.SocketStore)
+    this.TimerStore = new TimerStore(this, initialState.TimerStore)
+    this.ExamAdminStore = new ExamAdminStore(this, initialState.ExamAdminStore)
 
     this.AppStore.hydrateFinish()
   }

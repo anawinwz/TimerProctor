@@ -28,3 +28,5 @@ export const rangeStr = (a, b, type = 'short') => {
 }
 
 export const dateSorter = (a, b) => moment(a).unix() - moment(b).unix()
+
+export const secDiff = (a, b) => a && b ? moment(b).diff(a, 'seconds') : 0

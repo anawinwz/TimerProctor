@@ -10,15 +10,16 @@ const ExamOnlineProctorsList = () => {
   const { ExamAdminStore: examAdmin } = useStore()
   const [loading, setLoading] = useState(true)
 
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true)
 
-    try {
-      await examAdmin?.getProctors()
-      setLoading(false)
-    } catch (err) {
-      message.error(err.message)
-    }
+    examAdmin.getProctors()
+      .then(() => {
+        setLoading(false)
+      })
+      .catch(err => {
+        message.error(err.message)
+      })
   }, [])
 
 

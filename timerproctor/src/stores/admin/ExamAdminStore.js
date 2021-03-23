@@ -1,5 +1,6 @@
 import { action, computed, observable } from 'mobx'
 import { fetchAPIwithAdminToken } from '~/utils/api'
+import { secDiff } from '~/utils/date'
 
 const initialCounts = {
   all: 0,
@@ -36,6 +37,7 @@ class ExamAdminStore {
     this.rootStore = rootStore
     this.examStore = rootStore.ExamStore
     this.authStore = rootStore.AuthStore
+    this.timerStore = rootStore.TimerStore
   }
 
   @action
@@ -68,6 +70,22 @@ class ExamAdminStore {
       const { status, payload } = res
       if (status === 'ok') this.socketToken = payload.socketToken
     } catch {}
+  }
+
+  @action
+  async startTimer() {
+    const timeWindow = this.examStore?.info?.timeWindow
+    if (!timeWindow) return
+
+    const { mode, realtime } = timeWindow
+    if (mode !== 'realtime') return
+
+    if (realtime?.status === 'started') {
+      this.timerStore.set({ startTime: secDiff(realtime?.startedAt, new Date()) })
+      this.timerStore.start()
+    } else {
+      this.timerStore.reset()
+    }
   }
 
   @action

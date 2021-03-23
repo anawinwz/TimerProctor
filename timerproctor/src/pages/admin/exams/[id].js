@@ -18,17 +18,21 @@ import ExamTesterPage from './[id]/testers/[testerId]'
 import Error404Page from '~/pages/404'
 
 const AdminExamPage = ({ match }) => {
-  const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore } = useStore()
+  const { ExamStore: exam, ExamAdminStore: examAdmin, SocketStore: socketStore, TimerStore: timer } = useStore()
   const history = useHistory()
   const { location } = history
 
   useEffect(async () => {
-    exam.clearInfo()
     try {
       await exam.getInfo({ id: match.params.id })
-      examAdmin.clearInfo()
       await examAdmin.startProctor()
+      await examAdmin.startTimer()
     } catch {}
+    return () => {
+      exam.clearInfo()
+      examAdmin.clearInfo()
+      timer.reset()
+    }
   }, [match.params.id])
 
   useEffect(() => {
@@ -131,7 +135,7 @@ const AdminExamPage = ({ match }) => {
       }
     }
     return () => {
-      if (typeof hideSocketLoading === 'function') hideSocketLoading() 
+      if (typeof hideSocketLoading === 'function') hideSocketLoading()
       socketStore.destroy()
     }
   }, [examAdmin.socketToken, exam.id])

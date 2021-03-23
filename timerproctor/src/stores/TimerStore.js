@@ -1,5 +1,7 @@
 import { action, computed, observable } from 'mobx'
 
+const zeroPad = num => `${num < 10 ? 0 : ''}${num}`
+
 class TimerStore {
   @observable isRunning = false
   @observable currentTime = 0
@@ -26,7 +28,7 @@ class TimerStore {
   tick() {
     if (!this.isRunning) return
     this.currentTime += 1
-    if (this.currentTime >= this.endTime) {
+    if (this.endTime > 0 && this.currentTime >= this.endTime) {
       this.isRunning = false
       return
     }
@@ -57,12 +59,22 @@ class TimerStore {
     return false
   }
 
+  displayTime(time = 0) {
+    const hrs = Math.floor(time / 3600)
+    const mins = Math.floor((time % 3600) / 60)
+    const secs = time % 60
+
+    return `${hrs ? `${zeroPad(hrs)}:` : ''}${zeroPad(mins)}:${zeroPad(secs)}`
+  }
+
   @computed
   get displayRemainingTime() {
-    const remainingTime = this.remainingTime
-    const mins = Math.floor(remainingTime / 60)
-    const secs = remainingTime % 60
-    return `${mins < 10 ? 0 : ''}${mins}:${secs < 10 ? 0 : ''}${secs}`
+    return this.displayTime(this.remainingTime)
+  }
+
+  @computed
+  get displayElapsedTime() {
+    return this.displayTime(this.currentTime)
   }
 }
 

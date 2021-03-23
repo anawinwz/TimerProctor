@@ -8,7 +8,6 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import { fetchAPIwithAdminToken } from '~/utils/api'
-import { fromNowStr } from '~/utils/date'
 
 import ExamAllowLoginToggle from '~/components/admin/ExamAllowLoginToggle'
 import ExamAnnouncementsModal from './ExamAnnouncementsModal'
@@ -25,7 +24,7 @@ const ExamSettingsButton = observer(({ examId = '' }) => (
 ))
 
 const ExamStatusControls = () => {
-  const { ExamStore: exam, ExamAdminStore: examAdmin } = useStore()
+  const { ExamStore: exam, ExamAdminStore: examAdmin, TimerStore: timer } = useStore()
 
   const status = exam?.status
   const timeWindowMode = exam?.timeWindow?.mode
@@ -73,7 +72,7 @@ const ExamStatusControls = () => {
             onClick={stopExam}
             disabled={!isExamOwner}
           >สิ้นสุดการสอบ</Button> 
-          <span>ดำเนินไปแล้ว { fromNowStr(exam?.timeWindow?.realtime?.startedAt) }</span>
+          <span>ดำเนินไปแล้ว { timer.displayElapsedTime }</span>
         </Wrapper>
         ) : (
         <Wrapper>
