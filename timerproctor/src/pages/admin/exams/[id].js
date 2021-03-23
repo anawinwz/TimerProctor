@@ -47,7 +47,10 @@ const AdminExamPage = ({ match }) => {
           .on('connect_error', error => {
             throw error
           })
-          .on('examStatus', payload => exam.updateStatus(payload))
+          .on('examStatus', payload => {
+            exam.updateStatus(payload)
+            examAdmin.startTimer()
+          })
           .on('examAllowLogin', payload => examAdmin.updateAllowLogin(payload))
           .on('newTester', tester => examAdmin.addLocalTester(tester))
           .on('testerUpdate', payload => {
