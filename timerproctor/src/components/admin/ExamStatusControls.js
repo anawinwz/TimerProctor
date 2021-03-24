@@ -52,15 +52,17 @@ const ExamStatusControls = () => {
   }, [])
 
   const startExam = useCallback(() => {
+    const askToDelete = false
     const affected = Object.keys(examAdmin.testers).length
 
-    if (affected <= 0)
+    if (!askToDelete || affected <= 0)
       return controlExam(exam?.id, 'started')
 
     Modal.confirm({
-      title: 'คุณต้องการลบผู้เข้าสอบจากครั้งก่อนออกด้วยหรือไม่?',
+      title: 'คุณต้องการลบผู้เข้าสอบจากครั้งก่อนหรือไม่?',
       content: `ข้อมูลทั้งหมดรวมถึงเหตุการณ์ที่เกี่ยวกับผู้เข้าสอบทั้ง ${affected} คนจะถูกนำออก`,
       okText: 'ใช่ นำออก',
+      okType: 'danger',
       onOk: () => controlExam(exam?.id, 'started', true),
       cancelText: 'ไม่เป็นไร',
       onCancel: () => controlExam(exam?.id, 'started', false)

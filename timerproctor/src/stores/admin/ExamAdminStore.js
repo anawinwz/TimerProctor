@@ -8,7 +8,8 @@ const initialCounts = {
   authenticating: 0,
   authenticated: 0,
   started: 0,
-  completed: 0
+  completed: 0,
+  terminated: 0
 }
 
 const initialHasNewCounts = {
@@ -17,7 +18,8 @@ const initialHasNewCounts = {
   authenticating: false,
   authenticated: false,
   started: false,
-  completed: false
+  completed: false,
+  terminated: false
 }
 
 class ExamAdminStore {
