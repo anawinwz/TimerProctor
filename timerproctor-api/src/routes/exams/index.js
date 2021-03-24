@@ -323,7 +323,7 @@ router.get('/:id/status', populateExam, async (req, res) => {
 })
 router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   try {
-    const { status } = req.body
+    const { status, deletePreviousTesters = false } = req.body
     const exam = req.exam
 
     if (!['started', 'stopped'].includes(status))
@@ -336,16 +336,26 @@ router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, 
 
     exam.timeWindow.realtime.status = status
     exam.timeWindow.realtime.allowLogin = newAllowLogin
+
+    let clearTesters = false
     if (status === 'started') {
       exam.timeWindow.realtime.startedAt = new Date()
       exam.announcements = []
+
+      if (deletePreviousTesters) {
+        try {
+          await deletePreviousTesters(exam._id)
+          clearTesters = true
+        } catch {}
+      }
     }
     await exam.save()
 
     getExamNsp(exam._id).emit('examStatus', status)
     getExamNsp(exam._id).to('proctor').emit('examAllowLogin', newAllowLogin)
+    if (clearTesters) getExamNsp(exam._id).to('proctor').emit('clearTesters', true)
 
-    return res.json(jsonResponse('ok', `สั่ง${status === 'started' ? 'เริ่ม':'สิ้นสุด'}การสอบแล้ว`))
+    return res.json(jsonResponse('ok', `สั่ง${status === 'started' ? 'เริ่ม':'สิ้นสุด'}การสอบ${clearTesters ? 'พร้อมลบผู้เข้าสอบ' : ''}แล้ว`))
   } catch (err) {
     console.log(err)
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบตั้งค่าสถานะการสอบ'))

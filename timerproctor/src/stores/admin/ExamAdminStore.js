@@ -131,6 +131,11 @@ class ExamAdminStore {
   }
 
   @action
+  clearLocalTesters() {
+    this.testers = {}
+  }
+
+  @action
   addLocalTester(tester = {}) {
     const { _id } = tester
     if (this.updateLocalTester(_id, tester, true)) return true
