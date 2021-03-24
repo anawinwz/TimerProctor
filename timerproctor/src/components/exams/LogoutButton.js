@@ -6,12 +6,13 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/index'
 
 const LogoutButton = () => {
-  const { ExamStore: { id }, AuthStore: auth, SocketStore: socket, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
+  const { ExamStore: { id }, AuthStore: auth, TimerStore: timer, SocketStore: socket, IDCheckStore: idCheck, AttemptStore: attempt } = useStore()
   const history = useHistory()
 
   const logoutAndReturn = useCallback(() => {
     auth.logout()
     attempt.reset()
+    timer.reset()
     idCheck.reset()
     socket.destroy()
     history.replace(`/exams/${id}`)

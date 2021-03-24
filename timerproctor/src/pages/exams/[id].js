@@ -71,10 +71,12 @@ const ExamPage = ({ match }) => {
               onOk: () => {
                 idCheck.reset()
                 attempt.reset()
+                timer.reset()
               },
               onCancel: () => {
                 idCheck.reset()
                 attempt.reset()
+                timer.reset()
               }
             })
 
