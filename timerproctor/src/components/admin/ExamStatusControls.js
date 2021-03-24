@@ -30,13 +30,8 @@ const ExamStatusControls = () => {
   const timeWindowMode = exam?.timeWindow?.mode
   const isExamOwner = examAdmin?.isExamOwner
 
-  const controlExam = useCallback(async (id, mode) => {
+  const controlExam = useCallback(async (id, mode, deletePreviousTesters = false) => {
     if (!id) return false
-
-    let deletePreviousTesters = false
-    if (mode === 'started' && Object.keys(examAdmin.testers).length > 0) {
-      deletePreviousTesters = confirm('คุณต้องการลบข้อมูลผู้เข้าสอบก่อนหน้านี้หรือไม่?')
-    }
 
     try {
       const res = await fetchAPIwithAdminToken(`/exams/${id}/status`, {
@@ -56,7 +51,21 @@ const ExamStatusControls = () => {
     }
   }, [])
 
-  const startExam = useCallback(() => controlExam(exam?.id, 'started'), [exam?.id])
+  const startExam = useCallback(() => {
+    const affected = Object.keys(examAdmin.testers).length
+
+    if (affected <= 0)
+      return controlExam(exam?.id, 'started')
+
+    Modal.confirm({
+      title: 'คุณต้องการลบผู้เข้าสอบจากครั้งก่อนออกด้วยหรือไม่?',
+      content: `ข้อมูลทั้งหมดรวมถึงเหตุการณ์ที่เกี่ยวกับผู้เข้าสอบทั้ง ${affected} คนจะถูกนำออก`,
+      okText: 'ใช่ นำออก',
+      onOk: () => controlExam(exam?.id, 'started', true),
+      cancelText: 'ไม่เป็นไร',
+      onCancel: () => controlExam(exam?.id, 'started', false)
+    })
+  }, [exam?.id])
   const stopExam = useCallback(() => {
     Modal.confirm({
       title: `คุณแน่ใจหรือว่าต้องการสิ้นสุดการสอบ?`,
