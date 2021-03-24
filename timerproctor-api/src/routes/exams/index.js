@@ -315,7 +315,7 @@ router.get('/:id/status', populateExam, async (req, res) => {
       mode,
       ...(
         mode === 'realtime' ? 
-        { status: realtime.status } :
+        { realtime: { status: realtime.status } } :
         schedule
       )
     }
