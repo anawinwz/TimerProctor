@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import { authenticate, adminAuthen } from '../../middlewares/authentication'
-import { onlyExamPersonnel, populateExam } from '../../middlewares/exam'
+import { onlyExamOwner, onlyExamPersonnel, populateExam } from '../../middlewares/exam'
 import { populateAttempt } from '../../middlewares/attempt'
 
 import Attempt from '../../models/attempt'
@@ -12,6 +12,7 @@ import { createSocketToken } from '../../utils/token'
 import {
   convertAttemptToTester,
   convertEventToSnapshot,
+  deleteAllAttempts,
   getCompletedAttemptsCount,
   getLastAttempt
 } from '../../utils/attempt'
@@ -134,6 +135,16 @@ router.post('/', authenticate, populateExam, async (req, res) => {
     }))
   } catch {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบการขอเข้าห้องสอบ'))
+  }
+})
+router.delete('/', authenticate, populateExam, onlyExamOwner, async (req, res) => {
+  const { _id } = req.exam
+  
+  try {
+    const affected = await deleteAllAttempts(_id)
+    res.json(jsonResponse('ok', `ลบผู้เข้าสอบทั้ง ${affected} รายเรียบร้อยแล้ว`))
+  } catch {
+    res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการลบผู้เข้าสอบทั้งหมด'))
   }
 })
 
