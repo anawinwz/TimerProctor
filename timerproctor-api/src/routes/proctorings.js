@@ -9,7 +9,7 @@ router.get('/', adminAuthen, async (req, res) => {
   try {
     const proctorings = await Proctoring.find({
       user: req.user._id,
-      status: { $ne: 'rejected' }
+      status: { $nin: ['rejected', 'cancelled'] }
     }, { user: 0 })
     .lean()
     .populate('exam', 'name owner timeWindow createdAt updatedAt')
