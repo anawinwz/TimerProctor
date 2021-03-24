@@ -53,7 +53,7 @@ const ExamStatusControls = () => {
   }, [])
 
   const startExam = useCallback(() => {
-    const askToDelete = false
+    const askToDelete = true
     const affected = examAdmin.counts.completed + examAdmin.counts.terminated
 
     if (!askToDelete || affected <= 0)

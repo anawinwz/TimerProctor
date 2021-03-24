@@ -140,7 +140,7 @@ class ExamAdminStore {
       return affected
     }
 
-    for (const [id, tester] of Object.entries(testers)) {
+    for (const [id, tester] of Object.entries(this.testers)) {
       if (statuses.includes(tester.status))
         delete this.testers[id]
     }
