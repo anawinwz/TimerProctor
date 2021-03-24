@@ -4,9 +4,9 @@ import CompletedCard from '~/components/exams/CompletedCard'
 import { Redirect } from 'react-router'
 
 const CompletedPage = () => {
-  const { ExamStore: exam, AttemptStore: attempt } = useStore()
+  const { ExamStore: exam, SocketStore: socketStore } = useStore()
 
-  if (attempt.status !== 'completed')
+  if (!socketStore?.socket)
     return <Redirect to={`/exams/${exam.id}`} />
 
   return (
