@@ -132,8 +132,8 @@ const AdminExamPage = ({ match }) => {
           .on('clearTesters', (statuses = []) => {
             const testerId = location.pathname.match(`/testers/(.*)`)?.[1]
             if (
-              statuses.length === 0 ||
-              (testerId && statuses.includes(examAdmin?.testers?.[testerId]?.status))
+              testerId && 
+              (statuses.length === 0 || statuses.includes(examAdmin?.testers?.[testerId]?.status))
             ) {
               showModal('info', 'ข้อมูลผู้เข้าสอบถูกลบกลางคัน', 'อาจารย์ผู้สอนสั่งลบข้อมูลผู้เข้าสอบทั้งหมดออกขณะที่คุณดูอยู่')
               history.replace(`/admin/exams/${exam.id}/overview`)
