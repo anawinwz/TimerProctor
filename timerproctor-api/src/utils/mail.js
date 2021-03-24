@@ -1,5 +1,6 @@
 import { createTransport } from 'nodemailer'
 
+require('dotenv-flow').config()
 const transporter = createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -13,4 +14,4 @@ export const defaultMailOptions = {
   from: process.env.SMTP_FROM || process.env.SMTP_USER
 }
 
-export const sendMail = transporter.sendMail
+export const sendMail = transporter.sendMail.bind(transporter)
