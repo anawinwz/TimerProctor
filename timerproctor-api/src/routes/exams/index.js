@@ -18,6 +18,7 @@ import dayjs from '../../utils/dayjs'
 import { jsonResponse, getExamNsp, getFirstValidationErrMessage, isExamProctor, determineExamStatus, isEmail } from '../../utils/helpers'
 import { createSocketToken } from '../../utils/token'
 import { ValidationError } from '../../utils/error'
+import { deleteAllAttempts } from '../../utils/attempt'
 
 dot.keepArray = true
 
@@ -344,7 +345,7 @@ router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, 
 
       if (deletePreviousTesters) {
         try {
-          await deletePreviousTesters(exam._id)
+          await deleteAllAttempts(exam._id)
           clearTesters = true
         } catch {}
       }
