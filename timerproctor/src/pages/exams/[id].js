@@ -56,13 +56,17 @@ const ExamPage = ({ match }) => {
             }
           })
           .on('examAnnouncement', text => exam.addLocalAnnouncement(text))
-          .on('terminated', () => {
+          .on('terminated', (reason = '') => {
             attempt.setStatus('terminated')
             
             timer.pause()
             Modal.error({
               title: 'คุณถูกเชิญออกจากการสอบ',
-              content: 'กรรมการพิจารณาเชิญคุณออกจากการสอบแล้ว',
+              content: reason ? <>
+                <p>กรรมการพิจารณาเชิญคุณออกจากการสอบแล้วด้วยสาเหตุ:</p>
+                { reason }
+              </> :
+              'กรรมการพิจารณาเชิญคุณออกจากการสอบแล้ว',
               okText: 'รับทราบ',
               cancelButtonProps: {
                 style: { display: 'none' }
