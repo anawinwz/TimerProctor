@@ -122,6 +122,8 @@ class ExamAdminStore {
 
   @action
   async deleteAllTesters() {
+    const examId = this.examStore?.id
+
     const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers`, null, 'DELETE')
     const { status, message } = res
     if (status === 'ok') {

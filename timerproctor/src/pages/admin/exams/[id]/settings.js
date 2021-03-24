@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import { Button, message, Popconfirm, Skeleton, Tabs, Typography } from 'antd'
+import { DeleteOutlined } from '@ant-design/icons'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -12,8 +13,7 @@ import Alert from '~/components/admin/Alert'
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
 import ExamProctorsList from '~/components/admin/ExamProctorsList'
-import ExamTesterIdMappings from 'components/admin/ExamTesterIdMappings'
-import { DeleteOutlined } from '@ant-design/icons'
+import ExamTesterIdMappings from '~/components/admin/ExamTesterIdMappings'
 
 const ExamSettings = () => {
   const { ExamStore: examStore, ExamAdminStore: examAdmin } = useStore()

@@ -137,13 +137,13 @@ router.post('/', authenticate, populateExam, async (req, res) => {
     return res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในระบบการขอเข้าห้องสอบ'))
   }
 })
-router.delete('/', authenticate, populateExam, onlyExamOwner, async (req, res) => {
+router.delete('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) => {
   const { _id } = req.exam
   
   try {
     const affected = await deleteAllAttempts(_id)
     getExamNsp(_id).to('proctor').emit('clearTesters', [])
-    
+
     res.json(jsonResponse('ok', `ลบผู้เข้าสอบทั้ง ${affected} รายเรียบร้อยแล้ว`))
   } catch {
     res.json(jsonResponse('error', 'เกิดข้อผิดพลาดในการลบผู้เข้าสอบทั้งหมด'))
