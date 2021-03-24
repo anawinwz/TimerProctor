@@ -32,9 +32,16 @@ const ExamStatusControls = () => {
 
   const controlExam = useCallback(async (id, mode) => {
     if (!id) return false
+
+    let deletePreviousTesters = false
+    if (mode === 'started' && Object.keys(examAdmin.testers).length > 0) {
+      deletePreviousTesters = confirm('คุณต้องการลบข้อมูลผู้เข้าสอบก่อนหน้านี้หรือไม่?')
+    }
+
     try {
       const res = await fetchAPIwithAdminToken(`/exams/${id}/status`, {
-        status: mode
+        status: mode,
+        deletePreviousTesters: deletePreviousTesters === true
       }, 'PUT')
       const { status, message: msg } = res
       if (status === 'ok') {
