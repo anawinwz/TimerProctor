@@ -133,8 +133,17 @@ class ExamAdminStore {
   }
 
   @action
-  clearLocalTesters() {
-    this.testers = {}
+  clearLocalTesters(statuses = []) {
+    if (statuses.length === 0) {
+      const affected = this.testers.length
+      this.testers = {}
+      return affected
+    }
+
+    for (const [id, tester] of Object.entries(testers)) {
+      if (statuses.includes(tester.status))
+        delete this.testers[id]
+    }
   }
 
   @action

@@ -345,7 +345,7 @@ router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, 
 
       if (deletePreviousTesters) {
         try {
-          await deleteAllAttempts(exam._id)
+          await deleteAllAttempts(exam._id, ['completed', 'terminated'])
           clearTesters = true
         } catch {}
       }
@@ -354,7 +354,7 @@ router.put('/:id/status', adminAuthen, populateExam, onlyExamOwner, async (req, 
 
     getExamNsp(exam._id).emit('examStatus', status)
     getExamNsp(exam._id).to('proctor').emit('examAllowLogin', newAllowLogin)
-    if (clearTesters) getExamNsp(exam._id).to('proctor').emit('clearTesters', true)
+    if (clearTesters) getExamNsp(exam._id).to('proctor').emit('clearTesters', ['completed', 'terminated'])
 
     return res.json(jsonResponse('ok', `สั่ง${status === 'started' ? 'เริ่ม':'สิ้นสุด'}การสอบ${clearTesters ? 'พร้อมลบผู้เข้าสอบ' : ''}แล้ว`))
   } catch (err) {

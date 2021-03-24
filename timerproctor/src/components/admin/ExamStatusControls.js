@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
 
 import { fetchAPIwithAdminToken } from '~/utils/api'
+import { testerStatuses } from '~/utils/const'
 
 import ExamAllowLoginToggle from '~/components/admin/ExamAllowLoginToggle'
 import ExamAnnouncementsModal from './ExamAnnouncementsModal'
@@ -53,14 +54,20 @@ const ExamStatusControls = () => {
 
   const startExam = useCallback(() => {
     const askToDelete = false
-    const affected = Object.keys(examAdmin.testers).length
+    const affected = examAdmin.counts.completed + examAdmin.counts.terminated
 
     if (!askToDelete || affected <= 0)
       return controlExam(exam?.id, 'started')
 
     Modal.confirm({
       title: 'คุณต้องการลบผู้เข้าสอบจากครั้งก่อนหรือไม่?',
-      content: `ข้อมูลทั้งหมดรวมถึงเหตุการณ์ที่เกี่ยวกับผู้เข้าสอบทั้ง ${affected} คนจะถูกนำออก`,
+      content: <>
+        ข้อมูลผู้เข้าสอบในสถานะต่อไปนี้ทั้ง { affected } คนจะถูกนำออก:
+        <ul>
+          <li>{ testerStatuses.completed }</li>
+          <li>{ testerStatuses.terminated }</li>
+        </ul>
+      </>,
       okText: 'ใช่ นำออก',
       okType: 'danger',
       onOk: () => controlExam(exam?.id, 'started', true),

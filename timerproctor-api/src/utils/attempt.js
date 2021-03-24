@@ -1,8 +1,12 @@
 import Attempt from '../models/attempt'
 import AttemptEvent from '../models/attemptEvent'
 
-export const deleteAllAttempts = async examId => {
-  const attempts = await Attempt.find({ exam: examId })
+export const deleteAllAttempts = async (examId, statuses = []) => {
+  const attempts = await Attempt.find({
+    exam: examId,
+    ...(statuses.length > 0 && { status: { $in: statuses } })
+  })
+  
   const affected = attempts.length
   for (const { _id } of attempts) {
     await AttemptEvent.deleteMany({ attempt: _id })
