@@ -78,7 +78,7 @@ const AttemptPage = () => {
   return (
     <>
       <Trackers />
-      <Spin spinning={sending} tip="กำลังส่งคำตอบ...">
+      <Spin spinning={state === 'sending'} tip="กำลังส่งคำตอบ...">
         <Form form={form} onCompleted={onCompleted} />
       </Spin>
     </>
