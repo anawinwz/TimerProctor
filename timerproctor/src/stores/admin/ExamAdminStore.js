@@ -141,8 +141,10 @@ class ExamAdminStore {
     }
 
     for (const [id, tester] of Object.entries(this.testers)) {
-      if (statuses.includes(tester.status))
+      if (statuses.includes(tester.status)) {
         delete this.testers[id]
+        this.counts[tester.status] -= 1
+      }
     }
   }
 
