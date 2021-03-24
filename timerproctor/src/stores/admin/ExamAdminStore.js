@@ -121,6 +121,19 @@ class ExamAdminStore {
   }
 
   @action
+  async deleteAllTesters() {
+    const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers`, null, 'DELETE')
+    const { status, message } = res
+    if (status === 'ok') {
+      this.counts = initialCounts
+      this.testers = {}
+      return message
+    } else {
+      throw new Error(message || 'เกิดข้อผิดพลาดในการลบผู้เข้าสอบทั้งหมด')
+    }
+  }
+
+  @action
   setCurrentStatus(status = 'all') {
     this.currentStatus = status
   }

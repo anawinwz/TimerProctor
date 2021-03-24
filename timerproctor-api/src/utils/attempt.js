@@ -1,15 +1,20 @@
 import Attempt from '../models/attempt'
 import AttemptEvent from '../models/attemptEvent'
+import { getExamNsp } from './helpers'
 
 export const deleteAllAttempts = async (examId, statuses = []) => {
   const attempts = await Attempt.find({
     exam: examId,
     ...(statuses.length > 0 && { status: { $in: statuses } })
   })
-  
+
   const affected = attempts.length
-  for (const { _id } of attempts) {
+  for (const { _id, status, socketId } of attempts) {
     await AttemptEvent.deleteMany({ attempt: _id })
+
+    if (!['completed', 'terminated'].includes(status) && socketId)
+      getExamNsp(examId).to(socketId).emit('terminated', 'ข้อมูลการสอบถูกลบออก')
+
     await Attempt.deleteOne({ _id: _id })
   }
   return affected
