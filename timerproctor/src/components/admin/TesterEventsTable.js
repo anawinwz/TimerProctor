@@ -1,7 +1,8 @@
+import { useCallback } from 'react'
 import { Table } from 'antd'
 import { observer } from 'mobx-react-lite'
-import { isEventRisk } from 'utils/const'
 
+import { isEventRisk } from '~/utils/const'
 import { testerEventsType } from '~/utils/const'
 import { dateStr, dateSorter } from '~/utils/date'
 
@@ -67,12 +68,22 @@ const columns = [
   }
 ]
 
-const TesterEventsTable = ({ events }) => {
+const columnsWithActor = [
+  {
+    title: 'ผู้กระทำ',
+    dataIndex: 'actor',
+    key: 'actor'
+  },
+  ...columns
+]
+
+const TesterEventsTable = ({ events = [], withActor = false, riskOnly = false }) => {
+  const rowClassNameGetter = useCallback(event => riskOnly ? '' : isEventRisk(event), [riskOnly])
   return (
     <Table
       size="small"
-      rowClassName={event => isEventRisk(event) ? 'risk' : ''}
-      columns={columns}
+      rowClassName={rowClassNameGetter}
+      columns={withActor ? columnsWithActor : columns}
       dataSource={events}
       rowKey="_id"
     />
