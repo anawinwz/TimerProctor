@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react'
-import { Button, message, Popconfirm, Skeleton, Tabs, Typography } from 'antd'
-import { DeleteOutlined } from '@ant-design/icons'
+import { message, Skeleton, Tabs, Typography } from 'antd'
 
 import { observer } from 'mobx-react-lite'
 import { useStore } from '~/stores/admin'
@@ -13,6 +12,7 @@ import Alert from '~/components/admin/Alert'
 import ExamTitle from '~/components/admin/ExamTitle'
 import ExamSettingsForm from '~/components/admin/ExamSettingsForm'
 import ExamProctorsList from '~/components/admin/ExamProctorsList'
+import ExamDeleteAllTesters from '~/components/admin/ExamDeleteAllTesters'
 import ExamTesterIdMappings from '~/components/admin/ExamTesterIdMappings'
 
 const ExamSettings = () => {
@@ -63,23 +63,7 @@ const ExamSettings = () => {
         >
           {
             isExamOwner && 
-            <>
-              <Typography.Title level={5}>
-                ลบข้อมูลผู้เข้าสอบทั้งหมด
-              </Typography.Title>
-              <Typography.Paragraph>
-                ลบข้อมูลและเหตุการณ์ของผู้เข้าสอบทั้งหมด<br />
-                หากผู้เข้าสอบยังอยู่ในระบบจะถูกเชิญออกอัตโนมัติ
-              </Typography.Paragraph>
-              <Popconfirm
-                title="ยืนยันลบหรือไม่?"
-                okText="ลบ"
-                okType="danger"
-                onConfirm={() => examAdmin.deleteAllTesters()}
-              >
-                <Button type="danger" size="large" icon={<DeleteOutlined />}>ลบข้อมูลผู้เข้าสอบทั้งหมด</Button>
-              </Popconfirm>
-            </>
+            <ExamDeleteAllTesters />
           }
           <Typography.Title level={5}>
             รายชื่อผู้เข้าสอบที่รู้จัก
