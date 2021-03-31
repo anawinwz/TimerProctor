@@ -151,6 +151,42 @@ router.delete('/', adminAuthen, populateExam, onlyExamOwner, async (req, res) =>
   }
 })
 
+router.get('/events', adminAuthen, populateExam, onlyExamPersonnel, async (req, res) => {
+  try {
+    const { type } = req.query
+    const exam = req.exam
+    
+    const examAttempts = await Attempt.find({ exam: exam._id }, { _id: 1 })
+    const events = await AttemptEvent.find({
+      attempt: { $in: examAttempts },
+      ...(type ? { type } : {})
+    }).lean()
+
+    const testerEvents = events.reduce((prev, curr) => {
+      const testerId = String(curr.attempt)
+
+      delete curr._id
+      delete curr.__v
+      delete curr.attempt
+
+      curr.isRisk = isEventRisk(curr)
+
+      return {
+        ...prev,
+        [testerId]: prev[testerId] ? 
+          [...prev[testerId], curr] : 
+          [curr]
+      }
+    }, {})
+
+    return res.json(jsonResponse('ok', {
+      testerEvents: testerEvents
+    }))
+  } catch (err) {
+    return res.json(jsonResponse('error', 'ไม่สามารถเรียกรายการเหตุการณ์ของผู้เข้าสอบได้'))
+  }
+})
+
 router.get('/:testerId', adminAuthen, populateExam, onlyExamPersonnel, populateAttempt, async (req, res) => {
   try {
     const attempt = await req.attempt
