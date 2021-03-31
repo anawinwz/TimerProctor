@@ -78,7 +78,7 @@ const columnsWithActor = [
 ]
 
 const TesterEventsTable = ({ events = [], withActor = false, riskOnly = false }) => {
-  const rowClassNameGetter = useCallback(event => riskOnly ? '' : isEventRisk(event), [riskOnly])
+  const rowClassNameGetter = useCallback(event => riskOnly ? '' : isEventRisk(event) ? 'risk' : '', [riskOnly])
   return (
     <Table
       size="small"

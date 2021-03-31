@@ -14,7 +14,8 @@ import {
   convertEventToSnapshot,
   deleteAllAttempts,
   getCompletedAttemptsCount,
-  getLastAttempt
+  getLastAttempt,
+  isEventRisk
 } from '../../utils/attempt'
 
 const router = Router({ mergeParams: true })
@@ -218,13 +219,16 @@ router.get('/:testerId/events', adminAuthen, populateExam, onlyExamPersonnel, po
     const events = await AttemptEvent.find({
       attempt: attempt._id,
       ...(type ? { type } : {})
-    }, { attempt: 0 }).map(event => {
-      delete event._id
-      delete event.attempt
-      return event
-    })
+    }, { attempt: 0 }).lean()
 
-    return res.json(jsonResponse('ok', { events: events }))
+    return res.json(jsonResponse('ok', {
+      events: events.map(event => ({
+        ...event,
+        _id: undefined,
+        __v: undefined,
+        isRisk: isEventRisk(event)
+      }))
+    }))
   } catch (err) {
     return res.json(jsonResponse('error', 'ไม่สามารถเรียกรายการเหตุการณ์ของผู้เข้าสอบได้'))
   }

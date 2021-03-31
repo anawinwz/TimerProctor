@@ -1,5 +1,6 @@
 import Attempt from '../models/attempt'
 import AttemptEvent from '../models/attemptEvent'
+import { isEventRisk } from '../utils/attempt'
 import { getExamIdFromSocket, getExamNsp } from '../utils/helpers'
 
 export default (socket, user = {}) => {
@@ -27,7 +28,10 @@ export default (socket, user = {}) => {
 
       getExamNsp(examId).to('proctor').emit('newEvent', {
         id: socketInfo.id,
-        event: toSend
+        event: {
+          ...toSend,
+          isRisk: isEventRisk(toSend)
+        }
       })
     })
   })
@@ -93,7 +97,10 @@ export default (socket, user = {}) => {
       delete toSend.attempt
       getExamNsp(examId).to('proctor').emit('newEvent', {
         id: socketInfo.id,
-        event: toSend
+        event: {
+          ...toSend,
+          isRisk: isEventRisk(toSend)
+        }
       })
       callback({ err: false })
       
@@ -159,7 +166,10 @@ export default (socket, user = {}) => {
       delete toSend.attempt
       getExamNsp(examId).to('proctor').emit('newEvent', {
         id: socketInfo.id,
-        event: toSend
+        event: {
+          ...toSend,
+          isRisk: isEventRisk(toSend)
+        }
       })
       callback({ err: false })
     })

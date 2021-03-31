@@ -6,10 +6,12 @@ import { JWT_SOCKET_SECRET } from './config'
 import AttemptEvent from './models/attemptEvent'
 
 import { corsOrigin, ioNamespace } from './utils/const'
+import { getExamNsp } from './utils/helpers'
+import { isEventRisk } from './utils/attempt'
 
 import { jwtAuthorize, validateRole } from './socketio/middlewares/authentication'
-import { getExamNsp } from './utils/helpers'
 import bindSocketListener from './socketio'
+
 
 const io = new Server(server, {
   cors: {
@@ -65,7 +67,10 @@ ioExam.on('connection', async socket => {
 
       getExamNsp(examId).to('proctor').emit('newEvent', {
         id: id,
-        event: toSend
+        event: {
+          ...toSend,
+          isRisk: isEventRisk(toSend)
+        }
       })
     })
   } else if (role === 'proctor') {
