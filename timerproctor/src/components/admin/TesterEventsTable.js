@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { isEventRisk } from '~/utils/const'
 import { testerEventsType } from '~/utils/const'
-import { dateStr, dateSorter } from '~/utils/date'
+import { hybridDateStr, dateSorter } from '~/utils/date'
 import UserTag from './UserTag'
 
 const typeFilters = Object.entries(testerEventsType)
@@ -19,7 +19,7 @@ const columns = [
     sorter: (a, b) => dateSorter(a.timestamp, b.timestamp),
     defaultSortOrder: 'descend',
     sortDirections: ['ascend', 'descend', 'ascend'],
-    render: text => dateStr(text, 'fullS')
+    render: text => hybridDateStr(text, 'shortS')
   },
   {
     title: 'ประเภทเหตุการณ์',
@@ -63,7 +63,6 @@ const columns = [
               }
             default: return 'ไม่ทราบรายละเอียด'
           }
-          break
         default: return `ไม่ทราบรายละเอียด`
       }
     }
@@ -75,6 +74,8 @@ const columnsWithActor = [
     title: 'ผู้กระทำ',
     dataIndex: 'actor',
     key: 'actor',
+    width: '12%',
+    ellipsis: true,
     render: user => {
       return (
        <Link to={`testers/${user._id}`}><UserTag user={user} /></Link>

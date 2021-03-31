@@ -27,7 +27,9 @@ const TesterEventsDrawer = () => {
   }
   const hideDrawer = () => setVisible(false)
 
-  const drawerWidth = window?.innerWidth > 850 ? 800 : window.innerWidth - 50
+  const drawerWidth = !window?.innerWidth || window.innerWidth > 800 ? 
+    800 :
+    window.innerWidth - (window.innerWidth > 500 ? 50 : 0)
 
   const testerEvents = examAdmin.testerEvents
 

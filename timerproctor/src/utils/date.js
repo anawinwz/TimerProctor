@@ -18,6 +18,13 @@ export const fromNowStr = (date) => date ? moment(date).fromNow(true) : '...'
 
 export const dateStr = (date, type = 'short') => date ? moment(date).format(formats[type]) : '-'
 
+export const hybridDateStr = (date) => {
+  if (!date) return '-'
+
+  const dateObj = moment(date)
+  return dateObj.isSame(moment(), 'day') ? 'วันนี้ ' + dateObj.format(formats.timeS) : dateObj.format(formats.shortS)
+}
+
 export const shortDateStr = (date) => dateStr(date, 'short')
 
 export const rangeStr = (a, b, type = 'short') => {
