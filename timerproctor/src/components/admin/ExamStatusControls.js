@@ -10,8 +10,9 @@ import { useStore } from '~/stores/admin'
 import { fetchAPIwithAdminToken } from '~/utils/api'
 import { testerStatuses } from '~/utils/const'
 
+import TesterEventsDrawer from '~/components/admin/TesterEventsDrawer'
+import ExamAnnouncementsModal from '~/components/admin/ExamAnnouncementsModal'
 import ExamAllowLoginToggle from '~/components/admin/ExamAllowLoginToggle'
-import ExamAnnouncementsModal from './ExamAnnouncementsModal'
 
 const Wrapper = styled('div')`
   &>*, &>a>* {
@@ -96,7 +97,8 @@ const ExamStatusControls = () => {
             icon={<StopOutlined />}
             onClick={stopExam}
             disabled={!isExamOwner}
-          >สิ้นสุดการสอบ</Button> 
+          >สิ้นสุดการสอบ</Button>
+          <TesterEventsDrawer />
           <span>ดำเนินไปแล้ว { timer.displayElapsedTime }</span>
         </Wrapper>
         ) : (

@@ -1,10 +1,12 @@
 import { useCallback } from 'react'
 import { Table } from 'antd'
 import { observer } from 'mobx-react-lite'
+import { Link } from 'react-router-dom'
 
 import { isEventRisk } from '~/utils/const'
 import { testerEventsType } from '~/utils/const'
 import { dateStr, dateSorter } from '~/utils/date'
+import UserTag from './UserTag'
 
 const typeFilters = Object.entries(testerEventsType)
   .map(([value, text]) => ({ text, value }))
@@ -72,7 +74,12 @@ const columnsWithActor = [
   {
     title: 'ผู้กระทำ',
     dataIndex: 'actor',
-    key: 'actor'
+    key: 'actor',
+    render: user => {
+      return (
+       <Link to={`testers/${user._id}`}><UserTag user={user} /></Link>
+      )
+    }
   },
   ...columns
 ]

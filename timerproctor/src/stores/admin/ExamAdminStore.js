@@ -92,9 +92,11 @@ class ExamAdminStore {
 
   @action
   async getTesters() {
+    const examId = this.examStore.id
+    if (examId === this.lastExamId) return false
+
     try {
       this.loading = true
-      const examId = this.examStore.id
       const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers`)
       if (res.status === 'ok') {
         this.testers = res.payload.testers
@@ -108,9 +110,10 @@ class ExamAdminStore {
 
   @action
   async getTestersCount(isInit = false) {
+    const examId = this.examStore.id
+    if (examId === this.lastExamId) return false
     try {
       this.loading = true
-      const examId = this.examStore?.id
       const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/count`)
       const { status, payload } = res
       if (status === 'ok') this.counts = Object.assign({}, isInit ? initialCounts : this.counts, payload.counts)
@@ -211,10 +214,29 @@ class ExamAdminStore {
     
     const oldEvents = this.testers[_id].events
     if (typeof oldEvents === 'undefined' || !Array.isArray(oldEvents))
-      return false
+      this.testers[_id].events = []
 
     this.testers[_id].events = [...this.testers[_id].events, event]
     return true
+  }
+
+  @computed
+  get testerEvents() {
+    const testers = Object.values(this.testers)
+    return testers.reduce((prev, curr) => {
+      return [
+        ...prev,
+        ...(curr.events || [])
+          .map(event => ({
+            ...event,
+            actor: {
+              _id: curr._id,
+              name: curr.name,
+              avatar: curr.avatar
+            }
+          }))
+      ]
+    }, [])
   }
 
   @action
