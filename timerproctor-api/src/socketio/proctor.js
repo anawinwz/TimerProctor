@@ -51,7 +51,7 @@ export default (socket, user = {}) => {
       attempt.status = accepted ? 'authenticated' : 'loggedin'
       attempt.idCheck.accepted = accepted
       attempt.idCheck.reason = rejectReason
-      attempt.idCheck.checker = user._id
+      attempt.idCheck.checker = socketInfo.userId
       attempt.idCheck.checkedAt = Date.now()
       attempt = await attempt.save() 
       
