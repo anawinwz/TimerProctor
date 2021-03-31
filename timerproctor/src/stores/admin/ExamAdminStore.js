@@ -240,6 +240,22 @@ class ExamAdminStore {
   }
 
   @action
+  async getTesterEvents() {
+    try {
+      const examId = this.examStore.id
+      const res = await fetchAPIwithAdminToken(`/exams/${examId}/testers/events`)
+      if (res.status === 'ok') {
+        for (const [testerId, events] of Object.entries(res.payload.testerEvents)) 
+          this.updateLocalTester(testerId, { events: events })
+      } else {
+        throw new Error(res.message || 'เกิดข้อผิดพลาดในการโหลดเหตุการณ์ผู้เข้าสอบ')
+      }
+    } catch {
+      throw new Error('เกิดข้อผิดพลาดในการโหลดเหตุการณ์ผู้เข้าสอบ')
+    }
+  }
+
+  @action
   async getTester(testerId, scope = '') {
     try {
       this.loading = true

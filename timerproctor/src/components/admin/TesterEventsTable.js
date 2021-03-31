@@ -84,10 +84,11 @@ const columnsWithActor = [
   ...columns
 ]
 
-const TesterEventsTable = ({ events = [], withActor = false, riskOnly = false }) => {
+const TesterEventsTable = ({ loading = false, events = [], withActor = false, riskOnly = false }) => {
   const rowClassNameGetter = useCallback(event => riskOnly ? '' : isEventRisk(event) ? 'risk' : '', [riskOnly])
   return (
     <Table
+      loading={loading}
       size="small"
       rowClassName={rowClassNameGetter}
       columns={withActor ? columnsWithActor : columns}

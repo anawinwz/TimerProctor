@@ -10,9 +10,21 @@ import TesterEventsTable from '~/components/admin/TesterEventsTable'
 const TesterEventsDrawer = () => {
   const { ExamAdminStore: examAdmin } = useStore()
 
+  const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
 
-  const showDrawer = () => setVisible(true)
+  const showDrawer = () => {
+    if (Object.values(examAdmin.testers).length > 0 && examAdmin.testerEvents.length === 0) {
+      setLoading(true)
+      try {
+        examAdmin?.getTesterEvents()
+      } catch {
+      } finally {
+        setLoading(false)
+      }
+    }
+    setVisible(true)
+  }
   const hideDrawer = () => setVisible(false)
 
   const drawerWidth = window?.innerWidth > 850 ? 800 : window.innerWidth - 50
@@ -32,6 +44,7 @@ const TesterEventsDrawer = () => {
         visible={visible}
       >
         <TesterEventsTable
+          loading={loading}
           events={testerEvents}
           withActor
         />
