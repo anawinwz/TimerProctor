@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  </head>
+  <body>
+    <div class="sidebar">
+      <div id="loading">กำลังโหลด...</div>
+      <div id="loaded" style="display: none;">
+        <div class="block">
+          <input type="checkbox" id="var-autofillEmail">
+          <label for="var-autofillEmail">เติมอีเมลผู้เข้าสอบอัตโนมัติ</label>
+        </div>
+        <div class="block form-group" id="var-autofillEmail-options" style="display: none;">
+          <label for="var-autofillEmailField">
+            ต้องการให้เติมลงในช่องใด?
+          </label>
+          <select class="width-100" id="var-autofillEmailField">
+          </select>
+          <button class="action" id="add-email-field">+ เพิ่มอัตโนมัติ</button>
+        </div>
+        
+        <div class="block">
+          <input type="checkbox" id="var-autofillTesterID">
+          <label for="var-autofillTesterID">เติมรหัสประจำตัวผู้เข้าสอบอัตโนมัติ</label>
+        </div>
+        <div class="block form-group" id="var-autofillTesterID-options" style="display: none;">
+          <label for="var-autofillTesterIDField">
+            ต้องการให้เติมลงในช่องใด?
+          </label>
+          <select class="width-100" id="var-autofillTesterIDField">
+          </select>
+          <button class="action" id="add-testerID-field">+ เพิ่มอัตโนมัติ</button>
+        </div>
+
+        <div class="block" id="button-bar">
+          <button class="action" id="save-settings">บันทึก</button>
+        </div>
+      </div>
+      <div id="status" class="error"></div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+    </script>
+    <script>
+      $(function() {
+        $('#save-settings').click(saveSettings);
+        $('input[type="checkbox"]').click(toggleCheckboxOptions);
+        $('#add-email-field').click(addEmailField);
+        $('#add-testerID-field').click(addTesterIDField);
+        
+        google.script.run
+           .withSuccessHandler(function () {
+              google.script.run
+                .withSuccessHandler(loadSettings)
+                .withFailureHandler(setError)
+                .getSettings();
+            })
+           .withFailureHandler(setError)
+           .checkMultipleAccountIssue('<?=Session.getActiveUser().getEmail();?>');
+      });
+      
+      function toggleCheckboxOptions(e, obj) {
+        var checkbox = obj || $(this);
+        
+        var id = checkbox.attr('id');
+        var checkboxOptions = $('#' + id + '-options');
+        
+        var isChecked = checkbox.is(':checked');
+        if (e && !isChecked) {
+          alert("คำเตือน\r\nช่องที่เลือกไว้จะกลับมาแสดงผลตามปกติ\rและผู้เข้าสอบจะกรอกได้อิสระจนกว่าคุณจะลบออก!");
+        }
+        
+        if (isChecked) checkboxOptions.show();
+        else checkboxOptions.hide();
+      }
+      
+      function loadSettings(settings) {
+        setError('');
+        
+        $('#loaded').hide();$('#loading').show();
+        
+        ['autofillEmail', 'autofillTesterID'].forEach(function (name) {
+          var field = $('#var-'+name);
+          field.prop('checked', settings[name] == "true" || false);
+          toggleCheckboxOptions(null, field);
+        });
+        
+        ['autofillEmailField', 'autofillTesterIDField'].forEach(function (name) {
+          var field = $('#var-'+name);
+          field.html('<option value="" style="font-style: italic;">-- ยังไม่ได้เลือก --</option>');
+          settings.textItems.forEach(function (textItem) {
+            var option = $('<option>').attr('value', textItem.id)
+              .attr('selected', textItem.id == settings[name])
+              .text(textItem.title);
+            field.append(option);
+          });
+        });
+        
+        $('#save-settings').removeAttr('disabled');
+        
+        $('#loading').hide();$('#loaded').show();
+      }
+      
+      function setError(msg) { 
+        msg = msg.toString()
+        if (msg.indexOf('required to perform that action') != -1 || msg.indexOf('เพื่อที่จะดำเนินการนั้น') != -1 || msg.indexOf('PERMISSION_DENIED') != -1) {
+          msg = 'TimerProctor ได้สิทธิ์ในการทำงานไม่พอ อาจเกิดจากการเข้าสู่ระบบหลายบัญชี โปรดออกจากระบบบัญชีอื่น ๆ แล้วลองอีกครั้ง'
+        }
+        
+        $('#status').text(msg);
+        $('#save-settings').removeAttr('disabled');
+      }
+      
+      function addEmailField() {
+        google.script.run
+          .withSuccessHandler(loadSettings)
+          .withFailureHandler(setError)
+          .addEmailField();
+      }
+      
+      function addTesterIDField() {
+        google.script.run
+          .withSuccessHandler(loadSettings)
+          .withFailureHandler(setError)
+          .addTesterIDField();
+      }
+      
+      function saveSettings() {
+        setError('กำลังบันทึก...');
+        $('#save-settings').attr('disabled', 'disabled');
+        
+        var autofillEmail = $('#var-autofillEmail').is(':checked');
+        var autofillEmailField = $('#var-autofillEmailField').val();
+        var autofillTesterID = $('#var-autofillTesterID').is(':checked');
+        var autofillTesterIDField = $('#var-autofillTesterIDField').val();
+        
+        if (autofillEmailField && autofillTesterIDField && autofillEmailField == autofillTesterIDField) {
+          alert("ไม่สามารถเลือกให้เติมทั้ง 2 อย่างลงในช่องเดียวกันได้");
+          setError('');
+          return false;
+        }
+        
+        google.script.run
+          .withSuccessHandler(loadSettings)
+          .withFailureHandler(setError)
+          .saveSettings({
+            autofillEmail: autofillEmail,
+            autofillEmailField: autofillEmailField,
+            autofillTesterID: autofillTesterID,
+            autofillTesterIDField: autofillTesterIDField
+          });        
+      }
+     </script>
+     <style>
+       .width-100 { width: 100%; }
+       .form-group {
+         background-color: #eee;
+         border-color: #eee;
+         border-width: 5px;
+         border-style: solid;
+         display: none;
+       }
+       .form-group p, .form-group .small-text { color: gray; font-size: 12px; }
+       .form-group ul { margin-top: 0px; padding-left: 10px; }
+     </style>
+  </body>
+</html>
